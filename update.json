@@ -1,6 +1,6 @@
 {
-  "versionCode": 5,
-  "versionName": "1.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.5-debug.apk",
-  "releaseNotes": "NOVIDADES: \n- EPG Completo com descrição e horas.\n- Arranque dos Canais 5x mais rápido!\n- Otimização do Auto-Update."
+  "versionCode": 6,
+  "versionName": "1.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.6-debug.apk",
+  "releaseNotes": "Correção de emergência: canais não abriam devido ao modo turbo muito agressivo."
 }
