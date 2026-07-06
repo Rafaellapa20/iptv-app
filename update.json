@@ -1,6 +1,6 @@
 {
-  "versionCode": 6,
-  "versionName": "1.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.6-debug.apk",
-  "releaseNotes": "Correção de emergência: canais não abriam devido ao modo turbo muito agressivo."
+  "versionCode": 7,
+  "versionName": "1.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.7-debug.apk",
+  "releaseNotes": "NOVO: Quando volta à lista de canais, o canal atual continua a dar no canto superior direito!"
 }
