@@ -1,6 +1,6 @@
 {
-  "versionCode": 7,
-  "versionName": "1.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.7-debug.apk",
-  "releaseNotes": "NOVO: Quando volta à lista de canais, o canal atual continua a dar no canto superior direito!"
+  "versionCode": 8,
+  "versionName": "1.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.8-debug.apk",
+  "releaseNotes": "NOVO: Menu superior da TV em Direto agora é navegável com o comando! Botão 'Voltar' mantém o canal a tocar em Picture-in-Picture (Janela Pequena) enquanto escolhe outro."
 }
