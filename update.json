@@ -1,6 +1,6 @@
 {
-  "versionCode": 8,
-  "versionName": "1.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.8-debug.apk",
-  "releaseNotes": "NOVO: Menu superior da TV em Direto agora é navegável com o comando! Botão 'Voltar' mantém o canal a tocar em Picture-in-Picture (Janela Pequena) enquanto escolhe outro."
+  "versionCode": 9,
+  "versionName": "1.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.9-debug.apk",
+  "releaseNotes": "CORREÇÕES: Botão OK na zona de Login; Scrolling e adaptação de ecrã perfeito no menu de Definições (Telemóvel e TV)."
 }
