@@ -20,7 +20,9 @@ import org.json.JSONArray
 
 class VodNetflixActivity : AppCompatActivity() {
 
-    private lateinit var rvMainNetflix: RecyclerView
+    private lateinit var rvSidebar: RecyclerView
+    private lateinit var rvMovieGrid: RecyclerView
+    private lateinit var tvMainTitle: TextView
     private lateinit var progressBar: ProgressBar
     
     private val categories = mutableListOf<Category>()
@@ -31,6 +33,8 @@ class VodNetflixActivity : AppCompatActivity() {
     private var password = ""
     private var type = "vod"
 
+    private var movieGridAdapter: MovieGridAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vod_netflix)
@@ -39,10 +43,17 @@ class VodNetflixActivity : AppCompatActivity() {
         password = intent.getStringExtra("PASSWORD") ?: ""
         type = intent.getStringExtra("TYPE") ?: "vod"
 
-        rvMainNetflix = findViewById(R.id.rvMainNetflix)
+        tvMainTitle = findViewById(R.id.tvMainTitle)
+        rvSidebar = findViewById(R.id.rvSidebar)
+        rvMovieGrid = findViewById(R.id.rvMovieGrid)
         progressBar = findViewById(R.id.progressBar)
         
-        rvMainNetflix.layoutManager = LinearLayoutManager(this)
+        rvSidebar.layoutManager = LinearLayoutManager(this)
+        rvMovieGrid.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 5)
+        
+        if (type == "series") {
+            tvMainTitle.text = "SÉRIES"
+        }
 
         setupTopNavigation()
         fetchData()
@@ -186,7 +197,7 @@ class VodNetflixActivity : AppCompatActivity() {
                                 val sRes = OkHttpProvider.client.newCall(Request.Builder().url(streamUrl).build()).execute()
                                 if (sRes.isSuccessful) {
                                     val sArray = JSONArray(sRes.body?.string() ?: "[]")
-                                    val sLimit = minOf(sArray.length(), 30)
+                                    val sLimit = sArray.length()
                                     for (j in 0 until sLimit) {
                                         val sObj = sArray.getJSONObject(j)
                                         val stream = Stream(
@@ -237,7 +248,20 @@ class VodNetflixActivity : AppCompatActivity() {
 
                     withContext(Dispatchers.Main) {
                         progressBar.visibility = View.GONE
-                        rvMainNetflix.adapter = CategoryRowAdapter(categories, streamsByCategory)
+                        val sidebarAdapter = SidebarCategoryAdapter(categories, streamsByCategory) { selectedCategory ->
+                            val movies = streamsByCategory[selectedCategory.category_id] ?: emptyList()
+                            movieGridAdapter = MovieGridAdapter(movies)
+                            rvMovieGrid.adapter = movieGridAdapter
+                        }
+                        rvSidebar.adapter = sidebarAdapter
+
+                        // Select first category by default
+                        if (categories.isNotEmpty()) {
+                            val firstCat = categories[0]
+                            val movies = streamsByCategory[firstCat.category_id] ?: emptyList()
+                            movieGridAdapter = MovieGridAdapter(movies)
+                            rvMovieGrid.adapter = movieGridAdapter
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -246,43 +270,65 @@ class VodNetflixActivity : AppCompatActivity() {
         }
     }
 
-    // Outer Adapter (Linhas verticais)
-    inner class CategoryRowAdapter(
+    // Adapter para a Sidebar
+    inner class SidebarCategoryAdapter(
         private val catList: List<Category>,
-        private val streamsMap: Map<String, List<Stream>>
-    ) : RecyclerView.Adapter<CategoryRowAdapter.RowHolder>() {
+        private val streamsMap: Map<String, List<Stream>>,
+        private val onCategorySelected: (Category) -> Unit
+    ) : RecyclerView.Adapter<SidebarCategoryAdapter.CategoryHolder>() {
 
-        inner class RowHolder(v: View) : RecyclerView.ViewHolder(v) {
-            val tvTitle: TextView = v.findViewById(R.id.tvRowTitle)
-            val rvMovies: RecyclerView = v.findViewById(R.id.rvHorizontalMovies)
+        inner class CategoryHolder(v: View) : RecyclerView.ViewHolder(v) {
+            val tvName: TextView = v.findViewById(R.id.tvCategoryName)
+            val tvCount: TextView = v.findViewById(R.id.tvCategoryCount)
+
             init {
-                rvMovies.layoutManager = LinearLayoutManager(v.context, LinearLayoutManager.HORIZONTAL, false)
+                v.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        tvName.setTextColor(android.graphics.Color.parseColor("#FFCC00"))
+                        tvCount.setTextColor(android.graphics.Color.parseColor("#FFCC00"))
+                        onCategorySelected(catList[adapterPosition])
+                    } else {
+                        tvName.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+                        tvCount.setTextColor(android.graphics.Color.parseColor("#AAAAAA"))
+                    }
+                }
+                v.setOnClickListener {
+                    onCategorySelected(catList[adapterPosition])
+                }
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = RowHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_netflix_row, parent, false)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CategoryHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_sidebar_category, parent, false)
         )
 
-        override fun onBindViewHolder(holder: RowHolder, position: Int) {
+        override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
             val cat = catList[position]
-            holder.tvTitle.text = cat.category_name
-            val movies = streamsMap[cat.category_id] ?: emptyList()
-            holder.rvMovies.adapter = MovieAdapter(movies)
+            holder.tvName.text = cat.category_name
+            val count = streamsMap[cat.category_id]?.size ?: 0
+            holder.tvCount.text = count.toString()
         }
 
         override fun getItemCount() = catList.size
     }
 
-    // Inner Adapter (Filmes horizontais)
-    inner class MovieAdapter(private val movies: List<Stream>) : RecyclerView.Adapter<MovieAdapter.MovieHolder>() {
+    // Adapter para a Grelha de Filmes
+    inner class MovieGridAdapter(private val movies: List<Stream>) : RecyclerView.Adapter<MovieGridAdapter.MovieHolder>() {
 
         inner class MovieHolder(v: View) : RecyclerView.ViewHolder(v) {
             val ivPoster: ImageView = v.findViewById(R.id.ivMoviePoster)
             val tvFallback: TextView = v.findViewById(R.id.tvMovieTitleFallback)
             val pbProgress: ProgressBar = v.findViewById(R.id.pbMovieProgress)
-            
+
             init {
+                v.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        tvFallback.setTextColor(android.graphics.Color.parseColor("#000000"))
+                    } else {
+                        tvFallback.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+                    }
+                }
+                
                 v.setOnClickListener {
                     val s = movies[adapterPosition]
                     if (s.stream_type == "series") {
@@ -315,17 +361,16 @@ class VodNetflixActivity : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_netflix_movie, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_movie_grid, parent, false)
         )
 
         override fun onBindViewHolder(holder: MovieHolder, position: Int) {
             val s = movies[position]
+            holder.tvFallback.text = s.name
+            
             if (s.stream_icon.isNotEmpty()) {
-                holder.tvFallback.visibility = View.GONE
                 Glide.with(holder.ivPoster.context).load(s.stream_icon).into(holder.ivPoster)
             } else {
-                holder.tvFallback.visibility = View.VISIBLE
-                holder.tvFallback.text = s.name
                 holder.ivPoster.setImageDrawable(null)
             }
             
