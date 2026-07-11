@@ -1,6 +1,6 @@
 {
-  "versionCode": 15,
-  "versionName": "2.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.5-debug.apk",
-  "releaseNotes": "v2.5 - Removido o limite de filmes. Agora carrega o catálogo completo em cada categoria!"
+  "versionCode": 16,
+  "versionName": "2.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.6-debug.apk",
+  "releaseNotes": "v2.6 - Ajuste na cor de seleção dos filmes: agora fica com Vermelho Premium (estilo Netflix) e texto branco em vez de preto para ser mais fácil de ler!"
 }

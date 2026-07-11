@@ -323,9 +323,9 @@ class VodNetflixActivity : AppCompatActivity() {
             init {
                 v.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
-                        tvFallback.setTextColor(android.graphics.Color.parseColor("#000000"))
-                    } else {
                         tvFallback.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+                    } else {
+                        tvFallback.setTextColor(android.graphics.Color.parseColor("#DDDDDD"))
                     }
                 }
                 
