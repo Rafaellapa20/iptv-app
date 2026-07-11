@@ -1,6 +1,6 @@
 {
-  "versionCode": 14,
-  "versionName": "2.4",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.4-debug.apk",
-  "releaseNotes": "v2.4 - NOVO DESIGN DO CATÁLOGO: Menu de Categorias lateral em painel e Grelha de Filmes à direita, inspirado num layout clássico. Cores de foco dinâmicas (amarelo) ao usar o comando na TV."
+  "versionCode": 18,
+  "versionName": "2.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.8-debug.apk",
+  "releaseNotes": "v2.8 - Design Premium para Séries: O ecrã dos episódios tem agora o layout de cinema! Capa gigante, fundo desfocado, e toda a informação (Sinopse, Elenco, Realizador, Classificação) antes da lista dos episódios."
 }
