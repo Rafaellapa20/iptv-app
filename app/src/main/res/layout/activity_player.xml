@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Background Secondary Player (For Seamless Zapping & Multi-Screen) -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view_secondary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        android:visibility="invisible"
+        app:resize_mode="fill"
+        app:surface_type="texture_view"
+        app:use_controller="false"/>
+
+    <!-- Foreground Primary Player -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        app:resize_mode="fill"
+        app:surface_type="texture_view"
+        app:use_controller="true"/>
+
+    <!-- Quick Channel List Overlay -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvQuickChannels"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="#CC000000"
+        android:visibility="gone"
+        android:padding="8dp" />
+
+    <!-- Floating Control Buttons (REC & Split Screen) -->
+    <LinearLayout
+        android:id="@+id/llFloatingControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="160dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btnRec"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_button_neon"
+            android:src="@android:drawable/presence_video_online"
+            app:tint="#FF0000"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Gravar Canal" />
+
+        <ImageButton
+            android:id="@+id/btnSplitScreen"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_button_neon"
+            android:src="@android:drawable/ic_menu_crop"
+            app:tint="#00FFFF"
+            android:contentDescription="Multi-Tela" />
+    </LinearLayout>
+
+    <!-- Next Episode Overlay -->
+    <LinearLayout
+        android:id="@+id/llNextEpisode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp"
+        android:background="#DD000000"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvNextCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Próximo Episódio em 10s"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnNextEpisode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="▶ Próximo Episódio"
+            android:background="@drawable/bg_button_neon"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <!-- EPG Overlay -->
+    <LinearLayout
+        android:id="@+id/epgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="80dp"
+        android:background="#99000000"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvEpgProgram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A Carregar Programação..."
+                android:textColor="#00FFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEpgTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="--:-- - --:--"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+                
+            <ProgressBar
+                android:id="@+id/pbEpgProgress"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:progressDrawable="@drawable/bg_progress_red"
+                android:max="100"
+                android:progress="0"/>
+        </LinearLayout>
+
+        <!-- Indicador de Qualidade de Rede -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/ivNetworkStatus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/stat_sys_upload_done"
+                app:tint="#00FF00" />
+
+            <TextView
+                android:id="@+id/tvNetworkSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estável"
+                android:textColor="#00FF00"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</FrameLayout>

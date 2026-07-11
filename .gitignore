@@ -1,0 +1,10 @@
+# Build
+/build/
+/app/build/
+*.iml
+.gradle/
+local.properties
+
+# IDE
+.idea/
+*.hprof

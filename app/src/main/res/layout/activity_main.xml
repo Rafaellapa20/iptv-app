@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D071E"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/ivHeroBanner"
+        android:layout_width="0dp"
+        android:layout_height="450dp"
+        android:layout_marginEnd="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.35"
+        android:scaleType="fitCenter"
+        android:src="@android:color/transparent"
+        android:alpha="0.8"/>
+
+    <!-- Barra Superior -->
+    <HorizontalScrollView
+        android:id="@+id/topBarScroll"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:scrollbars="none"
+        android:background="@drawable/bg_button_neon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sideMenu"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Botão Atualizar -->
+            <LinearLayout
+                android:id="@+id/btnRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ATUALIZAR"
+                    android:textColor="#00FFFF"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_popup_sync"
+                    app:tint="#00FFFF"/>
+            </LinearLayout>
+
+            <!-- VPN Badge -->
+            <TextView
+                android:id="@+id/tvVpnBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒 PROTEÇÃO ATIVA"
+                android:textColor="#00FF55"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_vpn_badge"
+                android:layout_marginEnd="24dp"/>
+            
+            <!-- Configurações -->
+            <LinearLayout
+                android:id="@+id/btnSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="12dp"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚙️ CONFIGURAÇÕES"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#442288" android:layout_marginVertical="8dp" android:layout_marginEnd="12dp"/>
+
+            <!-- Vencimento -->
+            <TextView
+                android:id="@+id/tvVencimento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VENCIMENTO: Undefined"
+                android:textColor="#00FFFF"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Menu Lateral -->
+    <ScrollView
+        android:id="@+id/sideMenu"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingVertical="16dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/logo"
+                android:layout_marginBottom="24dp"
+                android:scaleType="fitCenter"/>
+
+            <Button
+                android:id="@+id/btnTv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="TV"
+                android:background="@drawable/bg_button_neon"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnFilmes"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="VOD"
+                android:background="@drawable/bg_button_neon"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnSeries"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="SÉRIES"
+                android:background="@drawable/bg_button_neon"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnFavorites"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="FAVORITOS"
+                android:background="@drawable/bg_button_neon"
+                android:textColor="#FFFF00"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:layout_marginBottom="16dp"/>
+
+            <Space android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:text="SAIR"
+                android:background="@drawable/bg_button_exit"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Conteúdo Principal (Últimos Lançamentos) -->
+    <ScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/topBarScroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/sideMenu"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <!-- Continuar Assistindo -->
+            <TextView
+                android:id="@+id/tvContinueTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▶️ CONTINUAR ASSISTINDO"
+                android:textColor="#00FFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvContinueWatching"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <!-- Favoritos na Home -->
+            <TextView
+                android:id="@+id/tvFavTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⭐ MEUS FAVORITOS"
+                android:textColor="#FFCC00"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHomeFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <!-- O carrossel de filmes foi removido a pedido do usuário -->
+                
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

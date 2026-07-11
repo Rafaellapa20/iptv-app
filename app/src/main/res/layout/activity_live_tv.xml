@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D071E">
+
+    <!-- Barra Superior -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:gravity="center_vertical"
+        android:background="#1A1A1A"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/nav_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <TextView
+            android:id="@+id/nav_canais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Canais"
+            android:textColor="#FFCC00"
+            android:textStyle="bold"
+            android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <TextView
+            android:id="@+id/nav_filmes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filmes"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <TextView
+            android:id="@+id/nav_series"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Series"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginEnd="20dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <Space android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/nav_search"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_menu_search"
+            app:tint="#FFFFFF"
+            android:focusable="true"
+            android:clickable="true"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackground"/>
+    </LinearLayout>
+
+    <!-- Coluna 1: Categorias -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="250dp"
+        android:layout_height="0dp"
+        android:background="#151515"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Coluna 2: Lista de Canais -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChannels"
+        android:layout_width="350dp"
+        android:layout_height="0dp"
+        android:background="#202020"
+        app:layout_constraintStart_toEndOf="@id/rvCategories"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Coluna 3: Preview e EPG -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#000000"
+        app:layout_constraintStart_toEndOf="@id/rvChannels"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Mini Player -->
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/mini_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#333333"
+            app:use_controller="false"
+            app:resize_mode="fixed_width"/>
+
+        <TextView
+            android:id="@+id/tvPreviewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selecione um canal"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvEpgCurrent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FFFF"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp" />
+
+        <ProgressBar
+            android:id="@+id/pbEpgProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="4dp"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            android:progressTint="#00FFFF"
+            android:visibility="gone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEpgList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnEpgMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EPG"
+            android:layout_gravity="end"
+            android:backgroundTint="#0066FF"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
