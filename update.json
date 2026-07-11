@@ -1,6 +1,6 @@
 {
-  "versionCode": 16,
-  "versionName": "2.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.6-debug.apk",
-  "releaseNotes": "v2.6 - Ajuste na cor de seleção dos filmes: agora fica com Vermelho Premium (estilo Netflix) e texto branco em vez de preto para ser mais fácil de ler!"
+  "versionCode": 18,
+  "versionName": "2.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.8-debug.apk",
+  "releaseNotes": "v2.8 - Design Premium para Séries: O ecrã dos episódios tem agora o layout de cinema! Capa gigante, fundo desfocado, e toda a informação (Sinopse, Elenco, Realizador, Classificação) antes da lista dos episódios."
 }

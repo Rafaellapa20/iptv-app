@@ -15,8 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import com.bumptech.glide.Glide
 import java.net.HttpURLConnection
 import java.net.URL
+import android.widget.ImageView
 
 import okhttp3.Request
 
@@ -24,6 +26,18 @@ class EpisodesActivity : AppCompatActivity() {
 
     private lateinit var rvEpisodes: RecyclerView
     private lateinit var tvSeriesTitle: TextView
+    private lateinit var btnFavorite: ImageView
+    
+    // Novas views de informação
+    private lateinit var ivBackground: ImageView
+    private lateinit var ivPoster: ImageView
+    private lateinit var tvRating: TextView
+    private lateinit var tvReleaseDate: TextView
+    private lateinit var tvGenre: TextView
+    private lateinit var tvPlot: TextView
+    private lateinit var tvDirector: TextView
+    private lateinit var tvCast: TextView
+
     private val episodesList = mutableListOf<Episode>()
     private var username = ""
     private var password = ""
@@ -35,6 +49,16 @@ class EpisodesActivity : AppCompatActivity() {
 
         rvEpisodes = findViewById(R.id.rvEpisodes)
         tvSeriesTitle = findViewById(R.id.tvSeriesTitle)
+        btnFavorite = findViewById(R.id.btnFavorite)
+        
+        ivBackground = findViewById(R.id.ivBackground)
+        ivPoster = findViewById(R.id.ivPoster)
+        tvRating = findViewById(R.id.tvRating)
+        tvReleaseDate = findViewById(R.id.tvReleaseDate)
+        tvGenre = findViewById(R.id.tvGenre)
+        tvPlot = findViewById(R.id.tvPlot)
+        tvDirector = findViewById(R.id.tvDirector)
+        tvCast = findViewById(R.id.tvCast)
         
         // Premium grid for episodes
         rvEpisodes.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 6)
@@ -42,7 +66,20 @@ class EpisodesActivity : AppCompatActivity() {
         username = intent.getStringExtra("USERNAME") ?: ""
         password = intent.getStringExtra("PASSWORD") ?: ""
         seriesId = intent.getStringExtra("SERIES_ID") ?: ""
-        tvSeriesTitle.text = intent.getStringExtra("SERIES_NAME") ?: "EPISÓDIOS"
+        
+        val seriesName = intent.getStringExtra("SERIES_NAME") ?: "EPISÓDIOS"
+        val seriesCover = intent.getStringExtra("SERIES_COVER") ?: ""
+        tvSeriesTitle.text = seriesName
+
+        // Update favorite star icon
+        val isFav = FavoritesManager.isFavorite(this, seriesId)
+        btnFavorite.setImageResource(if (isFav) android.R.drawable.btn_star_big_on else android.R.drawable.btn_star_big_off)
+
+        btnFavorite.setOnClickListener {
+            val nowFav = FavoritesManager.toggleFavorite(this, seriesId, seriesName, seriesCover, "series")
+            btnFavorite.setImageResource(if (nowFav) android.R.drawable.btn_star_big_on else android.R.drawable.btn_star_big_off)
+            Toast.makeText(this, if (nowFav) "Adicionado aos Favoritos" else "Removido dos Favoritos", Toast.LENGTH_SHORT).show()
+        }
 
         fetchEpisodes()
     }
@@ -60,6 +97,35 @@ class EpisodesActivity : AppCompatActivity() {
                     val responseBody = response.body?.string() ?: "{}"
                     val jsonObject = JSONObject(responseBody)
                     
+                    var backdropPath = ""
+                    var seriesName = intent.getStringExtra("SERIES_NAME") ?: "EPISÓDIOS"
+                    var seriesCover = intent.getStringExtra("SERIES_COVER") ?: ""
+                    var plot = ""
+                    var cast = ""
+                    var director = ""
+                    var genre = ""
+                    var rating = ""
+                    var releaseDate = ""
+
+                    if (jsonObject.has("info")) {
+                        val info = jsonObject.getJSONObject("info")
+                        seriesName = info.optString("name", seriesName)
+                        seriesCover = info.optString("cover", seriesCover)
+                        plot = info.optString("plot", "Sem sinopse disponível.")
+                        cast = info.optString("cast", "Desconhecido")
+                        director = info.optString("director", "Desconhecido")
+                        genre = info.optString("genre", "")
+                        rating = info.optString("rating", "")
+                        releaseDate = info.optString("releaseDate", "")
+                        
+                        val backdropNode = info.opt("backdrop_path")
+                        if (backdropNode is org.json.JSONArray && backdropNode.length() > 0) {
+                            backdropPath = backdropNode.getString(0)
+                        } else if (backdropNode is String && backdropNode.isNotEmpty()) {
+                            backdropPath = backdropNode
+                        }
+                    }
+
                     if (jsonObject.has("episodes")) {
                         val episodesObj = jsonObject.getJSONObject("episodes")
                         val seasonsKeys = episodesObj.keys()
@@ -81,6 +147,25 @@ class EpisodesActivity : AppCompatActivity() {
                     }
 
                     withContext(Dispatchers.Main) {
+                        tvSeriesTitle.text = seriesName
+                        tvPlot.text = plot
+                        tvCast.text = "Atores: $cast"
+                        tvDirector.text = "Realizador: $director"
+                        tvGenre.text = genre
+                        tvRating.text = if (rating.isNotEmpty()) "⭐ $rating" else ""
+                        tvReleaseDate.text = releaseDate
+                        
+                        if (seriesCover.isNotEmpty()) {
+                            Glide.with(this@EpisodesActivity).load(seriesCover).into(ivPoster)
+                            if (backdropPath.isEmpty()) {
+                                Glide.with(this@EpisodesActivity).load(seriesCover).into(ivBackground)
+                            }
+                        }
+                        
+                        if (backdropPath.isNotEmpty()) {
+                            Glide.with(this@EpisodesActivity).load(backdropPath).into(ivBackground)
+                        }
+
                         rvEpisodes.adapter = EpisodeAdapter(episodesList) { episode ->
                             val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
                             
