@@ -1,6 +1,6 @@
 {
-  "versionCode": 9,
-  "versionName": "1.9",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v1.9-debug.apk",
-  "releaseNotes": "CORREÇÕES: Botão OK na zona de Login; Scrolling e adaptação de ecrã perfeito no menu de Definições (Telemóvel e TV)."
+  "versionCode": 12,
+  "versionName": "2.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.2-debug.apk",
+  "releaseNotes": "MODO DEUS ACTIVADO: Animação de transição dos filmes; Botão Favoritos (❤) nos detalhes; Linha 'A Minha Lista'; Auto-play próximo episódio; Barra EPG na TV em direto!"
 }
