@@ -1,6 +1,6 @@
 {
-  "versionCode": 13,
-  "versionName": "2.3",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.3-debug.apk",
-  "releaseNotes": "v2.3 - Filmes por Género (Ação, Comédia, Drama...) e Séries por Plataforma (Netflix, HBO, Disney+). Favoritos, Próximo Episódio automático, Barra EPG, Animação Hollywood."
+  "versionCode": 14,
+  "versionName": "2.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v2.4-debug.apk",
+  "releaseNotes": "v2.4 - NOVO DESIGN DO CATÁLOGO: Menu de Categorias lateral em painel e Grelha de Filmes à direita, inspirado num layout clássico. Cores de foco dinâmicas (amarelo) ao usar o comando na TV."
 }
