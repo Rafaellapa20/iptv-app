@@ -77,12 +77,12 @@
                 android:nextFocusLeft="@id/etPassword"/>
         </FrameLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="OK - ENTRAR"
-            android:backgroundTint="#FF007F"
+            android:background="@drawable/selector_button_login"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:focusable="true"
