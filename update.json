@@ -1,6 +1,6 @@
 {
-  "versionCode": 23,
-  "versionName": "3.3",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.3-debug.apk",
-  "releaseNotes": "v3.3 - Seletor de Temporadas (Estilo Netflix): Agora existe uma lista de botões por cima dos episódios para escolher qual a temporada que quer ver. A grelha só mostra os episódios da temporada selecionada, tornando a navegação super rápida!"
+  "versionCode": 24,
+  "versionName": "3.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.4-debug.apk",
+  "releaseNotes": "v3.4 - Picture-in-Picture (PiP) Ativo! Enquanto estiver a ver Televisão (Canais ao Vivo), se carregar na tecla Voltar, o ecrã encolhe para um canto permitindo navegar por outras secções sem parar a emissão."
 }

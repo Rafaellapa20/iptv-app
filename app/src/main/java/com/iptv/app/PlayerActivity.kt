@@ -1,5 +1,6 @@
 package com.iptv.app
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -613,8 +614,15 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveCurrentProgress()
-        player1?.pause()
-        player2?.pause()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            if (!isInPictureInPictureMode) {
+                player1?.pause()
+                player2?.pause()
+            }
+        } else {
+            player1?.pause()
+            player2?.pause()
+        }
     }
 
     override fun onStop() {
@@ -632,5 +640,42 @@ class PlayerActivity : AppCompatActivity() {
         player2?.release()
         stopRecording()
         System.gc()
+    }
+
+    override fun onBackPressed() {
+        if (!isMovieOrEpisode && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val params = android.app.PictureInPictureParams.Builder().build()
+            enterPictureInPictureMode(params)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: android.content.res.Configuration) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (isInPictureInPictureMode) {
+            playerView1.useController = false
+            playerView2.useController = false
+            llNextEpisode.visibility = View.GONE
+            rvQuickChannels.visibility = View.GONE
+        } else {
+            playerView1.useController = true
+            playerView2.useController = true
+            if (!isMovieOrEpisode) rvQuickChannels.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent != null) {
+            currentStreamUrl = intent.getStringExtra("VIDEO_URL") ?: ""
+            streamId = intent.getStringExtra("STREAM_ID")
+            isMovieOrEpisode = (intent.getStringExtra("TYPE") == "vod" || intent.getStringExtra("TYPE") == "series")
+            
+            if (currentStreamUrl.isNotEmpty()) {
+                playUrlInPlayer(getActivePlayer(), currentStreamUrl)
+            }
+        }
     }
 }
