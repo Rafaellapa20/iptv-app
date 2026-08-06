@@ -25,6 +25,7 @@ import okhttp3.Request
 class EpisodesActivity : AppCompatActivity() {
 
     private lateinit var rvEpisodes: RecyclerView
+    private lateinit var rvSeasons: RecyclerView
     private lateinit var tvSeriesTitle: TextView
     private lateinit var btnFavorite: ImageView
     
@@ -48,6 +49,7 @@ class EpisodesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_episodes)
 
         rvEpisodes = findViewById(R.id.rvEpisodes)
+        rvSeasons = findViewById(R.id.rvSeasons)
         tvSeriesTitle = findViewById(R.id.tvSeriesTitle)
         btnFavorite = findViewById(R.id.btnFavorite)
         
@@ -62,6 +64,9 @@ class EpisodesActivity : AppCompatActivity() {
         
         // Premium grid for episodes
         rvEpisodes.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, 6)
+        
+        // Horizontal list for seasons
+        rvSeasons.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
 
         username = intent.getStringExtra("USERNAME") ?: ""
         password = intent.getStringExtra("PASSWORD") ?: ""
@@ -126,6 +131,8 @@ class EpisodesActivity : AppCompatActivity() {
                         }
                     }
 
+                    val seasonsList = mutableListOf<String>()
+
                     if (jsonObject.has("episodes")) {
                         val episodesObj = jsonObject.getJSONObject("episodes")
                         val seasonsKeys = episodesObj.keys().asSequence().toList()
@@ -133,6 +140,7 @@ class EpisodesActivity : AppCompatActivity() {
                         val sortedSeasons = seasonsKeys.sortedBy { it.toIntOrNull() ?: Int.MAX_VALUE }
                         
                         for (seasonNum in sortedSeasons) {
+                            seasonsList.add(seasonNum)
                             val episodesArray = episodesObj.getJSONArray(seasonNum)
                             val seasonEpisodes = mutableListOf<Episode>()
                             
@@ -144,7 +152,7 @@ class EpisodesActivity : AppCompatActivity() {
                                 var ext = epObj.optString("container_extension", "mp4")
                                 if (ext.isEmpty()) ext = "mp4"
                                 
-                                seasonEpisodes.add(Episode(id, epNum, "T$seasonNum - $title", ext))
+                                seasonEpisodes.add(Episode(id, epNum, "T$seasonNum - $title", ext, seasonNum))
                             }
                             
                             seasonEpisodes.sortBy { it.episode_num }
@@ -172,28 +180,38 @@ class EpisodesActivity : AppCompatActivity() {
                             Glide.with(this@EpisodesActivity).load(backdropPath).into(ivBackground)
                         }
 
-                        rvEpisodes.adapter = EpisodeAdapter(episodesList) { position ->
-                            val episode = episodesList[position]
-                            val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
-                            
-                            val urls = ArrayList<String>()
-                            for (ep in episodesList) {
-                                urls.add("http://nelitoplay.top:80/series/$username/$password/${ep.id}.${ep.container_extension}")
+                        val updateEpisodesForSeason = { season: String ->
+                            val filteredEpisodes = episodesList.filter { it.seasonNum == season }
+                            rvEpisodes.adapter = EpisodeAdapter(filteredEpisodes) { episode ->
+                                val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
+                                
+                                val urls = ArrayList<String>()
+                                for (ep in episodesList) {
+                                    urls.add("http://nelitoplay.top:80/series/$username/$password/${ep.id}.${ep.container_extension}")
+                                }
+                                
+                                val currentIndex = episodesList.indexOf(episode)
+                                
+                                intent.putExtra("VIDEO_URL", urls[currentIndex])
+                                intent.putStringArrayListExtra("EPISODE_URLS", urls)
+                                intent.putExtra("CURRENT_INDEX", currentIndex)
+                                intent.putExtra("TITLE", episode.title)
+                                intent.putExtra("COVER", intent.getStringExtra("SERIES_COVER") ?: "")
+                                intent.putExtra("TYPE", "series")
+                                intent.putExtra("STREAM_ID", seriesId)
+                                intent.putExtra("USERNAME", username)
+                                intent.putExtra("PASSWORD", password)
+                                
+                                startActivity(intent)
                             }
-                            
-                            val currentIndex = position
-                            
-                            intent.putExtra("VIDEO_URL", urls[currentIndex])
-                            intent.putStringArrayListExtra("EPISODE_URLS", urls)
-                            intent.putExtra("CURRENT_INDEX", currentIndex)
-                            intent.putExtra("TITLE", episode.title)
-                            intent.putExtra("COVER", intent.getStringExtra("SERIES_COVER") ?: "")
-                            intent.putExtra("TYPE", "series")
-                            intent.putExtra("STREAM_ID", seriesId)
-                            intent.putExtra("USERNAME", username)
-                            intent.putExtra("PASSWORD", password)
-                            
-                            startActivity(intent)
+                        }
+
+                        if (seasonsList.isNotEmpty()) {
+                            rvSeasons.adapter = SeasonAdapter(seasonsList) { selectedSeason ->
+                                updateEpisodesForSeason(selectedSeason)
+                            }
+                            // Select first season initially
+                            updateEpisodesForSeason(seasonsList[0])
                         }
                     }
                 } else {
@@ -211,13 +229,13 @@ class EpisodesActivity : AppCompatActivity() {
 
     inner class EpisodeAdapter(
         private val list: List<Episode>,
-        private val onClick: (Int) -> Unit
+        private val onClick: (Episode) -> Unit
     ) : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvName)
             init {
-                view.setOnClickListener { onClick(adapterPosition) }
+                view.setOnClickListener { onClick(list[adapterPosition]) }
             }
         }
 
@@ -228,6 +246,39 @@ class EpisodesActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.tvName.text = list[position].title
+        }
+
+        override fun getItemCount() = list.size
+    }
+
+    inner class SeasonAdapter(
+        private val list: List<String>,
+        private val onClick: (String) -> Unit
+    ) : RecyclerView.Adapter<SeasonAdapter.ViewHolder>() {
+
+        private var selectedPosition = 0
+
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val tvSeasonName: TextView = view.findViewById(R.id.tvSeasonName)
+            init {
+                view.setOnClickListener { 
+                    val oldPos = selectedPosition
+                    selectedPosition = adapterPosition
+                    notifyItemChanged(oldPos)
+                    notifyItemChanged(selectedPosition)
+                    onClick(list[adapterPosition]) 
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_season, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.tvSeasonName.text = "Temporada ${list[position]}"
+            holder.tvSeasonName.isSelected = position == selectedPosition
         }
 
         override fun getItemCount() = list.size

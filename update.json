@@ -1,6 +1,6 @@
 {
-  "versionCode": 22,
-  "versionName": "3.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.2-debug.apk",
-  "releaseNotes": "v3.2 - Correção nas Séries: Os episódios e temporadas aparecem agora devidamente ordenados (por número) e foi resolvido o problema de alguns episódios não abrirem corretamente."
+  "versionCode": 23,
+  "versionName": "3.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.3-debug.apk",
+  "releaseNotes": "v3.3 - Seletor de Temporadas (Estilo Netflix): Agora existe uma lista de botões por cima dos episódios para escolher qual a temporada que quer ver. A grelha só mostra os episódios da temporada selecionada, tornando a navegação super rápida!"
 }

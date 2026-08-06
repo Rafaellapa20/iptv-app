@@ -18,5 +18,6 @@ data class Episode(
     val id: String,
     val episode_num: Int,
     val title: String,
-    val container_extension: String
+    val container_extension: String,
+    val seasonNum: String = ""
 )

@@ -144,6 +144,17 @@
                 app:layout_constraintTop_toBottomOf="@id/tvDirector"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- RecyclerView das Temporadas -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSeasons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCast" />
+
             <!-- RecyclerView dos Episódios -->
             <TextView
                 android:id="@+id/tvEpisodesHeader"
@@ -153,9 +164,9 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvCast" />
+                app:layout_constraintTop_toBottomOf="@id/rvSeasons" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvEpisodes"
