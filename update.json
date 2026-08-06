@@ -1,6 +1,6 @@
 {
-  "versionCode": 20,
-  "versionName": "3.0",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.0-debug.apk",
-  "releaseNotes": "v3.0 - Correção no Login: O botão 'OK - ENTRAR' agora fica em destaque (Borda branca) quando navegado com o comando, para ser mais fácil de ver."
+  "versionCode": 22,
+  "versionName": "3.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.2-debug.apk",
+  "releaseNotes": "v3.2 - Correção nas Séries: Os episódios e temporadas aparecem agora devidamente ordenados (por número) e foi resolvido o problema de alguns episódios não abrirem corretamente."
 }

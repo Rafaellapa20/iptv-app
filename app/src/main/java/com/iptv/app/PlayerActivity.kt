@@ -258,6 +258,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun changeChannel(isNext: Boolean) {
         val urls = intent.getStringArrayListExtra("CHANNEL_URLS")
+        val ids = intent.getStringArrayListExtra("CHANNEL_IDS")
+        val names = intent.getStringArrayListExtra("CHANNEL_NAMES")
         var currentIndex = intent.getIntExtra("CURRENT_INDEX", -1)
 
         if (urls != null && currentIndex >= 0) {
@@ -270,6 +272,23 @@ class PlayerActivity : AppCompatActivity() {
 
             intent.putExtra("CURRENT_INDEX", currentIndex)
             currentStreamUrl = urls[currentIndex]
+            
+            if (ids != null && names != null && currentIndex < ids.size && currentIndex < names.size) {
+                streamId = ids[currentIndex]
+                val name = names[currentIndex]
+                intent.putExtra("STREAM_ID", streamId)
+                intent.putExtra("TITLE", name)
+                
+                LiveTvActivity.lastPlayedStreamId = streamId
+                LiveTvActivity.lastPlayedStreamName = name
+                
+                val prefs = getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+                prefs.edit()
+                    .putString("LAST_STREAM_ID", streamId)
+                    .putString("LAST_STREAM_NAME", name)
+                    .apply()
+            }
+
             Toast.makeText(this, "A sintonizar...", Toast.LENGTH_SHORT).show()
 
             if (isMultiScreen) {
@@ -559,7 +578,7 @@ class PlayerActivity : AppCompatActivity() {
                     return true
                 }
                 KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN -> {
-                    changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_UP)
+                    changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
                     return true
                 }
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {

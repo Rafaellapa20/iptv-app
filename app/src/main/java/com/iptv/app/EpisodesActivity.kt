@@ -128,21 +128,27 @@ class EpisodesActivity : AppCompatActivity() {
 
                     if (jsonObject.has("episodes")) {
                         val episodesObj = jsonObject.getJSONObject("episodes")
-                        val seasonsKeys = episodesObj.keys()
+                        val seasonsKeys = episodesObj.keys().asSequence().toList()
                         
-                        while(seasonsKeys.hasNext()) {
-                            val seasonNum = seasonsKeys.next()
+                        val sortedSeasons = seasonsKeys.sortedBy { it.toIntOrNull() ?: Int.MAX_VALUE }
+                        
+                        for (seasonNum in sortedSeasons) {
                             val episodesArray = episodesObj.getJSONArray(seasonNum)
+                            val seasonEpisodes = mutableListOf<Episode>()
                             
                             for (i in 0 until episodesArray.length()) {
                                 val epObj = episodesArray.getJSONObject(i)
                                 val id = epObj.getString("id")
                                 val epNum = epObj.optInt("episode_num", 0)
                                 val title = epObj.optString("title", "Episódio $epNum")
-                                val ext = epObj.optString("container_extension", "mp4")
+                                var ext = epObj.optString("container_extension", "mp4")
+                                if (ext.isEmpty()) ext = "mp4"
                                 
-                                episodesList.add(Episode(id, epNum, "T$seasonNum - $title", ext))
+                                seasonEpisodes.add(Episode(id, epNum, "T$seasonNum - $title", ext))
                             }
+                            
+                            seasonEpisodes.sortBy { it.episode_num }
+                            episodesList.addAll(seasonEpisodes)
                         }
                     }
 
@@ -166,7 +172,8 @@ class EpisodesActivity : AppCompatActivity() {
                             Glide.with(this@EpisodesActivity).load(backdropPath).into(ivBackground)
                         }
 
-                        rvEpisodes.adapter = EpisodeAdapter(episodesList) { episode ->
+                        rvEpisodes.adapter = EpisodeAdapter(episodesList) { position ->
+                            val episode = episodesList[position]
                             val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
                             
                             val urls = ArrayList<String>()
@@ -174,7 +181,7 @@ class EpisodesActivity : AppCompatActivity() {
                                 urls.add("http://nelitoplay.top:80/series/$username/$password/${ep.id}.${ep.container_extension}")
                             }
                             
-                            val currentIndex = episodesList.indexOf(episode)
+                            val currentIndex = position
                             
                             intent.putExtra("VIDEO_URL", urls[currentIndex])
                             intent.putStringArrayListExtra("EPISODE_URLS", urls)
@@ -204,13 +211,13 @@ class EpisodesActivity : AppCompatActivity() {
 
     inner class EpisodeAdapter(
         private val list: List<Episode>,
-        private val onClick: (Episode) -> Unit
+        private val onClick: (Int) -> Unit
     ) : RecyclerView.Adapter<EpisodeAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvName)
             init {
-                view.setOnClickListener { onClick(list[adapterPosition]) }
+                view.setOnClickListener { onClick(adapterPosition) }
             }
         }
 

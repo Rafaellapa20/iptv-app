@@ -64,6 +64,11 @@ class LiveTvActivity : AppCompatActivity() {
         rvCategories.layoutManager = LinearLayoutManager(this)
         rvChannels.layoutManager = LinearLayoutManager(this)
 
+        val prefs = getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+        lastPlayedStreamId = prefs.getString("LAST_STREAM_ID", null)
+        lastPlayedStreamName = prefs.getString("LAST_STREAM_NAME", null)
+        selectedCategoryId = prefs.getString("LAST_CATEGORY_ID", "") ?: ""
+
         setupTopNavigation()
 
         initializeMiniPlayer()
@@ -153,8 +158,11 @@ class LiveTvActivity : AppCompatActivity() {
                         }
                         rvCategories.adapter = adapter
                         
-                        val defaultCat = categories.find { it.category_name.lowercase().contains("portugal") } ?: 
+                        var defaultCat = categories.find { it.category_id == selectedCategoryId }
+                        if (defaultCat == null) {
+                            defaultCat = categories.find { it.category_name.lowercase().contains("portugal") } ?: 
                                        if (categories.size > 2) categories[2] else categories[0]
+                        }
                         
                         selectedCategoryId = defaultCat.category_id
                         fetchChannels(selectedCategoryId)
@@ -283,7 +291,14 @@ class LiveTvActivity : AppCompatActivity() {
         inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val name: TextView = v.findViewById(R.id.tvCategoryName)
             val count: TextView = v.findViewById(R.id.tvCategoryCount)
-            init { v.setOnClickListener { onClick(list[adapterPosition]) } }
+            init { 
+                v.setOnClickListener { 
+                    val cat = list[adapterPosition]
+                    onClick(cat)
+                    val prefs = v.context.getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+                    prefs.edit().putString("LAST_CATEGORY_ID", cat.category_id).apply()
+                } 
+            }
         }
 
         override fun onCreateViewHolder(p: ViewGroup, t: Int) = ViewHolder(
@@ -316,17 +331,29 @@ class LiveTvActivity : AppCompatActivity() {
                     lastPlayedStreamId = s.stream_id
                     lastPlayedStreamName = s.name
                     
+                    val prefs = v.context.getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+                    prefs.edit()
+                        .putString("LAST_STREAM_ID", s.stream_id)
+                        .putString("LAST_STREAM_NAME", s.name)
+                        .apply()
+                    
                     val intent = Intent(this@LiveTvActivity, PlayerActivity::class.java)
                     val streamUrl = "http://nelitoplay.top:80/live/$username/$password/${s.stream_id}.ts"
                     
                     val urlsList = ArrayList<String>()
+                    val idsList = ArrayList<String>()
+                    val namesList = ArrayList<String>()
                     var currentIndex = -1
                     for ((index, item) in list.withIndex()) {
                         urlsList.add("http://nelitoplay.top:80/live/$username/$password/${item.stream_id}.ts")
+                        idsList.add(item.stream_id)
+                        namesList.add(item.name)
                         if (item.stream_id == s.stream_id) currentIndex = index
                     }
                     
                     intent.putStringArrayListExtra("CHANNEL_URLS", urlsList)
+                    intent.putStringArrayListExtra("CHANNEL_IDS", idsList)
+                    intent.putStringArrayListExtra("CHANNEL_NAMES", namesList)
                     intent.putExtra("CURRENT_INDEX", currentIndex)
                     intent.putExtra("VIDEO_URL", streamUrl)
                     intent.putExtra("STREAM_ID", s.stream_id)
@@ -365,6 +392,10 @@ class LiveTvActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val prefs = getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+        lastPlayedStreamId = prefs.getString("LAST_STREAM_ID", lastPlayedStreamId)
+        lastPlayedStreamName = prefs.getString("LAST_STREAM_NAME", lastPlayedStreamName)
+        
         if (lastPlayedStreamId != null) {
             tvPreviewName.text = lastPlayedStreamName
             fetchShortEpg(lastPlayedStreamId!!)
