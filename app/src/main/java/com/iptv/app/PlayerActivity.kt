@@ -170,13 +170,10 @@ class PlayerActivity : AppCompatActivity() {
                         if (this@apply == getActivePlayer()) {
                             updateNetworkStatus(playbackState)
                         }
-                        
-                        // Zapping Seamless Logic
+                        // Zapping Seamless Logic removida para evitar "soluços" no hardware das boxes TV
+                        // Mantemos apenas a atualização de estado
                         if (playbackState == androidx.media3.common.Player.STATE_READY) {
-                            if (!isMultiScreen && this@apply != getActivePlayer()) {
-                                // O player secundário carregou! Hora de trocar a visibilidade
-                                swapPlayers()
-                            }
+                            // Pronto a tocar
                         }
                     }
                 })
@@ -296,9 +293,11 @@ class PlayerActivity : AppCompatActivity() {
                 // Em Multi-tela, mudamos o canal no player que está focado/ativo
                 playUrlInPlayer(getActivePlayer(), currentStreamUrl)
             } else {
-                // Seamless Zapping! Carregar no player inativo, que está invisível.
-                val inactive = getInactivePlayer()
-                playUrlInPlayer(inactive, currentStreamUrl)
+                // Desativado o Seamless Zapping para poupar o CPU da Box TV e acabar com os "soluços"
+                val active = getActivePlayer()
+                active.stop()
+                active.clearMediaItems()
+                playUrlInPlayer(active, currentStreamUrl)
             }
         }
     }
@@ -643,12 +642,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (!isMovieOrEpisode && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val params = android.app.PictureInPictureParams.Builder().build()
-            enterPictureInPictureMode(params)
-        } else {
-            super.onBackPressed()
-        }
+        super.onBackPressed()
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: android.content.res.Configuration) {
