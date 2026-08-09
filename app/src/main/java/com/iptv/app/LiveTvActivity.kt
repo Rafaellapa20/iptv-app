@@ -415,6 +415,11 @@ class LiveTvActivity : AppCompatActivity() {
         }
     }
 
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        miniPlayer?.pause()
+    }
+
     override fun onPause() {
         super.onPause()
         miniPlayer?.pause()

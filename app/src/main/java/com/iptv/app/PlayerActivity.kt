@@ -626,6 +626,13 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        saveCurrentProgress()
+        player1?.pause()
+        player2?.pause()
+    }
+
     override fun onPause() {
         super.onPause()
         saveCurrentProgress()
