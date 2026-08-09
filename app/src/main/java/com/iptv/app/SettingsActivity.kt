@@ -22,6 +22,15 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        val tvAppVersion = findViewById<TextView>(R.id.tvAppVersion)
+        try {
+            val pInfo = packageManager.getPackageInfo(packageName, 0)
+            val version = pInfo.versionName
+            tvAppVersion.text = "Versão atual: $version"
+        } catch (e: Exception) {
+            tvAppVersion.text = "Versão: Desconhecida"
+        }
+
 
 
         val btnClearCache = findViewById<Button>(R.id.btnClearCache)
