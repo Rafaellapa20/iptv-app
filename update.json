@@ -1,6 +1,6 @@
 {
-  "versionCode": 25,
-  "versionName": "3.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.5-debug.apk",
-  "releaseNotes": "v3.5 - Correção de bugs:\n- Resolvido o problema de soluços/encravar ao trocar de canal (otimização de descodificação para boxes TV).\n- O botão 'Voltar' durante a TV ao vivo fecha novamente o vídeo e regressa ao menu dos canais em vez de ativar a janela pequena."
+  "versionCode": 26,
+  "versionName": "3.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.6-debug.apk",
+  "releaseNotes": "v3.6 - Premium Update:\n- Pesquisa Global Unificada (Pesquise tudo no mesmo sítio).\n- Suporte a Picture-in-Picture (PiP).\n- Modo Binge-Watching (passa ao próximo episódio automaticamente nos últimos 15s).\n- Interface de Player Netflix e vários melhoramentos visuais."
 }
