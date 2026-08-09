@@ -1,6 +1,6 @@
 {
-  "versionCode": 33,
-  "versionName": "4.3",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.3-debug.apk",
-  "releaseNotes": "v4.3 - Correção de Atualizações OTA:\n- Resolvido um problema onde a aplicação instalava a versão anterior continuamente e pedia sempre para atualizar.\n- A partir desta versão, o atualizador automático funciona perfeitamente à primeira."
+  "versionCode": 34,
+  "versionName": "4.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.4-debug.apk",
+  "releaseNotes": "v4.4 - Correção Definitiva de Atualizações:\n- Adicionado sistema inteligente que fura a memória cache (Cache-Busting) do servidor.\n- A partir de agora, a aplicação nunca mais ficará presa num loop de transferências falsas quando a rede estiver lenta."
 }

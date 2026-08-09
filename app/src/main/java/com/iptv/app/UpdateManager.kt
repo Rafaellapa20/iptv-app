@@ -25,7 +25,9 @@ object UpdateManager {
     fun checkForUpdates(context: Context, showNoUpdateToast: Boolean = false) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val request = Request.Builder().url(UPDATE_JSON_URL).build()
+                // Adiciona timestamp para furar a cache do GitHub Raw
+                val cacheBusterUrl = "$UPDATE_JSON_URL?t=${System.currentTimeMillis()}"
+                val request = Request.Builder().url(cacheBusterUrl).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
                 
                 if (response.isSuccessful) {
