@@ -111,7 +111,14 @@ class PlayerActivity : AppCompatActivity() {
         currentStreamUrl = intent.getStringExtra("VIDEO_URL") ?: ""
         
         // Initialize Players
-        player1 = createExoPlayer()
+        val isSeamlessLive = type == "live" && PlayerManager.sharedPlayer != null
+        if (isSeamlessLive) {
+            player1 = PlayerManager.getPlayer(this)
+            // Remover listeners antigos para evitar memory leaks ou duplicados
+            player1?.clearVideoSurface() 
+        } else {
+            player1 = createExoPlayer()
+        }
         player2 = createExoPlayer()
         
         playerView1.player = player1
@@ -125,7 +132,14 @@ class PlayerActivity : AppCompatActivity() {
         playerView2.setShowPreviousButton(false)
 
         if (currentStreamUrl.isNotEmpty()) {
-            playUrlInPlayer(player1!!, currentStreamUrl)
+            if (isSeamlessLive && PlayerManager.currentStreamId == streamId && player1!!.playbackState == androidx.media3.common.Player.STATE_READY) {
+                // Já está a tocar este canal do mini-player, não vamos parar!
+                // Apenas adicionamos o listener para a UI do PlayerActivity
+                addPlayerListener(player1!!)
+                player1!!.playWhenReady = true
+            } else {
+                playUrlInPlayer(player1!!, currentStreamUrl)
+            }
             playerView1.visibility = View.VISIBLE
             playerView2.visibility = View.INVISIBLE
             activePlayerNum = 1
@@ -165,19 +179,18 @@ class PlayerActivity : AppCompatActivity() {
             .setLoadControl(loadControl)
             .setVideoScalingMode(androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
             .build().apply {
-                addListener(object : androidx.media3.common.Player.Listener {
-                    override fun onPlaybackStateChanged(playbackState: Int) {
-                        if (this@apply == getActivePlayer()) {
-                            updateNetworkStatus(playbackState)
-                        }
-                        // Zapping Seamless Logic removida para evitar "soluços" no hardware das boxes TV
-                        // Mantemos apenas a atualização de estado
-                        if (playbackState == androidx.media3.common.Player.STATE_READY) {
-                            // Pronto a tocar
-                        }
-                    }
-                })
+                addPlayerListener(this)
             }
+    }
+
+    private fun addPlayerListener(exoPlayer: ExoPlayer) {
+        exoPlayer.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (exoPlayer == getActivePlayer()) {
+                    updateNetworkStatus(playbackState)
+                }
+            }
+        })
     }
 
     private fun getActivePlayer(): ExoPlayer = if (activePlayerNum == 1) player1!! else player2!!
@@ -232,7 +245,7 @@ class PlayerActivity : AppCompatActivity() {
                     val p = getActivePlayer()
                     val duration = p.duration
                     val currentPos = p.currentPosition
-                    if (duration > 0 && duration - currentPos < 60000) { // Faltam 60 segundos
+                    if (duration > 0 && duration - currentPos < 15000) { // Faltam 15 segundos
                         if (!isNextEpisodeOverlayVisible) {
                             isNextEpisodeOverlayVisible = true
                             llNextEpisode.visibility = View.VISIBLE
@@ -595,16 +608,19 @@ class PlayerActivity : AppCompatActivity() {
             val p = getActivePlayer()
             val currentPos = p.currentPosition
             val duration = p.duration
-            val title = intent.getStringExtra("TITLE") ?: "Vídeo sem título"
-            val cover = intent.getStringExtra("COVER") ?: ""
             val type = intent.getStringExtra("TYPE") ?: "vod"
             
             if (duration > 0) {
                 if (currentPos > duration * 0.9) {
                     ProgressManager.markAsSeen(this, streamId!!)
-                    ProgressManager.saveProgressFull(this, streamId!!, title, cover, type, 0L, duration)
+                    ProgressManager.saveProgressFull(this, streamId!!, intent.getStringExtra("TITLE") ?: "", intent.getStringExtra("COVER") ?: "", type, 0L, duration)
+                } else if (currentPos > 5000) { // Salvar após 5 seg
+                    val cover = intent.getStringExtra("COVER") ?: ""
+                    val title = intent.getStringExtra("TITLE") ?: ""
+                    val episodeIndex = intent.getIntExtra("CURRENT_INDEX", 0)
+                    ProgressManager.saveProgressFull(this, streamId!!, title, cover, type, currentPos, duration, episodeIndex)
                 } else {
-                    ProgressManager.saveProgressFull(this, streamId!!, title, cover, type, currentPos, duration)
+                    ProgressManager.saveProgressFull(this, streamId!!, intent.getStringExtra("TITLE") ?: "", intent.getStringExtra("COVER") ?: "", type, currentPos, duration)
                 }
             }
         }
@@ -627,7 +643,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         saveCurrentProgress()
-        player1?.release()
+        if (player1 != PlayerManager.sharedPlayer) {
+            player1?.release()
+        }
+        playerView1.player = null
         player2?.release()
         stopRecording()
     }
@@ -635,7 +654,9 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         progressJob?.cancel()
-        player1?.release()
+        if (player1 != PlayerManager.sharedPlayer) {
+            player1?.release()
+        }
         player2?.release()
         stopRecording()
         System.gc()
@@ -643,6 +664,19 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val p = getActivePlayer()
+            if (p.isPlaying) {
+                val params = android.app.PictureInPictureParams.Builder()
+                // Optionally set aspect ratio
+                // params.setAspectRatio(android.util.Rational(16, 9))
+                enterPictureInPictureMode(params.build())
+            }
+        }
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: android.content.res.Configuration) {

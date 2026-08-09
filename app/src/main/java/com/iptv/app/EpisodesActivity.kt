@@ -210,8 +210,36 @@ class EpisodesActivity : AppCompatActivity() {
                             rvSeasons.adapter = SeasonAdapter(seasonsList) { selectedSeason ->
                                 updateEpisodesForSeason(selectedSeason)
                             }
-                            // Select first season initially
-                            updateEpisodesForSeason(seasonsList[0])
+                            // Verificar se há progresso salvo para Auto-Resume
+                            val recents = ProgressManager.getRecentProgressList(this@EpisodesActivity)
+                            val match = recents.find { it.streamId == seriesId }
+                            
+                            if (match != null && match.position > 0 && match.episodeIndex >= 0 && match.episodeIndex < episodesList.size) {
+                                // Auto-resume para o último episódio visto
+                                val ep = episodesList[match.episodeIndex]
+                                updateEpisodesForSeason(ep.seasonNum) // seleciona a temporada certa
+                                
+                                val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
+                                val urls = ArrayList<String>()
+                                for (e in episodesList) {
+                                    urls.add("http://nelitoplay.top:80/series/$username/$password/${e.id}.${e.container_extension}")
+                                }
+                                
+                                intent.putExtra("VIDEO_URL", urls[match.episodeIndex])
+                                intent.putStringArrayListExtra("EPISODE_URLS", urls)
+                                intent.putExtra("CURRENT_INDEX", match.episodeIndex)
+                                intent.putExtra("TITLE", ep.title)
+                                intent.putExtra("COVER", seriesCover)
+                                intent.putExtra("TYPE", "series")
+                                intent.putExtra("STREAM_ID", seriesId)
+                                intent.putExtra("USERNAME", username)
+                                intent.putExtra("PASSWORD", password)
+                                
+                                startActivity(intent)
+                            } else {
+                                // Select first season initially se não houver resume
+                                updateEpisodesForSeason(seasonsList[0])
+                            }
                         }
                     }
                 } else {

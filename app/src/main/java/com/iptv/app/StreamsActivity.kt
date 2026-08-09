@@ -23,6 +23,8 @@ import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import jp.wasabeef.glide.transformations.BlurTransformation
 
 import okhttp3.Request
 
@@ -215,6 +217,24 @@ class StreamsActivity : AppCompatActivity() {
             
             init {
                 view.setOnClickListener { onClick(list[adapterPosition]) }
+                
+                view.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        val position = adapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val stream = list[position]
+                            val ivBackgroundBlur = this@StreamsActivity.findViewById<ImageView>(R.id.ivBackgroundBlur)
+                            if (stream.stream_icon.isNotEmpty() && ivBackgroundBlur != null) {
+                                Glide.with(this@StreamsActivity)
+                                    .load(stream.stream_icon)
+                                    .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
+                                    .into(ivBackgroundBlur)
+                            } else {
+                                ivBackgroundBlur?.setImageResource(0)
+                            }
+                        }
+                    }
+                }
                 
                 // Adicionar aos favoritos ao manter pressionado (Long Click)
                 view.setOnLongClickListener {

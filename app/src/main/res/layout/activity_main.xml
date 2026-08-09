@@ -41,6 +41,33 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="16dp">
 
+            <!-- Botão Pesquisa -->
+            <LinearLayout
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PESQUISAR"
+                    android:textColor="#00FFFF"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_menu_search"
+                    app:tint="#00FFFF"/>
+            </LinearLayout>
+
             <!-- Botão Atualizar -->
             <LinearLayout
                 android:id="@+id/btnRefresh"

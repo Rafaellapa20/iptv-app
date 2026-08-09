@@ -96,6 +96,13 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
+        findViewById<android.view.View>(R.id.btnSearch).setOnClickListener {
+            val intent = Intent(this, GlobalSearchActivity::class.java)
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+        }
+
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)

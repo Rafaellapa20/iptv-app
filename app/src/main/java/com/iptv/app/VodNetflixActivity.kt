@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,8 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.coroutines.*
 import okhttp3.Request
 import org.json.JSONArray
@@ -57,6 +60,36 @@ class VodNetflixActivity : AppCompatActivity() {
 
         setupTopNavigation()
         fetchData()
+    }
+
+    private fun updateHeroBanner(stream: Stream) {
+        val ivBackgroundBlur = findViewById<ImageView>(R.id.ivBackgroundBlur)
+        val llHeroBanner = findViewById<LinearLayout>(R.id.llHeroBanner)
+        val ivHeroPoster = findViewById<ImageView>(R.id.ivHeroPoster)
+        val tvHeroTitle = findViewById<TextView>(R.id.tvHeroTitle)
+        val tvHeroRating = findViewById<TextView>(R.id.tvHeroRating)
+        val tvHeroDesc = findViewById<TextView>(R.id.tvHeroDesc)
+
+        llHeroBanner.visibility = View.VISIBLE
+        tvHeroTitle.text = stream.name
+        
+        // Simular rating (ex: a API tem rating, mas para simplificar vamos por um texto padrão ou limpar)
+        tvHeroRating.text = if (type == "series") "Série" else "Filme"
+        tvHeroDesc.text = "As melhores escolhas preparadas para si." // Ideally, fetch VOD info, mas para não encravar a grelha, pomos um default.
+
+        if (stream.stream_icon.isNotEmpty()) {
+            // Atualizar o poster pequeno
+            Glide.with(this).load(stream.stream_icon).into(ivHeroPoster)
+            
+            // Atualizar o fundo com efeito Blur
+            Glide.with(this)
+                .load(stream.stream_icon)
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
+                .into(ivBackgroundBlur)
+        } else {
+            ivHeroPoster.setImageResource(R.drawable.logo)
+            ivBackgroundBlur.setImageResource(0)
+        }
     }
 
     private fun setupTopNavigation() {
@@ -324,6 +357,7 @@ class VodNetflixActivity : AppCompatActivity() {
                 v.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         tvFallback.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+                        updateHeroBanner(movies[adapterPosition])
                     } else {
                         tvFallback.setTextColor(android.graphics.Color.parseColor("#DDDDDD"))
                     }

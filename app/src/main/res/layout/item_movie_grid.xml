@@ -7,15 +7,16 @@
     android:layout_margin="8dp"
     android:focusable="true"
     android:clickable="true"
+    android:stateListAnimator="@animator/selector_item_scale"
     android:background="@drawable/selector_movie_card">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="12dp"
         app:cardBackgroundColor="#222"
         android:duplicateParentState="true"
-        app:cardElevation="0dp">
+        app:cardElevation="4dp">
 
         <ImageView
             android:id="@+id/ivMoviePoster"

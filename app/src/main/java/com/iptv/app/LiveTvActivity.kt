@@ -104,11 +104,18 @@ class LiveTvActivity : AppCompatActivity() {
     }
 
     private fun initializeMiniPlayer() {
-        miniPlayer = ExoPlayer.Builder(this).build()
+        miniPlayer = PlayerManager.getPlayer(this)
         miniPlayerView.player = miniPlayer
     }
 
     private fun playMiniVideo(streamId: String) {
+        if (PlayerManager.currentStreamId == streamId) {
+            if (miniPlayer?.isPlaying == false) {
+                miniPlayer?.playWhenReady = true
+            }
+            return // Já está carregado este canal, não recarregar do zero
+        }
+        PlayerManager.currentStreamId = streamId
         val streamUrl = "http://nelitoplay.top:80/live/$username/$password/$streamId.ts"
         val mediaItem = MediaItem.fromUri(Uri.parse(streamUrl))
         miniPlayer?.setMediaItem(mediaItem)
@@ -399,20 +406,25 @@ class LiveTvActivity : AppCompatActivity() {
         if (lastPlayedStreamId != null) {
             tvPreviewName.text = lastPlayedStreamName
             fetchShortEpg(lastPlayedStreamId!!)
+            // Re-assign the player view in case it was detached by PlayerActivity
+            miniPlayerView.player = miniPlayer
             playMiniVideo(lastPlayedStreamId!!)
         } else {
+            miniPlayerView.player = miniPlayer
             miniPlayer?.playWhenReady = true
         }
     }
 
     override fun onPause() {
         super.onPause()
-        miniPlayer?.playWhenReady = false
+        // Do not stop the player here, because it might be transitioning to PlayerActivity
+        miniPlayerView.player = null
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        miniPlayer?.release()
+        miniPlayerView.player = null
         miniPlayer = null
+        // We do not release the shared player here, because it might be used by another Activity
     }
 }

@@ -18,7 +18,8 @@ object ProgressManager {
         val type: String,
         val position: Long,
         val duration: Long,
-        val timestamp: Long
+        val timestamp: Long,
+        val episodeIndex: Int = 0
     )
 
     private fun getPrefs(context: Context): SharedPreferences {
@@ -46,7 +47,7 @@ object ProgressManager {
     }
 
     // Salvar Progresso (Novo Sistema Completo)
-    fun saveProgressFull(context: Context, streamId: String, title: String, coverUrl: String, type: String, position: Long, duration: Long) {
+    fun saveProgressFull(context: Context, streamId: String, title: String, coverUrl: String, type: String, position: Long, duration: Long, episodeIndex: Int = 0) {
         if (position <= 0) {
             removeProgress(context, streamId)
             return
@@ -68,7 +69,8 @@ object ProgressManager {
                         obj.getString("type"),
                         obj.getLong("position"),
                         obj.getLong("duration"),
-                        obj.getLong("timestamp")
+                        obj.getLong("timestamp"),
+                        obj.optInt("episodeIndex", 0)
                     )
                 )
             }
@@ -78,7 +80,7 @@ object ProgressManager {
         list.removeAll { it.streamId == streamId }
 
         // Adiciona no topo
-        list.add(0, ProgressItem(streamId, title, coverUrl, type, position, duration, System.currentTimeMillis()))
+        list.add(0, ProgressItem(streamId, title, coverUrl, type, position, duration, System.currentTimeMillis(), episodeIndex))
 
         // Manter apenas os 20 mais recentes
         if (list.size > 20) {
@@ -96,6 +98,7 @@ object ProgressManager {
             obj.put("position", item.position)
             obj.put("duration", item.duration)
             obj.put("timestamp", item.timestamp)
+            obj.put("episodeIndex", item.episodeIndex)
             newArray.put(obj)
         }
 
@@ -134,7 +137,8 @@ object ProgressManager {
                         obj.getString("type"),
                         obj.getLong("position"),
                         obj.getLong("duration"),
-                        obj.getLong("timestamp")
+                        obj.getLong("timestamp"),
+                        obj.optInt("episodeIndex", 0)
                     )
                 )
             }
