@@ -79,38 +79,58 @@ object UpdateManager {
     }
 
     private fun downloadAndInstall(context: Context, apkUrl: String, version: String) {
-        Toast.makeText(context, "A descarregar a atualização...", Toast.LENGTH_LONG).show()
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("A descarregar a atualização")
+            .setMessage("Por favor aguarde...")
+            .setCancelable(false)
+            .create()
+        dialog.show()
 
-        val safeVersion = version.replace(".", "_").replace(" ", "")
-        val destination = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update_$safeVersion.apk"
-        val file = File(destination)
-        if (file.exists()) file.delete()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val safeVersion = version.replace(".", "_").replace(" ", "")
+                val file = File(context.getExternalFilesDir(null), "update_$safeVersion.apk")
+                if (file.exists()) file.delete()
 
-        val request = DownloadManager.Request(Uri.parse(apkUrl))
-            .setTitle("Atualização do Aplicativo IPTV")
-            .setDescription("A transferir a nova versão...")
-            .setDestinationUri(Uri.fromFile(file))
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(true)
+                val request = Request.Builder().url(apkUrl).build()
+                val response = OkHttpProvider.client.newCall(request).execute()
 
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val downloadId = downloadManager.enqueue(request)
+                if (response.isSuccessful) {
+                    val body = response.body
+                    if (body != null) {
+                        val inputStream = body.byteStream()
+                        val outputStream = java.io.FileOutputStream(file)
+                        val buffer = ByteArray(4096)
+                        var bytesRead: Int
+                        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                            outputStream.write(buffer, 0, bytesRead)
+                        }
+                        outputStream.flush()
+                        outputStream.close()
+                        inputStream.close()
 
-        val onComplete = object : BroadcastReceiver() {
-            override fun onReceive(ctxt: Context, intent: Intent) {
-                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                if (downloadId == id) {
-                    installApk(context, file)
-                    context.unregisterReceiver(this)
+                        withContext(Dispatchers.Main) {
+                            dialog.dismiss()
+                            installApk(context, file)
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            dialog.dismiss()
+                            Toast.makeText(context, "Erro: Resposta vazia do servidor.", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        dialog.dismiss()
+                        Toast.makeText(context, "Erro ao descarregar: ${response.code}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    Toast.makeText(context, "Falha na transferência: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
-        }
-        
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), Context.RECEIVER_EXPORTED)
-        } else {
-            context.registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         }
     }
 

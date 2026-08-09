@@ -1,6 +1,6 @@
 {
-  "versionCode": 34,
-  "versionName": "4.4",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.4-debug.apk",
-  "releaseNotes": "v4.4 - Correção Definitiva de Atualizações:\n- Adicionado sistema inteligente que fura a memória cache (Cache-Busting) do servidor.\n- A partir de agora, a aplicação nunca mais ficará presa num loop de transferências falsas quando a rede estiver lenta."
+  "versionCode": 35,
+  "versionName": "4.5",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.5-debug.apk",
+  "releaseNotes": "v4.5 - Instalação Garantida em TV Boxes Antigas:\n- O sistema de atualizações foi completamente reescrito para utilizar transferência direta em vez do DownloadManager do Android, contornando bloqueios de sistema presentes em várias Android TV Boxes."
 }
