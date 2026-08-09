@@ -209,96 +209,104 @@ class VodNetflixActivity : AppCompatActivity() {
                         streamsByCategory["my_list"] = sList
                     }
 
-                    // --- GRUPOS DE GÉNERO ---
-                    // Para cada género, encontrar as categorias do servidor que lhe correspondem
-                    val streamAction = if (type == "series") "get_series" else "get_vod_streams"
-                    val genreStreams = mutableMapOf<String, MutableList<Stream>>()
-
-                    val deferreds = serverCategories.map { serverCat ->
-                        async(Dispatchers.IO) {
-                            // Descobre a qual género pertence esta categoria
-                            val catNameLower = serverCat.category_name.lowercase()
-                            val matchedGenre = genreMap.entries
-                                .firstOrNull { (_, keywords) ->
-                                    keywords.any { kw -> catNameLower.contains(kw) }
-                                }?.key
-
-                            val targetGenre = matchedGenre ?: "🎬 Outros Filmes"
-
-                            try {
-                                val streamUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$streamAction&category_id=${serverCat.category_id}"
-                                val sRes = OkHttpProvider.client.newCall(Request.Builder().url(streamUrl).build()).execute()
-                                if (sRes.isSuccessful) {
-                                    val sArray = JSONArray(sRes.body?.string() ?: "[]")
-                                    val sLimit = sArray.length()
-                                    for (j in 0 until sLimit) {
-                                        val sObj = sArray.getJSONObject(j)
-                                        val stream = Stream(
-                                            if (type == "series") sObj.getString("series_id") else sObj.getString("stream_id"),
-                                            sObj.getString("name"),
-                                            if (type == "series") sObj.optString("cover", "") else sObj.optString("stream_icon", ""),
-                                            type,
-                                            sObj.optString("container_extension", "mp4")
-                                        )
-                                        synchronized(genreStreams) {
-                                            genreStreams.getOrPut(targetGenre) { mutableListOf() }.add(stream)
-                                        }
-                                    }
-                                }
-                            } catch (e: Exception) { /* ignora timeout individual */ }
-                        }
+                    // Grupos de categorias
+                    val genreToCatIds = mutableMapOf<String, MutableList<String>>()
+                    for (serverCat in serverCategories) {
+                        val catNameLower = serverCat.category_name.lowercase()
+                        val matchedGenre = genreMap.entries
+                            .firstOrNull { (_, keywords) ->
+                                keywords.any { kw -> catNameLower.contains(kw) }
+                            }?.key ?: "🎬 Outros Filmes"
+                        genreToCatIds.getOrPut(matchedGenre) { mutableListOf() }.add(serverCat.category_id)
                     }
 
-                    // Mostra loading
-                    withContext(Dispatchers.Main) {
-                        progressBar.visibility = View.VISIBLE
-                    }
-
-                    deferreds.awaitAll()
-
-                    // Montar categorias por género, na ordem do genreMap
                     for (genreName in genreMap.keys) {
                         if (genreName == "▶️ Continuar a Assistir" || genreName == "❤️ A Minha Lista") continue
-                        val list = genreStreams[genreName]
-                        if (!list.isNullOrEmpty()) {
+                        if (genreToCatIds.containsKey(genreName)) {
                             val catId = "genre_${genreName.replace(" ", "_")}"
                             categories.add(Category(catId, genreName, 0))
-                            streamsByCategory[catId] = list
+                            // Guardamos os IDs reais no parent_id ou num map global, mas podemos usar o id para mapear.
+                            // Para simplificar, vamos armazenar os Server Category IDs num mapa global:
+                            genreServerCatIds[catId] = genreToCatIds[genreName]!!
                         }
                     }
-                    // "Outros Filmes" sempre no fim
-                    val outros = genreStreams["🎬 Outros Filmes"]
-                    if (!outros.isNullOrEmpty()) {
+                    val outros = genreToCatIds["🎬 Outros Filmes"]
+                    if (outros != null && outros.isNotEmpty()) {
                         categories.add(Category("genre_outros", "🎬 Outros Filmes", 0))
-                        streamsByCategory["genre_outros"] = outros
-                    }
-
-                    // Limpar categorias sem conteúdo
-                    categories.removeAll { cat ->
-                        val streams = streamsByCategory[cat.category_id]
-                        streams == null || streams.isEmpty()
+                        genreServerCatIds["genre_outros"] = outros
                     }
 
                     withContext(Dispatchers.Main) {
                         progressBar.visibility = View.GONE
                         val sidebarAdapter = SidebarCategoryAdapter(categories, streamsByCategory) { selectedCategory ->
-                            val movies = streamsByCategory[selectedCategory.category_id] ?: emptyList()
-                            movieGridAdapter = MovieGridAdapter(movies)
-                            rvMovieGrid.adapter = movieGridAdapter
+                            loadCategoryStreams(selectedCategory.category_id)
                         }
                         rvSidebar.adapter = sidebarAdapter
 
-                        // Select first category by default
                         if (categories.isNotEmpty()) {
-                            val firstCat = categories[0]
-                            val movies = streamsByCategory[firstCat.category_id] ?: emptyList()
-                            movieGridAdapter = MovieGridAdapter(movies)
-                            rvMovieGrid.adapter = movieGridAdapter
+                            // Carrega a primeira categoria (pode ser "continue_watching" ou um género)
+                            loadCategoryStreams(categories[0].category_id)
                         }
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) { progressBar.visibility = View.GONE }
+            }
+        }
+    }
+
+    private val genreServerCatIds = mutableMapOf<String, List<String>>()
+
+    private fun loadCategoryStreams(catId: String) {
+        // Se já temos as streams (ex: "continue_watching", "my_list" ou já feito cache), mostra logo
+        if (streamsByCategory.containsKey(catId) && streamsByCategory[catId]!!.isNotEmpty()) {
+            movieGridAdapter = MovieGridAdapter(streamsByCategory[catId]!!)
+            rvMovieGrid.adapter = movieGridAdapter
+            return
+        }
+
+        val serverIds = genreServerCatIds[catId] ?: return
+        progressBar.visibility = View.VISIBLE
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            val fetchedStreams = mutableListOf<Stream>()
+            val streamAction = if (type == "series") "get_series" else "get_vod_streams"
+
+            val deferreds = serverIds.map { serverCatId ->
+                async {
+                    try {
+                        val streamUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$streamAction&category_id=$serverCatId"
+                        val sRes = OkHttpProvider.client.newCall(Request.Builder().url(streamUrl).build()).execute()
+                        if (sRes.isSuccessful) {
+                            val sArray = JSONArray(sRes.body?.string() ?: "[]")
+                            val sLimit = sArray.length()
+                            for (j in 0 until sLimit) {
+                                val sObj = sArray.getJSONObject(j)
+                                val stream = Stream(
+                                    if (type == "series") sObj.getString("series_id") else sObj.getString("stream_id"),
+                                    sObj.getString("name"),
+                                    if (type == "series") sObj.optString("cover", "") else sObj.optString("stream_icon", ""),
+                                    type,
+                                    sObj.optString("container_extension", "mp4")
+                                )
+                                synchronized(fetchedStreams) {
+                                    fetchedStreams.add(stream)
+                                }
+                            }
+                        }
+                    } catch (e: Exception) { }
+                }
+            }
+            deferreds.awaitAll()
+
+            streamsByCategory[catId] = fetchedStreams
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                movieGridAdapter = MovieGridAdapter(fetchedStreams)
+                rvMovieGrid.adapter = movieGridAdapter
+                
+                // Força atualização da sidebar para mostrar a contagem
+                rvSidebar.adapter?.notifyDataSetChanged()
             }
         }
     }
