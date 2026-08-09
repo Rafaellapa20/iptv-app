@@ -22,10 +22,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        findViewById<Button>(R.id.btnCheckUpdate).setOnClickListener {
-            UpdateManager.checkForUpdates(this)
-            Toast.makeText(this, "A procurar atualizações...", Toast.LENGTH_SHORT).show()
-        }
+
 
         val btnClearCache = findViewById<Button>(R.id.btnClearCache)
         btnClearCache.setOnClickListener {

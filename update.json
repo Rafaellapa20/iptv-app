@@ -1,6 +1,6 @@
 {
-  "versionCode": 31,
-  "versionName": "4.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.1-debug.apk",
-  "releaseNotes": "v4.1 - Otimização de Catálogo:\n- Resolvido um problema onde a secção de Filmes e Séries encravava ou mostrava o ecrã vazio em contas com muitos conteúdos.\n- Os filmes são agora carregados de forma inteligente apenas quando seleciona o género, evitando travamentos e bloqueios do servidor."
+  "versionCode": 32,
+  "versionName": "4.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.2-debug.apk",
+  "releaseNotes": "v4.2 - Organização das Definições:\n- O botão 'Sair da Conta (Logout)' foi movido para o fundo do ecrã das definições conforme solicitado.\n- Removido o botão duplicado de 'Verificar Atualizações'."
 }
