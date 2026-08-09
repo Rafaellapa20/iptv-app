@@ -1,6 +1,6 @@
 {
-  "versionCode": 26,
-  "versionName": "3.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.6-debug.apk",
-  "releaseNotes": "v3.6 - Premium Update:\n- Pesquisa Global Unificada (Pesquise tudo no mesmo sítio).\n- Suporte a Picture-in-Picture (PiP).\n- Modo Binge-Watching (passa ao próximo episódio automaticamente nos últimos 15s).\n- Interface de Player Netflix e vários melhoramentos visuais."
+  "versionCode": 27,
+  "versionName": "3.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.7-debug.apk",
+  "releaseNotes": "v3.7 - Premium Update:\n- Pesquisa Global Unificada (Pesquise tudo no mesmo sítio).\n- Suporte a Picture-in-Picture (PiP).\n- Modo Binge-Watching (passa ao próximo episódio automaticamente nos últimos 15s).\n- Interface de Player Netflix e vários melhoramentos visuais."
 }
