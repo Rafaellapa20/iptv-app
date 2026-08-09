@@ -96,11 +96,17 @@ class SettingsActivity : AppCompatActivity() {
 
                     val startTime = System.currentTimeMillis()
                     val response = OkHttpProvider.client.newCall(request).execute()
-                    val endTime = System.currentTimeMillis()
-
                     if (response.isSuccessful) {
-                        response.body?.bytes() // Força o download completo para a RAM
+                        val inputStream = response.body?.byteStream()
+                        val buffer = ByteArray(8192)
+                        if (inputStream != null) {
+                            while (inputStream.read(buffer) != -1) {
+                                // Apenas ler para descartar da memória (evita OutOfMemoryError em TV Boxes com pouca RAM)
+                            }
+                            inputStream.close()
+                        }
 
+                        val endTime = System.currentTimeMillis()
                         val timeTakenMs = endTime - startTime
                         val timeTakenSecs = timeTakenMs / 1000.0
                         

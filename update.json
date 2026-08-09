@@ -1,6 +1,6 @@
 {
-  "versionCode": 28,
-  "versionName": "3.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.8-debug.apk",
-  "releaseNotes": "v3.8 - Bugfix:\n- O som do canal (quer na janela pequena, quer no modo ecrã inteiro) desliga-se corretamente ao voltar ao menu principal ou ao menu da TV (Box).\n- Removido o modo PiP para não causar confusão de fundo em boxes Android TV."
+  "versionCode": 29,
+  "versionName": "3.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.9-debug.apk",
+  "releaseNotes": "v3.9 - Bugfix:\n- Corrigido o Teste de Velocidade que não funcionava e causava lentidão/falhas (erro de memória) em várias boxes."
 }
