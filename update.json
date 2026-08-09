@@ -1,6 +1,6 @@
 {
-  "versionCode": 27,
-  "versionName": "3.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.7-debug.apk",
-  "releaseNotes": "v3.7 - Premium Update:\n- Pesquisa Global Unificada (Pesquise tudo no mesmo sítio).\n- Suporte a Picture-in-Picture (PiP).\n- Modo Binge-Watching (passa ao próximo episódio automaticamente nos últimos 15s).\n- Interface de Player Netflix e vários melhoramentos visuais."
+  "versionCode": 28,
+  "versionName": "3.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v3.8-debug.apk",
+  "releaseNotes": "v3.8 - Bugfix:\n- O som do canal (quer na janela pequena, quer no modo ecrã inteiro) desliga-se corretamente ao voltar ao menu principal ou ao menu da TV (Box).\n- Removido o modo PiP para não causar confusão de fundo em boxes Android TV."
 }

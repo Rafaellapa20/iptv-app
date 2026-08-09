@@ -417,7 +417,7 @@ class LiveTvActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Do not stop the player here, because it might be transitioning to PlayerActivity
+        miniPlayer?.pause()
         miniPlayerView.player = null
     }
 

@@ -629,15 +629,8 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveCurrentProgress()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            if (!isInPictureInPictureMode) {
-                player1?.pause()
-                player2?.pause()
-            }
-        } else {
-            player1?.pause()
-            player2?.pause()
-        }
+        player1?.pause()
+        player2?.pause()
     }
 
     override fun onStop() {
@@ -666,18 +659,7 @@ class PlayerActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val p = getActivePlayer()
-            if (p.isPlaying) {
-                val params = android.app.PictureInPictureParams.Builder()
-                // Optionally set aspect ratio
-                // params.setAspectRatio(android.util.Rational(16, 9))
-                enterPictureInPictureMode(params.build())
-            }
-        }
-    }
+
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: android.content.res.Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
