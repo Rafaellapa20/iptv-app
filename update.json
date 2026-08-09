@@ -1,6 +1,6 @@
 {
-  "versionCode": 32,
-  "versionName": "4.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.2-debug.apk",
-  "releaseNotes": "v4.2 - Organização das Definições:\n- O botão 'Sair da Conta (Logout)' foi movido para o fundo do ecrã das definições conforme solicitado.\n- Removido o botão duplicado de 'Verificar Atualizações'."
+  "versionCode": 33,
+  "versionName": "4.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.3-debug.apk",
+  "releaseNotes": "v4.3 - Correção de Atualizações OTA:\n- Resolvido um problema onde a aplicação instalava a versão anterior continuamente e pedia sempre para atualizar.\n- A partir desta versão, o atualizador automático funciona perfeitamente à primeira."
 }

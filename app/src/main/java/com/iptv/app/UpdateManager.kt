@@ -68,7 +68,7 @@ object UpdateManager {
             .setMessage(notes)
             .setCancelable(false)
             .setPositiveButton("Atualizar Agora") { _, _ ->
-                downloadAndInstall(context, apkUrl)
+                downloadAndInstall(context, apkUrl, version)
             }
             .setNegativeButton("Mais Tarde") { dialog, _ ->
                 dialog.dismiss()
@@ -76,10 +76,11 @@ object UpdateManager {
             .show()
     }
 
-    private fun downloadAndInstall(context: Context, apkUrl: String) {
+    private fun downloadAndInstall(context: Context, apkUrl: String, version: String) {
         Toast.makeText(context, "A descarregar a atualização...", Toast.LENGTH_LONG).show()
 
-        val destination = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update.apk"
+        val safeVersion = version.replace(".", "_").replace(" ", "")
+        val destination = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/update_$safeVersion.apk"
         val file = File(destination)
         if (file.exists()) file.delete()
 
