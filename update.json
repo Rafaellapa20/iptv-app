@@ -1,6 +1,6 @@
 {
-  "versionCode": 49,
-  "versionName": "6.0",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.0-debug.apk",
-  "releaseNotes": "v6.0 - Correção Definitiva dos Favoritos:\n- Corrigido o bug interno no carregamento de Favoritos (FavoritesManager JSON optString)\n- Botão ⭐ adicionado nos controlos do leitor fullscreen para adicionar aos Favoritos durante a transmissão\n- Botão ⭐ selecionável na lista de canais com visualização imediata do estado (Estrela Amarela viva)"
+  "versionCode": 50,
+  "versionName": "6.1",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.1-debug.apk",
+  "releaseNotes": "v6.1 - Desativada Troca de Canais por Setas Horizontais (ESQUERDA/DIREITA):\n- Apenas as setas para CIMA e BAIXO alteram de canal na TV em direto\n- As setas para ESQUERDA e DIREITA deixaram de trocar de canal na TV em direto\n- Nos Filmes/Séries, ESQUERDA/DIREITA continuam a recuar/avançar 10 segundos"
 }

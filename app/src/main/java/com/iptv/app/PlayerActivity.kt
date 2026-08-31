@@ -634,21 +634,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setupSwipeGestures() {
-        val gestureDetector = android.view.GestureDetector(this, object : android.view.GestureDetector.SimpleOnGestureListener() {
-            override fun onFling(e1: android.view.MotionEvent?, e2: android.view.MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                if (e1 != null) {
-                    val diffX = e2.x - e1.x
-                    if (kotlin.math.abs(diffX) > 100 && kotlin.math.abs(velocityX) > 100) {
-                        changeChannel(diffX < 0)
-                        return true
-                    }
-                }
-                return false
-            }
-        })
-
-        playerView1.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event); false }
-        playerView2.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event); false }
+        // Gestos horizontais desativados a pedido para não trocar de canal por engano
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -661,8 +647,9 @@ class PlayerActivity : AppCompatActivity() {
                         player1?.volume = 0f
                         player2?.volume = 1f
                         Toast.makeText(this, "Áudio: Canal Direito", Toast.LENGTH_SHORT).show()
-                    } else {
-                        changeChannel(true)
+                    } else if (isMovieOrEpisode) {
+                        // Avançar 10s em VOD
+                        getActivePlayer().seekTo(getActivePlayer().currentPosition + 10000)
                     }
                     return true
                 }
@@ -673,8 +660,9 @@ class PlayerActivity : AppCompatActivity() {
                         player2?.volume = 0f
                         player1?.volume = 1f
                         Toast.makeText(this, "Áudio: Canal Esquerdo", Toast.LENGTH_SHORT).show()
-                    } else {
-                        changeChannel(false)
+                    } else if (isMovieOrEpisode) {
+                        // Recuar 10s em VOD
+                        getActivePlayer().seekTo(kotlin.math.max(0L, getActivePlayer().currentPosition - 10000))
                     }
                     return true
                 }
