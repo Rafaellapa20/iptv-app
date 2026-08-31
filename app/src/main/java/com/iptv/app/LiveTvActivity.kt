@@ -392,6 +392,20 @@ class LiveTvActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
 
+                favIcon.setOnClickListener {
+                    val pos = adapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        val s = list[pos]
+                        val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
+                        notifyItemChanged(pos)
+                        val statusText = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
+                        android.widget.Toast.makeText(this@LiveTvActivity, "${s.name}\n$statusText", android.widget.Toast.LENGTH_SHORT).show()
+                        if (selectedCategoryId == "fav") {
+                            fetchChannels("fav")
+                        }
+                    }
+                }
+
                 view.setOnLongClickListener {
                     val pos = adapterPosition
                     if (pos != RecyclerView.NO_POSITION) {
@@ -432,7 +446,14 @@ class LiveTvActivity : AppCompatActivity() {
             }
 
             val isFav = FavoritesManager.isFavorite(h.itemView.context, s.stream_id)
-            h.favIcon.visibility = if (isFav) View.VISIBLE else View.GONE
+            if (isFav) {
+                h.favIcon.setImageResource(android.R.drawable.btn_star_big_on)
+                h.favIcon.alpha = 1.0f
+            } else {
+                h.favIcon.setImageResource(android.R.drawable.btn_star_big_off)
+                h.favIcon.alpha = 0.35f
+            }
+            h.favIcon.visibility = View.VISIBLE
         }
         override fun getItemCount() = list.size
     }

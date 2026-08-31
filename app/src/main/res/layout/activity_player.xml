@@ -65,15 +65,7 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- Quick Channel List Overlay -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvQuickChannels"
-        android:layout_width="250dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="#CC000000"
-        android:visibility="gone"
-        android:padding="8dp" />
+
 
     <!-- Floating Control Buttons (REC & Split Screen) -->
     <LinearLayout

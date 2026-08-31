@@ -59,7 +59,6 @@ class PlayerActivity : AppCompatActivity() {
     private var isMovieOrEpisode: Boolean = false
     
     private var hideOverlaysRunnable = Runnable { 
-        rvQuickChannels.visibility = View.GONE
         epgContainer.visibility = View.GONE
         llFloatingControls.visibility = View.GONE
     }
@@ -81,7 +80,6 @@ class PlayerActivity : AppCompatActivity() {
 
         playerView1 = findViewById(R.id.player_view)
         playerView2 = findViewById(R.id.player_view_secondary)
-        rvQuickChannels = findViewById(R.id.rvQuickChannels)
         epgContainer = findViewById(R.id.epgContainer)
         llFloatingControls = findViewById(R.id.llFloatingControls)
         btnRec = findViewById(R.id.btnRec)
@@ -109,8 +107,6 @@ class PlayerActivity : AppCompatActivity() {
             ivLoadingCover.setImageResource(R.drawable.logo)
         }
         rlBufferingOverlay.visibility = View.VISIBLE
-        
-        setupQuickChannels()
 
         streamId = intent.getStringExtra("STREAM_ID")
         username = intent.getStringExtra("USERNAME")
@@ -260,9 +256,11 @@ class PlayerActivity : AppCompatActivity() {
     private fun getActivePlayerView(): PlayerView = if (activePlayerNum == 1) playerView1 else playerView2
     private fun getInactivePlayerView(): PlayerView = if (activePlayerNum == 1) playerView2 else playerView1
 
-    private fun playUrlInPlayer(exoPlayer: ExoPlayer, url: String) {
-        if (exoPlayer == getActivePlayer() && exoPlayer.playbackState != androidx.media3.common.Player.STATE_READY) {
+    private fun playUrlInPlayer(exoPlayer: ExoPlayer, url: String, showLoadingOverlay: Boolean = false) {
+        if (showLoadingOverlay && exoPlayer == getActivePlayer() && exoPlayer.playbackState != androidx.media3.common.Player.STATE_READY) {
             rlBufferingOverlay.visibility = View.VISIBLE
+        } else {
+            rlBufferingOverlay.visibility = View.GONE
         }
 
         val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
@@ -600,7 +598,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun showOverlays() {
         epgContainer.visibility = View.VISIBLE
         llFloatingControls.visibility = View.VISIBLE
-        if (!isMovieOrEpisode) rvQuickChannels.visibility = View.VISIBLE
         
         epgContainer.removeCallbacks(hideOverlaysRunnable)
         epgContainer.postDelayed(hideOverlaysRunnable, 6000)

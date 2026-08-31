@@ -1,6 +1,6 @@
 {
-  "versionCode": 47,
-  "versionName": "5.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.8-debug.apk",
-  "releaseNotes": "v5.8 - Favoritos por Clique Prolongado nos Canais:\n- Pressionar prolongadamente o botão OK no comando (ou toque longo) em qualquer canal adiciona/remove dos Favoritos\n- Ícone de Estrela Amarela (⭐) visível na lista para todos os canais favoritos"
+  "versionCode": 48,
+  "versionName": "5.59",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.9-debug.apk",
+  "releaseNotes": "v5.9 - Melhorias Críticas Pedidas:\n- Adicionado botão de estrela ⭐ clicável em cada canal para alternar Favoritos instantaneamente\n- Removida a lista lateral 'Canal 1 2 3...' ao pressionar OK em ecrã inteiro\n- Ao mudar de canal com as setas para CIMA/BAIXO, a transmissão muda diretamente sem ecrã/logótipo de carregamento"
 }
