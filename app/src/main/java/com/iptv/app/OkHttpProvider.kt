@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Cache
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.dnsoverhttps.DnsOverHttps
 import java.io.File
@@ -13,6 +14,18 @@ import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 
 object OkHttpProvider {
+
+    private const val BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+
+    // Disfarça todo o tráfego da app como tráfego normal de um navegador Web (evita throttling/DPI dos operadores)
+    private val userAgentInterceptor = Interceptor { chain ->
+        val original = chain.request()
+        val requestBuilder = original.newBuilder()
+            .header("User-Agent", BROWSER_USER_AGENT)
+            .header("Accept", "*/*")
+            .header("Accept-Language", "pt-PT,pt;q=0.9,en-US;q=0.8,en;q=0.7")
+        chain.proceed(requestBuilder.build())
+    }
 
     private var cacheDir: File? = null
     private val appCache: Cache by lazy {
@@ -35,10 +48,11 @@ object OkHttpProvider {
         }
     }
     
-    // Cliente Base para fazer as consultas DNS (precisa ser sem o DNS modificado para não dar loop infinito)
+    // Cliente Base para fazer as consultas DNS (sem DNS modificado para evitar loop)
     private val bootstrapClient by lazy {
         OkHttpClient.Builder()
             .cache(appCache)
+            .addInterceptor(userAgentInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS)
             .build()
     }
@@ -98,6 +112,7 @@ object OkHttpProvider {
     var client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
+        .addInterceptor(userAgentInterceptor)
         .dns(safeDns)
         .build()
 
@@ -105,6 +120,7 @@ object OkHttpProvider {
         client = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor(userAgentInterceptor)
             .dns(safeDns)
             .build()
     }
@@ -113,6 +129,7 @@ object OkHttpProvider {
         client = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor(userAgentInterceptor)
             .build()
     }
 }
