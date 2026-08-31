@@ -1,6 +1,6 @@
 {
-  "versionCode": 50,
-  "versionName": "6.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.1-debug.apk",
-  "releaseNotes": "v6.1 - Desativada Troca de Canais por Setas Horizontais (ESQUERDA/DIREITA):\n- Apenas as setas para CIMA e BAIXO alteram de canal na TV em direto\n- As setas para ESQUERDA e DIREITA deixaram de trocar de canal na TV em direto\n- Nos Filmes/Séries, ESQUERDA/DIREITA continuam a recuar/avançar 10 segundos"
+  "versionCode": 51,
+  "versionName": "6.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.2-debug.apk",
+  "releaseNotes": "v6.2 - Estabilidade Total Anti-Travamentos e Resolução Ultra Rápida de Canais:\n- Aumentado o buffer de reprodução do ExoPlayer para 2500ms (evita travamentos e quebras de sinal)\n- Otimizada a consulta DNS (resolução ultrarrápida em 5ms com fallback automático)\n- Reconexão automática transparente caso o servidor IPTV perca pacotes"
 }

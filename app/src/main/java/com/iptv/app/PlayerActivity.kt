@@ -222,8 +222,8 @@ class PlayerActivity : AppCompatActivity() {
             .setBufferDurationsMs(
                 15000, // min buffer
                 60000,  // max buffer
-                500,    // buffer for playback (ARRANQUE EM 0.5s - SEM ESPERA PRETA)
-                1000    // buffer for playback after rebuffer
+                2500,   // buffer for playback (2.5s para estabilidade total)
+                3500    // buffer for playback after rebuffer
             )
             .build()
 
@@ -264,12 +264,18 @@ class PlayerActivity : AppCompatActivity() {
             }
             
             override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                android.util.Log.e("PlayerActivity", "Playback error: ${error.message}")
                 if (error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                     exoPlayer.seekToDefaultPosition()
                     exoPlayer.prepare()
                 } else {
-                    android.widget.Toast.makeText(this@PlayerActivity, "Ligação instável. A reconectar...", android.widget.Toast.LENGTH_SHORT).show()
-                    exoPlayer.prepare()
+                    if (currentStreamUrl.isNotEmpty()) {
+                        val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
+                        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
+                            .createMediaSource(MediaItem.fromUri(Uri.parse(currentStreamUrl)))
+                        exoPlayer.setMediaSource(mediaSource)
+                        exoPlayer.prepare()
+                    }
                 }
                 exoPlayer.playWhenReady = true
             }

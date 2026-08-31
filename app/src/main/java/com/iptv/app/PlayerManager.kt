@@ -10,13 +10,13 @@ object PlayerManager {
 
     fun getPlayer(context: Context): ExoPlayer {
         if (sharedPlayer == null) {
-            // Buffer ultra rápido para eliminação do ecrã preto e abertura instantânea
+            // Buffer ideal para estabilidade máxima sem falhas em transmissões ao vivo
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
                     15000, // min buffer
-                    60000,  // max buffer
-                    500,    // buffer for playback (apenas 0.5s para arrancar logo!)
-                    1000    // buffer for playback after rebuffer
+                    60000, // max buffer
+                    2500,  // buffer for playback (2.5s para estabilidade total contra travamentos)
+                    3500   // buffer for playback after rebuffer
                 ).build()
 
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)

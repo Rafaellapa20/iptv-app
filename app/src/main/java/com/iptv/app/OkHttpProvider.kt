@@ -82,27 +82,31 @@ object OkHttpProvider {
 
         override fun lookup(hostname: String): List<InetAddress> {
             try {
+                val results = okhttp3.Dns.SYSTEM.lookup(hostname)
+                if (results.isNotEmpty()) return results
+            } catch (e: Exception) {
+                android.util.Log.w("TripleArmorDns", "DNS do Sistema falhou ou bloqueado, a tentar Cloudflare DoH...")
+            }
+
+            try {
                 val results = cloudflareDns.lookup(hostname)
                 if (results.isNotEmpty()) return results
             } catch (e: Exception) {
-                android.util.Log.e("TripleArmorDns", "Cloudflare falhou, pulando para Google...")
+                android.util.Log.e("TripleArmorDns", "Cloudflare DoH falhou, a tentar Google DoH...")
             }
 
             try {
                 val results = googleDns.lookup(hostname)
                 if (results.isNotEmpty()) return results
             } catch (e: Exception) {
-                android.util.Log.e("TripleArmorDns", "Google falhou, pulando para Quad9...")
+                android.util.Log.e("TripleArmorDns", "Google DoH falhou, a tentar Quad9 DoH...")
             }
 
             try {
                 val results = quad9Dns.lookup(hostname)
                 if (results.isNotEmpty()) return results
-            } catch (e: Exception) {
-                android.util.Log.e("TripleArmorDns", "Quad9 falhou, voltando para DNS Original do Sistema...")
-            }
+            } catch (e: Exception) {}
 
-            // Fallback final: DNS da operadora
             return okhttp3.Dns.SYSTEM.lookup(hostname)
         }
     }
