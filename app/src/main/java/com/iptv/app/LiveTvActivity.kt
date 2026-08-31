@@ -338,16 +338,24 @@ class LiveTvActivity : AppCompatActivity() {
         override fun getItemCount() = list.size
     }
 
-    inner class ChannelAdapter(private val list: List<Stream>, private val onClick: (Stream) -> Unit) :
-        RecyclerView.Adapter<ChannelAdapter.ViewHolder>() {
-        
-        inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-            val num: TextView = v.findViewById(R.id.tvChannelNum)
-            val name: TextView = v.findViewById(R.id.tvChannelName)
-            val icon: ImageView = v.findViewById(R.id.ivChannelIcon)
+    inner class ChannelAdapter(
+        private val list: List<Stream>,
+        private val onChannelSelected: (Stream) -> Unit
+    ) : RecyclerView.Adapter<ChannelAdapter.ViewHolder>() {
+
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val num: TextView = view.findViewById(R.id.tvChannelNum)
+            val icon: ImageView = view.findViewById(R.id.ivChannelIcon)
+            val name: TextView = view.findViewById(R.id.tvChannelName)
+            val favIcon: ImageView = view.findViewById(R.id.ivFavIcon)
+
             init {
-                v.setOnClickListener {
-                    val s = list[adapterPosition]
+                view.setOnClickListener { v ->
+                    val pos = adapterPosition
+                    if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+                    val s = list[pos]
+                    onChannelSelected(s)
+                    
                     lastPlayedStreamId = s.stream_id
                     lastPlayedStreamName = s.name
                     
@@ -383,8 +391,24 @@ class LiveTvActivity : AppCompatActivity() {
                     intent.putExtra("TITLE", s.name)
                     startActivity(intent)
                 }
-                v.setOnFocusChangeListener { _, hasFocus ->
-                    if (hasFocus) {
+
+                view.setOnLongClickListener {
+                    val pos = adapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        val s = list[pos]
+                        val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
+                        notifyItemChanged(pos)
+                        val statusText = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
+                        android.widget.Toast.makeText(this@LiveTvActivity, "${s.name}\n$statusText", android.widget.Toast.LENGTH_SHORT).show()
+                        if (selectedCategoryId == "fav") {
+                            fetchChannels("fav")
+                        }
+                    }
+                    true
+                }
+
+                view.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus && adapterPosition != RecyclerView.NO_POSITION) {
                         val s = list[adapterPosition]
                         tvPreviewName.text = s.name
                         fetchShortEpg(s.stream_id)
@@ -406,6 +430,9 @@ class LiveTvActivity : AppCompatActivity() {
             } else {
                 h.icon.setImageResource(android.R.drawable.ic_media_play)
             }
+
+            val isFav = FavoritesManager.isFavorite(h.itemView.context, s.stream_id)
+            h.favIcon.visibility = if (isFav) View.VISIBLE else View.GONE
         }
         override fun getItemCount() = list.size
     }

@@ -1,6 +1,6 @@
 {
-  "versionCode": 46,
-  "versionName": "5.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.7-debug.apk",
-  "releaseNotes": "v5.7 - Navegação por Comando Direta para 'VER FILME':\n- Ao estar nos botões TV, Filmes, Séries ou Favoritos no menu principal e pressionar DIREITA, a seleção salta DIRETAMENTE para o botão '▶ VER FILME'\n- Ao pressionar ESQUERDA, regressa instantaneamente ao menu lateral"
+  "versionCode": 47,
+  "versionName": "5.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.8-debug.apk",
+  "releaseNotes": "v5.8 - Favoritos por Clique Prolongado nos Canais:\n- Pressionar prolongadamente o botão OK no comando (ou toque longo) em qualquer canal adiciona/remove dos Favoritos\n- Ícone de Estrela Amarela (⭐) visível na lista para todos os canais favoritos"
 }

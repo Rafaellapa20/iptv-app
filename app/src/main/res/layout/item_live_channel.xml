@@ -27,11 +27,20 @@
 
     <TextView
         android:id="@+id/tvChannelName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         android:textStyle="bold"
         android:maxLines="1"
         android:ellipsize="end" />
+
+    <ImageView
+        android:id="@+id/ivFavIcon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@android:drawable/btn_star_big_on"
+        android:visibility="gone"
+        android:layout_marginStart="6dp" />
 </LinearLayout>
