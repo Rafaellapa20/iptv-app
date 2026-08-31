@@ -1,6 +1,6 @@
 {
-  "versionCode": 44,
-  "versionName": "5.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.5-debug.apk",
-  "releaseNotes": "v5.5 - Fundo Dinâmico com Desfoco (Blur estilo Netflix/Apple TV):\n- Adicionado fundo de ecrã dinâmico que muda suavemente com o filme em destaque\n- Efeito de desfoco sofisticado com gradiente escuro para legibilidade perfeita"
+  "versionCode": 45,
+  "versionName": "5.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.6-debug.apk",
+  "releaseNotes": "v5.6 - Correção Crítica da Reprodução de Vídeo:\n- O ecrã de carregamento/logótipo esconde-se imediatamente assim que o áudio/vídeo arranca\n- Eliminação total do bloqueio visual ao trocar de canal"
 }

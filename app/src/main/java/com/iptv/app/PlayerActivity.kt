@@ -155,12 +155,20 @@ class PlayerActivity : AppCompatActivity() {
                 // Apenas adicionamos o listener para a UI do PlayerActivity
                 addPlayerListener(player1!!)
                 player1!!.playWhenReady = true
+                rlBufferingOverlay.visibility = View.GONE
             } else {
+                if (isSeamlessLive && player1 != null) {
+                    addPlayerListener(player1!!)
+                }
                 playUrlInPlayer(player1!!, currentStreamUrl)
             }
             playerView1.visibility = View.VISIBLE
             playerView2.visibility = View.INVISIBLE
             activePlayerNum = 1
+        }
+
+        if (getActivePlayer().isPlaying || getActivePlayer().playbackState == androidx.media3.common.Player.STATE_READY) {
+            rlBufferingOverlay.visibility = View.GONE
         }
 
         setupButtons()
@@ -207,10 +215,20 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun addPlayerListener(exoPlayer: ExoPlayer) {
+        if (exoPlayer == getActivePlayer() && (exoPlayer.isPlaying || exoPlayer.playbackState == androidx.media3.common.Player.STATE_READY)) {
+            rlBufferingOverlay.visibility = View.GONE
+        }
+
         exoPlayer.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (isPlaying && exoPlayer == getActivePlayer()) {
+                    runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                }
+            }
+
             override fun onRenderedFirstFrame() {
                 if (exoPlayer == getActivePlayer()) {
-                    rlBufferingOverlay.visibility = View.GONE
+                    runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
                 }
             }
 
@@ -218,7 +236,7 @@ class PlayerActivity : AppCompatActivity() {
                 if (exoPlayer == getActivePlayer()) {
                     updateNetworkStatus(playbackState)
                     if (playbackState == androidx.media3.common.Player.STATE_READY) {
-                        rlBufferingOverlay.visibility = View.GONE
+                        runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
                     }
                 }
             }
