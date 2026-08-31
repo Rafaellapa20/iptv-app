@@ -1,6 +1,6 @@
 {
-  "versionCode": 53,
-  "versionName": "6.4",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.4-debug.apk",
-  "releaseNotes": "v6.4 - Descodificação de Vídeo com Aceleração Direta de Hardware (Zero Micro-Congelamentos):\n- Alterado o leitor de vídeo para SurfaceView direto de Hardware (elimina cópias de ecrã GPU TextureView e quebras de imagem nas Box TV)\n- Adicionado buffer retroativo de 30 segundos (setBackBuffer) para evitar paragens na reprodução\n- Ativado tempo alargado de entrada de vídeo para sincronização total de áudio/vídeo em 1080p e 4K"
+  "versionCode": 54,
+  "versionName": "6.5",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.5-debug.apk",
+  "releaseNotes": "v6.5 - Correção Total de Imagem e Áudio (Fim do Ecrã Preto):\n- Removido o fundo preto opaco que cobria o ecrã de vídeo nas Box TV Android\n- Reajustada a rendição de vídeo no leitor para ser compatível a 100% com todas as Box TV (imagem + som simultâneos)\n- Otimizados os gradientes de sobreposição para EPG e controlos limpos"
 }
