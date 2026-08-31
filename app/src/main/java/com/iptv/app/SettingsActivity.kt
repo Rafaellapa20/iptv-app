@@ -89,7 +89,7 @@ class SettingsActivity : AppCompatActivity() {
         val btnUpdateApp = findViewById<Button>(R.id.btnUpdateApp)
         btnUpdateApp.setOnClickListener {
             Toast.makeText(this, "A procurar atualizações...", Toast.LENGTH_SHORT).show()
-            UpdateManager.checkForUpdates(this)
+            UpdateManager.checkForUpdates(this, showNoUpdateToast = true)
         }
 
         val btnSpeedTest = findViewById<Button>(R.id.btnSpeedTest)

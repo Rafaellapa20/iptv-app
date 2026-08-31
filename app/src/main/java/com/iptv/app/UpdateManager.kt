@@ -1,43 +1,62 @@
 package com.iptv.app
 
 import android.app.AlertDialog
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.Uri
-import android.os.Environment
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 object UpdateManager {
 
     private const val UPDATE_JSON_URL = "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/update.json"
 
+    // Standard client to avoid DNS loop/issues when checking GitHub raw
+    private val simpleClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .build()
+    }
+
     fun checkForUpdates(context: Context, showNoUpdateToast: Boolean = false) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Adiciona timestamp para furar a cache do GitHub Raw
                 val cacheBusterUrl = "$UPDATE_JSON_URL?t=${System.currentTimeMillis()}"
                 val request = Request.Builder().url(cacheBusterUrl).build()
-                val response = OkHttpProvider.client.newCall(request).execute()
+                
+                // Try simple client first, fallback to OkHttpProvider.client
+                val response = try {
+                    simpleClient.newCall(request).execute()
+                } catch (e: Exception) {
+                    OkHttpProvider.client.newCall(request).execute()
+                }
                 
                 if (response.isSuccessful) {
-                    val body = response.body?.string() ?: return@launch
+                    val body = response.body?.string() ?: ""
+                    if (body.isEmpty()) {
+                        if (showNoUpdateToast) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, "Resposta vazia do servidor.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        return@launch
+                    }
+
                     val json = JSONObject(body)
-                    
                     val remoteVersionCode = json.optInt("versionCode", 0)
                     val remoteVersionName = json.optString("versionName", "")
                     val apkUrl = json.optString("apkUrl", "")
                     val releaseNotes = json.optString("releaseNotes", "Nova versão disponível!")
+                    
                     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
                     val currentVersionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                         packageInfo.longVersionCode.toInt()
@@ -45,6 +64,7 @@ object UpdateManager {
                         @Suppress("DEPRECATION")
                         packageInfo.versionCode
                     }
+                    val currentVersionName = packageInfo.versionName ?: ""
                     
                     if (remoteVersionCode > currentVersionCode && apkUrl.isNotEmpty()) {
                         withContext(Dispatchers.Main) {
@@ -53,13 +73,27 @@ object UpdateManager {
                     } else {
                         if (showNoUpdateToast) {
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "O aplicativo já está na versão mais recente.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Já possui a versão mais recente ($currentVersionName / v$currentVersionCode).",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
+                        }
+                    }
+                } else {
+                    if (showNoUpdateToast) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Servidor retornou código ${response.code}.", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
             } catch (e: Exception) {
-                // Ignore silent network errors on startup
+                if (showNoUpdateToast) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Erro ao procurar atualizações: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }
@@ -80,7 +114,7 @@ object UpdateManager {
 
     private fun downloadAndInstall(context: Context, apkUrl: String, version: String) {
         val dialog = AlertDialog.Builder(context)
-            .setTitle("A descarregar a atualização")
+            .setTitle("A descarregar atualização v$version")
             .setMessage("Por favor aguarde...")
             .setCancelable(false)
             .create()
@@ -93,7 +127,11 @@ object UpdateManager {
                 if (file.exists()) file.delete()
 
                 val request = Request.Builder().url(apkUrl).build()
-                val response = OkHttpProvider.client.newCall(request).execute()
+                val response = try {
+                    simpleClient.newCall(request).execute()
+                } catch (e: Exception) {
+                    OkHttpProvider.client.newCall(request).execute()
+                }
 
                 if (response.isSuccessful) {
                     val body = response.body
@@ -116,13 +154,13 @@ object UpdateManager {
                     } else {
                         withContext(Dispatchers.Main) {
                             dialog.dismiss()
-                            Toast.makeText(context, "Erro: Resposta vazia do servidor.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Erro: Resposta vazia ao descarregar.", Toast.LENGTH_LONG).show()
                         }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
                         dialog.dismiss()
-                        Toast.makeText(context, "Erro ao descarregar: ${response.code}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Erro ao descarregar: código ${response.code}", Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
