@@ -180,7 +180,7 @@ class VodNetflixActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val catAction = if (type == "series") "get_series_categories" else "get_vod_categories"
-                val catUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$catAction"
+                val catUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=$catAction"
                 val catResponse = OkHttpProvider.client.newCall(Request.Builder().url(catUrl).build()).execute()
 
                 if (catResponse.isSuccessful) {
@@ -275,7 +275,7 @@ class VodNetflixActivity : AppCompatActivity() {
             val deferreds = serverIds.map { serverCatId ->
                 async {
                     try {
-                        val streamUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$streamAction&category_id=$serverCatId"
+                        val streamUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=$streamAction&category_id=$serverCatId"
                         val sRes = OkHttpProvider.client.newCall(Request.Builder().url(streamUrl).build()).execute()
                         if (sRes.isSuccessful) {
                             val sArray = JSONArray(sRes.body?.string() ?: "[]")
@@ -287,7 +287,8 @@ class VodNetflixActivity : AppCompatActivity() {
                                     sObj.getString("name"),
                                     if (type == "series") sObj.optString("cover", "") else sObj.optString("stream_icon", ""),
                                     type,
-                                    sObj.optString("container_extension", "mp4")
+                                    sObj.optString("container_extension", "mp4"),
+                                    sObj.optString("added", "0")
                                 )
                                 synchronized(fetchedStreams) {
                                     fetchedStreams.add(stream)
@@ -299,10 +300,11 @@ class VodNetflixActivity : AppCompatActivity() {
             }
             deferreds.awaitAll()
 
-            streamsByCategory[catId] = fetchedStreams
+            val sortedStreams = fetchedStreams.sortedByDescending { it.added.toLongOrNull() ?: 0L }
+            streamsByCategory[catId] = sortedStreams
             withContext(Dispatchers.Main) {
                 progressBar.visibility = View.GONE
-                movieGridAdapter = MovieGridAdapter(fetchedStreams)
+                movieGridAdapter = MovieGridAdapter(sortedStreams)
                 rvMovieGrid.adapter = movieGridAdapter
                 
                 // Força atualização da sidebar para mostrar a contagem
@@ -335,6 +337,7 @@ class VodNetflixActivity : AppCompatActivity() {
                 }
                 v.setOnClickListener {
                     onCategorySelected(catList[adapterPosition])
+                    rvMovieGrid.requestFocus()
                 }
             }
         }
@@ -383,7 +386,7 @@ class VodNetflixActivity : AppCompatActivity() {
                         startActivity(intent)
                     } else {
                         val intent = Intent(this@VodNetflixActivity, MovieInfoActivity::class.java)
-                        val url = "http://nelitoplay.top:80/movie/$username/$password/${s.stream_id}.${s.extension}"
+                        val url = "${Constants.SERVER_URL}/movie/$username/$password/${s.stream_id}.${s.extension}"
                         intent.putExtra("VIDEO_URL", url)
                         intent.putExtra("TITLE", s.name)
                         intent.putExtra("STREAM_ID", s.stream_id)

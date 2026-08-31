@@ -10,8 +10,8 @@ android {
         applicationId "com.iptv.app"
         minSdk 24
         targetSdk 34
-        versionCode 37
-        versionName "4.7"
+        versionCode 38
+        versionName "4.9"
     }
 
     buildTypes {
@@ -66,4 +66,5 @@ dependencies {
 
     // UI Premium
     implementation("androidx.cardview:cardview:1.0.0")
+
 }

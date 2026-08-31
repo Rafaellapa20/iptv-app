@@ -49,24 +49,49 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Proteção Anti-Bloqueio (DNS)"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <Switch
-                        android:id="@+id/switchVpn"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🛡️ Anti-Bloqueio (DNS Seguro)"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Switch
+                            android:id="@+id/switchVpn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true" />
+                        android:layout_marginTop="8dp"
+                        android:text="Contorna bloqueios do operador via DNS seguro (Cloudflare)"
+                        android:textColor="#808080"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btnInstallWarp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_button_neon"
+                        android:text="🌐 INSTALAR VPN GRÁTIS (WARP)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

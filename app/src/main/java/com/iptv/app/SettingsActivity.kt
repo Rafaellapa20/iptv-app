@@ -31,8 +31,6 @@ class SettingsActivity : AppCompatActivity() {
             tvAppVersion.text = "Versão: Desconhecida"
         }
 
-
-
         val btnClearCache = findViewById<Button>(R.id.btnClearCache)
         btnClearCache.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
@@ -53,26 +51,36 @@ class SettingsActivity : AppCompatActivity() {
 
         switchVpn.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("VPN_ENABLED", isChecked).apply()
-            
-            // Reconfigura o OkHttp com base no toggle
+            VpnHelper.setEnabled(this, isChecked)
             if (isChecked) {
-                OkHttpProvider.enableDoH()
-                Toast.makeText(this, "Proteção Anti-Bloqueio ATIVADA", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Anti-Bloqueio ATIVADO (DNS Seguro)", Toast.LENGTH_SHORT).show()
             } else {
-                OkHttpProvider.disableDoH()
-                Toast.makeText(this, "Proteção Anti-Bloqueio DESATIVADA", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Anti-Bloqueio DESATIVADO", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Botão para instalar/abrir Cloudflare WARP (VPN grátis)
+        val btnInstallWarp = findViewById<Button>(R.id.btnInstallWarp)
+        if (VpnHelper.isWarpInstalled(this)) {
+            btnInstallWarp.text = "🌐 ABRIR VPN (WARP)"
+        }
+        btnInstallWarp.setOnClickListener {
+            if (VpnHelper.isWarpInstalled(this)) {
+                Toast.makeText(this, "A abrir Cloudflare WARP...", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "A abrir loja para instalar VPN grátis...", Toast.LENGTH_SHORT).show()
+            }
+            VpnHelper.openWarpApp(this)
         }
         
         val btnLogout = findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
-            prefs.edit().clear().apply() // Clear all user data
+            prefs.edit().clear().apply()
             
             // Clear favorites
             getSharedPreferences("IPTV_FAVORITES", MODE_PRIVATE).edit().clear().apply()
 
             val intent = android.content.Intent(this, LoginActivity::class.java)
-            // Clear all activities in the stack so user can't press back to return
             intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
@@ -90,14 +98,13 @@ class SettingsActivity : AppCompatActivity() {
         btnSpeedTest.setOnClickListener {
             tvSpeedResult.visibility = View.VISIBLE
             tvSpeedResult.text = "A testar a sua internet... (Aguarde 5s)"
-            tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FFFF")) // Ciano loading
+            tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FFFF"))
             btnSpeedTest.isEnabled = false
 
             kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                 try {
-                    // Baixar 10MB da CDN ultrarrápida da Cloudflare para medir o tempo
                     val request = okhttp3.Request.Builder()
-                        .url("https://speed.cloudflare.com/__down?bytes=10000000") // 10MB chunk
+                        .url("https://speed.cloudflare.com/__down?bytes=10000000")
                         .build()
 
                     val startTime = System.currentTimeMillis()
@@ -107,7 +114,7 @@ class SettingsActivity : AppCompatActivity() {
                         val buffer = ByteArray(8192)
                         if (inputStream != null) {
                             while (inputStream.read(buffer) != -1) {
-                                // Apenas ler para descartar da memória (evita OutOfMemoryError em TV Boxes com pouca RAM)
+                                // Ler para descartar da memória
                             }
                             inputStream.close()
                         }
@@ -116,20 +123,20 @@ class SettingsActivity : AppCompatActivity() {
                         val timeTakenMs = endTime - startTime
                         val timeTakenSecs = timeTakenMs / 1000.0
                         
-                        // 10MB = 80 Megabits (Mb). Velocidade = Megabits / tempo
+                        // 10MB = 80 Megabits
                         val speedMbps = (80.0 / timeTakenSecs).toInt()
 
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                             btnSpeedTest.isEnabled = true
                             tvSpeedResult.text = "Velocidade: $speedMbps Megas (Mbps)\n" +
                                 if (speedMbps > 25) {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FF00")) // Verde
+                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FF00"))
                                     "🟢 Excelente! Sem travamentos."
                                 } else if (speedMbps in 10..25) {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FFFF00")) // Amarelo
+                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FFFF00"))
                                     "🟡 Razoável. Pode haver pequenos delays."
                                 } else {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FF0000")) // Vermelho
+                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FF0000"))
                                     "🔴 Lenta! Sua internet causará travamentos."
                                 }
                         }
@@ -157,15 +164,13 @@ class SettingsActivity : AppCompatActivity() {
 
             kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                 try {
-                    // Limpar Glide Cache de Disco (Fotos de filmes antigos)
                     com.bumptech.glide.Glide.get(this@SettingsActivity).clearDiskCache()
                     
-                    kotlinx.coroutines.delay(800) // Efeito psicológico
+                    kotlinx.coroutines.delay(800)
                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                         tvOptimizeResult.text = "A acelerar processamento... 50%"
                     }
                     
-                    // Limpar Cache geral do App
                     val cacheDir = cacheDir
                     if (cacheDir != null && cacheDir.isDirectory) {
                         cacheDir.deleteRecursively()
@@ -173,16 +178,14 @@ class SettingsActivity : AppCompatActivity() {
                     
                     kotlinx.coroutines.delay(800)
                     
-                    // Forçar o coletor de lixo (Garbage Collector)
                     System.gc()
                     Runtime.getRuntime().gc()
 
                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                        // Limpar Glide Cache de Memória RAM (Precisa ser na thread principal)
                         com.bumptech.glide.Glide.get(this@SettingsActivity).clearMemory()
                         
                         btnOptimize.isEnabled = true
-                        tvOptimizeResult.setTextColor(android.graphics.Color.parseColor("#00FF00")) // Verde
+                        tvOptimizeResult.setTextColor(android.graphics.Color.parseColor("#00FF00"))
                         tvOptimizeResult.text = "🚀 100% Concluído!\nMemória RAM libertada. TV Box otimizada!"
                         Toast.makeText(this@SettingsActivity, "TV Box Otimizada com sucesso!", Toast.LENGTH_SHORT).show()
                     }

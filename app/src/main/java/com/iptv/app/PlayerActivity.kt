@@ -171,7 +171,12 @@ class PlayerActivity : AppCompatActivity() {
     private fun createExoPlayer(): ExoPlayer {
         val trackSelector = androidx.media3.exoplayer.trackselection.DefaultTrackSelector(this)
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
-            .setBufferDurationsMs(2500, 50000, 1000, 2000)
+            .setBufferDurationsMs(
+                32000, // min buffer
+                120000, // max buffer
+                2500, // buffer for playback
+                5000 // buffer for playback after rebuffer
+            )
             .build()
 
         return ExoPlayer.Builder(this)
@@ -189,6 +194,17 @@ class PlayerActivity : AppCompatActivity() {
                 if (exoPlayer == getActivePlayer()) {
                     updateNetworkStatus(playbackState)
                 }
+            }
+            
+            override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                if (error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                    exoPlayer.seekToDefaultPosition()
+                    exoPlayer.prepare()
+                } else {
+                    android.widget.Toast.makeText(this@PlayerActivity, "Ligação instável. A reconectar...", android.widget.Toast.LENGTH_SHORT).show()
+                    exoPlayer.prepare()
+                }
+                exoPlayer.playWhenReady = true
             }
         })
     }
@@ -468,7 +484,7 @@ class PlayerActivity : AppCompatActivity() {
         if (username == null || password == null || streamId == null) return
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_short_epg&stream_id=$streamId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_short_epg&stream_id=$streamId"
                 val request = okhttp3.Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
                 if (response.isSuccessful) {

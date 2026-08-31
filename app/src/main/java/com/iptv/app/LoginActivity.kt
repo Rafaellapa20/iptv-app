@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val apiUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password"
+                val apiUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password"
                 val request = Request.Builder().url(apiUrl).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
@@ -118,8 +118,7 @@ class LoginActivity : AppCompatActivity() {
                             btnLogin.isEnabled = true
                             btnLogin.text = "ENTRAR"
                             if (isAutoLogin) {
-                                val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-                                prefs.edit().clear().apply()
+                                // Do not clear preferences on network/API failure
                             }
                             Toast.makeText(this@LoginActivity, "Usuário ou senha incorretos.", Toast.LENGTH_LONG).show()
                         }

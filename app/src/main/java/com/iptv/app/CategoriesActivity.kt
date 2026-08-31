@@ -65,7 +65,7 @@ class CategoriesActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$action"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=$action"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 

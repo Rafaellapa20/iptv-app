@@ -15,6 +15,7 @@ class IPTVApplication : Application() {
         val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", true)
         
         if (isVpnEnabled) {
+            // Enable DNS over HTTPS para contornar bloqueios
             OkHttpProvider.enableDoH()
         } else {
             OkHttpProvider.disableDoH()

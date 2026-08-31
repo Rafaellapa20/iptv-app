@@ -85,7 +85,7 @@ class LiveTvActivity : AppCompatActivity() {
         }
 
         navFilmes.setOnClickListener {
-            val intent = Intent(this, CategoriesActivity::class.java)
+            val intent = Intent(this, VodNetflixActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
             intent.putExtra("TYPE", "vod")
@@ -94,7 +94,7 @@ class LiveTvActivity : AppCompatActivity() {
         }
 
         navSeries.setOnClickListener {
-            val intent = Intent(this, CategoriesActivity::class.java)
+            val intent = Intent(this, VodNetflixActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
             intent.putExtra("TYPE", "series")
@@ -106,6 +106,18 @@ class LiveTvActivity : AppCompatActivity() {
     private fun initializeMiniPlayer() {
         miniPlayer = PlayerManager.getPlayer(this)
         miniPlayerView.player = miniPlayer
+        
+        miniPlayer?.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                if (error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                    miniPlayer?.seekToDefaultPosition()
+                    miniPlayer?.prepare()
+                } else {
+                    miniPlayer?.prepare()
+                }
+                miniPlayer?.playWhenReady = true
+            }
+        })
     }
 
     private fun playMiniVideo(streamId: String) {
@@ -116,7 +128,7 @@ class LiveTvActivity : AppCompatActivity() {
             return // Já está carregado este canal, não recarregar do zero
         }
         PlayerManager.currentStreamId = streamId
-        val streamUrl = "http://nelitoplay.top:80/live/$username/$password/$streamId.ts"
+        val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$streamId.ts"
         val mediaItem = MediaItem.fromUri(Uri.parse(streamUrl))
         miniPlayer?.setMediaItem(mediaItem)
         miniPlayer?.prepare()
@@ -128,7 +140,7 @@ class LiveTvActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Primeiro busca todos os canais para contar quantos existem em cada categoria
-                val allUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_live_streams"
+                val allUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
                 val allResponse = OkHttpProvider.client.newCall(Request.Builder().url(allUrl).build()).execute()
                 if (allResponse.isSuccessful) {
                     val allArray = JSONArray(allResponse.body?.string() ?: "[]")
@@ -140,7 +152,7 @@ class LiveTvActivity : AppCompatActivity() {
                     }
                 }
 
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_live_categories"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_categories"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
@@ -198,7 +210,7 @@ class LiveTvActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_live_streams&category_id=$catId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams&category_id=$catId"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
@@ -240,7 +252,7 @@ class LiveTvActivity : AppCompatActivity() {
     private fun fetchShortEpg(streamId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_short_epg&stream_id=$streamId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_short_epg&stream_id=$streamId"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
                 
@@ -304,6 +316,7 @@ class LiveTvActivity : AppCompatActivity() {
                     onClick(cat)
                     val prefs = v.context.getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
                     prefs.edit().putString("LAST_CATEGORY_ID", cat.category_id).apply()
+                    findViewById<RecyclerView>(R.id.rvChannels).requestFocus()
                 } 
             }
         }
@@ -345,14 +358,14 @@ class LiveTvActivity : AppCompatActivity() {
                         .apply()
                     
                     val intent = Intent(this@LiveTvActivity, PlayerActivity::class.java)
-                    val streamUrl = "http://nelitoplay.top:80/live/$username/$password/${s.stream_id}.ts"
+                    val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/${s.stream_id}.ts"
                     
                     val urlsList = ArrayList<String>()
                     val idsList = ArrayList<String>()
                     val namesList = ArrayList<String>()
                     var currentIndex = -1
                     for ((index, item) in list.withIndex()) {
-                        urlsList.add("http://nelitoplay.top:80/live/$username/$password/${item.stream_id}.ts")
+                        urlsList.add("${Constants.SERVER_URL}/live/$username/$password/${item.stream_id}.ts")
                         idsList.add(item.stream_id)
                         namesList.add(item.name)
                         if (item.stream_id == s.stream_id) currentIndex = index

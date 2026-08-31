@@ -72,7 +72,7 @@ class StreamsActivity : AppCompatActivity() {
                 val intent = Intent(this@StreamsActivity, PlayerActivity::class.java)
                 val extension = if (type == "vod") ".${stream.extension}" else ".ts"
                 val folder = if (type == "vod") "movie" else "live"
-                val streamUrl = "http://nelitoplay.top:80/$folder/$username/$password/${stream.stream_id}$extension"
+                val streamUrl = "${Constants.SERVER_URL}/$folder/$username/$password/${stream.stream_id}$extension"
                 
                 if (type == "live" || type == "favorites") {
                     val urlsList = ArrayList<String>()
@@ -80,7 +80,7 @@ class StreamsActivity : AppCompatActivity() {
                     for ((index, s) in filteredStreams.withIndex()) {
                         val sExt = if (s.stream_type == "movie") ".${s.extension}" else ".ts"
                         val sFold = if (s.stream_type == "movie") "movie" else "live"
-                        val sUrl = "http://nelitoplay.top:80/$sFold/$username/$password/${s.stream_id}$sExt"
+                        val sUrl = "${Constants.SERVER_URL}/$sFold/$username/$password/${s.stream_id}$sExt"
                         urlsList.add(sUrl)
                         if (s.stream_id == stream.stream_id) currentIndex = index
                     }
@@ -164,7 +164,7 @@ class StreamsActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=$action&category_id=$categoryId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=$action&category_id=$categoryId"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 

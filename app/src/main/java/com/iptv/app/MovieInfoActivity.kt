@@ -103,7 +103,7 @@ class MovieInfoActivity : AppCompatActivity() {
         pbLoading.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_vod_info&vod_id=$streamId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_vod_info&vod_id=$streamId"
                 val response = OkHttpProvider.client.newCall(Request.Builder().url(url).build()).execute()
 
                 if (response.isSuccessful) {

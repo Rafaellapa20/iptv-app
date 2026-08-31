@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 // Simplesmente forçamos uma pequena chamada para validar se a conta está ativa
                 // e ao mesmo tempo garantimos que o sistema sabe que houve um novo login.
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_live_categories"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_categories"
                 OkHttpProvider.client.newCall(okhttp3.Request.Builder().url(url).build()).execute()
                 withContext(Dispatchers.Main) {
                     android.util.Log.d("MainActivity", "Canais atualizados automaticamente.")
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, PlayerActivity::class.java)
                         val ext = if (stream.stream_type == "movie") ".${stream.extension}" else ".ts"
                         val folder = if (stream.stream_type == "movie") "movie" else "live"
-                        val url = "http://nelitoplay.top:80/$folder/$user/$pass/${stream.stream_id}$ext"
+                        val url = "${Constants.SERVER_URL}/$folder/$user/$pass/${stream.stream_id}$ext"
                         
                         intent.putExtra("VIDEO_URL", url)
                         intent.putExtra("STREAM_ID", stream.stream_id)
@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchRecentMovies(username: String, password: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_vod_streams"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_vod_streams"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 

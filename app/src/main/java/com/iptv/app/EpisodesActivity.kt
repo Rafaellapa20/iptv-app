@@ -94,7 +94,7 @@ class EpisodesActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_series_info&series_id=$seriesId"
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_series_info&series_id=$seriesId"
                 val request = Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
@@ -187,7 +187,7 @@ class EpisodesActivity : AppCompatActivity() {
                                 
                                 val urls = ArrayList<String>()
                                 for (ep in episodesList) {
-                                    urls.add("http://nelitoplay.top:80/series/$username/$password/${ep.id}.${ep.container_extension}")
+                                    urls.add("${Constants.SERVER_URL}/series/$username/$password/${ep.id}.${ep.container_extension}")
                                 }
                                 
                                 val currentIndex = episodesList.indexOf(episode)
@@ -222,7 +222,7 @@ class EpisodesActivity : AppCompatActivity() {
                                 val intent = Intent(this@EpisodesActivity, PlayerActivity::class.java)
                                 val urls = ArrayList<String>()
                                 for (e in episodesList) {
-                                    urls.add("http://nelitoplay.top:80/series/$username/$password/${e.id}.${e.container_extension}")
+                                    urls.add("${Constants.SERVER_URL}/series/$username/$password/${e.id}.${e.container_extension}")
                                 }
                                 
                                 intent.putExtra("VIDEO_URL", urls[match.episodeIndex])

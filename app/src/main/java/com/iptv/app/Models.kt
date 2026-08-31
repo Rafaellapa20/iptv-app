@@ -11,7 +11,8 @@ data class Stream(
     val name: String,
     val stream_icon: String,
     val stream_type: String,
-    val extension: String = "mp4"
+    val extension: String = "mp4",
+    val added: String = "0"
 )
 
 data class Episode(

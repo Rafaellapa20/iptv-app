@@ -71,7 +71,7 @@ class GlobalSearchActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // Fetch Live
-                val liveUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_live_streams"
+                val liveUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
                 val liveReq = Request.Builder().url(liveUrl).build()
                 val liveResp = OkHttpProvider.client.newCall(liveReq).execute()
                 if (liveResp.isSuccessful) {
@@ -88,7 +88,7 @@ class GlobalSearchActivity : AppCompatActivity() {
                 }
 
                 // Fetch VOD
-                val vodUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_vod_streams"
+                val vodUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_vod_streams"
                 val vodReq = Request.Builder().url(vodUrl).build()
                 val vodResp = OkHttpProvider.client.newCall(vodReq).execute()
                 if (vodResp.isSuccessful) {
@@ -106,7 +106,7 @@ class GlobalSearchActivity : AppCompatActivity() {
                 }
 
                 // Fetch Series
-                val seriesUrl = "http://nelitoplay.top:80/player_api.php?username=$username&password=$password&action=get_series"
+                val seriesUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_series"
                 val seriesReq = Request.Builder().url(seriesUrl).build()
                 val seriesResp = OkHttpProvider.client.newCall(seriesReq).execute()
                 if (seriesResp.isSuccessful) {
@@ -171,7 +171,7 @@ class GlobalSearchActivity : AppCompatActivity() {
                     when (s.stream_type) {
                         "live" -> {
                             val intent = Intent(this@GlobalSearchActivity, PlayerActivity::class.java)
-                            intent.putExtra("VIDEO_URL", "http://nelitoplay.top:80/live/$username/$password/${s.stream_id}.ts")
+                            intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/live/$username/$password/${s.stream_id}.ts")
                             intent.putExtra("TITLE", s.name)
                             intent.putExtra("STREAM_ID", s.stream_id)
                             intent.putExtra("TYPE", "live")
@@ -181,7 +181,7 @@ class GlobalSearchActivity : AppCompatActivity() {
                         }
                         "vod" -> {
                             val intent = Intent(this@GlobalSearchActivity, MovieInfoActivity::class.java)
-                            intent.putExtra("VIDEO_URL", "http://nelitoplay.top:80/movie/$username/$password/${s.stream_id}.${s.extension}")
+                            intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/movie/$username/$password/${s.stream_id}.${s.extension}")
                             intent.putExtra("TITLE", s.name)
                             intent.putExtra("STREAM_ID", s.stream_id)
                             intent.putExtra("TYPE", "vod")
