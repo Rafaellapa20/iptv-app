@@ -1,6 +1,6 @@
 {
-  "versionCode": 48,
-  "versionName": "5.59",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.9-debug.apk",
-  "releaseNotes": "v5.9 - Melhorias Críticas Pedidas:\n- Adicionado botão de estrela ⭐ clicável em cada canal para alternar Favoritos instantaneamente\n- Removida a lista lateral 'Canal 1 2 3...' ao pressionar OK em ecrã inteiro\n- Ao mudar de canal com as setas para CIMA/BAIXO, a transmissão muda diretamente sem ecrã/logótipo de carregamento"
+  "versionCode": 49,
+  "versionName": "6.0",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.0-debug.apk",
+  "releaseNotes": "v6.0 - Correção Definitiva dos Favoritos:\n- Corrigido o bug interno no carregamento de Favoritos (FavoritesManager JSON optString)\n- Botão ⭐ adicionado nos controlos do leitor fullscreen para adicionar aos Favoritos durante a transmissão\n- Botão ⭐ selecionável na lista de canais com visualização imediata do estado (Estrela Amarela viva)"
 }

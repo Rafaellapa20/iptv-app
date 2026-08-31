@@ -79,6 +79,18 @@
         android:visibility="gone">
 
         <ImageButton
+            android:id="@+id/btnFavPlayer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_button_neon"
+            android:src="@android:drawable/btn_star_big_on"
+            app:tint="#FFCC00"
+            android:layout_marginBottom="16dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:contentDescription="Favorito" />
+
+        <ImageButton
             android:id="@+id/btnRec"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -45,6 +45,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var llNextEpisode: View
     private lateinit var btnNextEpisode: android.widget.Button
     private lateinit var tvNextCountdown: android.widget.TextView
+    private lateinit var btnFavPlayer: android.widget.ImageButton
     
     private var player1: ExoPlayer? = null
     private var player2: ExoPlayer? = null
@@ -173,6 +174,20 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
+        btnFavPlayer = findViewById(R.id.btnFavPlayer)
+        updateFavButtonState()
+        btnFavPlayer.setOnClickListener {
+            if (streamId != null) {
+                val title = intent.getStringExtra("TITLE") ?: "Canal"
+                val cover = intent.getStringExtra("COVER") ?: ""
+                val type = intent.getStringExtra("TYPE") ?: "live"
+                val isFav = FavoritesManager.toggleFavorite(this, streamId!!, title, cover, type)
+                updateFavButtonState()
+                val msg = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         btnSplitScreen.setOnClickListener {
             toggleMultiScreen()
         }
@@ -187,6 +202,17 @@ class PlayerActivity : AppCompatActivity() {
         
         btnNextEpisode.setOnClickListener {
             playNextEpisode()
+        }
+    }
+
+    private fun updateFavButtonState() {
+        if (streamId != null) {
+            val isFav = FavoritesManager.isFavorite(this, streamId!!)
+            if (isFav) {
+                btnFavPlayer.setColorFilter(android.graphics.Color.YELLOW)
+            } else {
+                btnFavPlayer.setColorFilter(android.graphics.Color.WHITE)
+            }
         }
     }
 
