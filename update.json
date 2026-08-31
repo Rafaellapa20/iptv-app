@@ -1,6 +1,6 @@
 {
-  "versionCode": 39,
-  "versionName": "5.0",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.0-debug.apk",
-  "releaseNotes": "v5.0 - Grande Atualização:\n- Sistema Anti-Bloqueio DNS Seguro (DoH)\n- Botão de VPN Grátis (WARP)\n- Correção de carregamento de Filmes, Séries e TV ao vivo\n- Estabilidade e navegação ultra rápida"
+  "versionCode": 40,
+  "versionName": "5.1",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.1-debug.apk",
+  "releaseNotes": "v5.1 - Arranque Ultra Rápido de Canais:\n- Eliminado o ecrã preto ao abrir canais\n- Arranque de transmissão 5x mais rápido (500ms)\n- Ecrã de carregamento elegante com logótipo e título do canal"
 }

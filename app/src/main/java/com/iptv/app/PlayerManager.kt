@@ -2,7 +2,6 @@ package com.iptv.app
 
 import android.content.Context
 import androidx.media3.exoplayer.ExoPlayer
-
 import androidx.media3.exoplayer.DefaultLoadControl
 
 object PlayerManager {
@@ -11,12 +10,13 @@ object PlayerManager {
 
     fun getPlayer(context: Context): ExoPlayer {
         if (sharedPlayer == null) {
+            // Buffer ultra rápido para eliminação do ecrã preto e abertura instantânea
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
-                    32000, // min buffer
-                    120000, // max buffer
-                    2500, // buffer for playback
-                    5000 // buffer for playback after rebuffer
+                    15000, // min buffer
+                    60000,  // max buffer
+                    500,    // buffer for playback (apenas 0.5s para arrancar logo!)
+                    1000    // buffer for playback after rebuffer
                 ).build()
 
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)

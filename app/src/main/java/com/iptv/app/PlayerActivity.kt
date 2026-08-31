@@ -71,6 +71,10 @@ class PlayerActivity : AppCompatActivity() {
     private var currentStreamUrl = ""
     private var isNextEpisodeOverlayVisible = false
 
+    private lateinit var rlBufferingOverlay: View
+    private lateinit var ivLoadingCover: android.widget.ImageView
+    private lateinit var tvLoadingTitle: android.widget.TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -91,6 +95,20 @@ class PlayerActivity : AppCompatActivity() {
         llNextEpisode = findViewById(R.id.llNextEpisode)
         btnNextEpisode = findViewById(R.id.btnNextEpisode)
         tvNextCountdown = findViewById(R.id.tvNextCountdown)
+
+        rlBufferingOverlay = findViewById(R.id.rlBufferingOverlay)
+        ivLoadingCover = findViewById(R.id.ivLoadingCover)
+        tvLoadingTitle = findViewById(R.id.tvLoadingTitle)
+
+        val initialTitle = intent.getStringExtra("TITLE") ?: "A carregar canal..."
+        val initialCover = intent.getStringExtra("COVER") ?: ""
+        tvLoadingTitle.text = initialTitle
+        if (initialCover.isNotEmpty()) {
+            com.bumptech.glide.Glide.with(this).load(initialCover).into(ivLoadingCover)
+        } else {
+            ivLoadingCover.setImageResource(R.drawable.logo)
+        }
+        rlBufferingOverlay.visibility = View.VISIBLE
         
         setupQuickChannels()
 
@@ -172,10 +190,10 @@ class PlayerActivity : AppCompatActivity() {
         val trackSelector = androidx.media3.exoplayer.trackselection.DefaultTrackSelector(this)
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
             .setBufferDurationsMs(
-                32000, // min buffer
-                120000, // max buffer
-                2500, // buffer for playback
-                5000 // buffer for playback after rebuffer
+                15000, // min buffer
+                60000,  // max buffer
+                500,    // buffer for playback (ARRANQUE EM 0.5s - SEM ESPERA PRETA)
+                1000    // buffer for playback after rebuffer
             )
             .build()
 
@@ -190,9 +208,18 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun addPlayerListener(exoPlayer: ExoPlayer) {
         exoPlayer.addListener(object : androidx.media3.common.Player.Listener {
+            override fun onRenderedFirstFrame() {
+                if (exoPlayer == getActivePlayer()) {
+                    rlBufferingOverlay.visibility = View.GONE
+                }
+            }
+
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (exoPlayer == getActivePlayer()) {
                     updateNetworkStatus(playbackState)
+                    if (playbackState == androidx.media3.common.Player.STATE_READY) {
+                        rlBufferingOverlay.visibility = View.GONE
+                    }
                 }
             }
             
@@ -216,6 +243,10 @@ class PlayerActivity : AppCompatActivity() {
     private fun getInactivePlayerView(): PlayerView = if (activePlayerNum == 1) playerView2 else playerView1
 
     private fun playUrlInPlayer(exoPlayer: ExoPlayer, url: String) {
+        if (exoPlayer == getActivePlayer() && exoPlayer.playbackState != androidx.media3.common.Player.STATE_READY) {
+            rlBufferingOverlay.visibility = View.VISIBLE
+        }
+
         val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
         val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
             .createMediaSource(MediaItem.fromUri(Uri.parse(url)))

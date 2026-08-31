@@ -26,6 +26,45 @@
         app:surface_type="texture_view"
         app:use_controller="true"/>
 
+    <!-- Fast Buffering Overlay (Substitui ecrã preto por Capa/Logo + Spinner) -->
+    <RelativeLayout
+        android:id="@+id/rlBufferingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D071E"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivLoadingCover"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo" />
+
+        <ProgressBar
+            android:id="@+id/pbBufferingSpinner"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/ivLoadingCover"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:indeterminateTint="#00FFFF" />
+
+        <TextView
+            android:id="@+id/tvLoadingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pbBufferingSpinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:text="A carregar canal..."
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
     <!-- Quick Channel List Overlay -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvQuickChannels"
