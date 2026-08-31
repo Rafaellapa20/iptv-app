@@ -59,19 +59,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        // Botão para instalar/abrir Cloudflare WARP (VPN grátis)
-        val btnInstallWarp = findViewById<Button>(R.id.btnInstallWarp)
-        if (VpnHelper.isWarpInstalled(this)) {
-            btnInstallWarp.text = "🌐 ABRIR VPN (WARP)"
-        }
-        btnInstallWarp.setOnClickListener {
-            if (VpnHelper.isWarpInstalled(this)) {
-                Toast.makeText(this, "A abrir Cloudflare WARP...", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "A abrir loja para instalar VPN grátis...", Toast.LENGTH_SHORT).show()
-            }
-            VpnHelper.openWarpApp(this)
-        }
+
         
         val btnLogout = findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {

@@ -1,6 +1,6 @@
 {
-  "versionCode": 41,
-  "versionName": "5.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.2-debug.apk",
-  "releaseNotes": "v5.2 - Novo Hero Card de Filmes no Menu Inicial:\n- Design Premium com cantos arredondados e gradiente escuro\n- Título do Filme em Destaque no menu inicial\n- Botão de acesso direto '▶ VER FILME' no menu inicial"
+  "versionCode": 43,
+  "versionName": "5.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.4-debug.apk",
+  "releaseNotes": "v5.4 - Melhorias Gerais:\n- Removido botão e referências ao WARP das Definições\n- Sistema Anti-Bloqueio nativo 100% automático em segundo plano\n- Navegação por comando de TV e reprodução otimizadas"
 }
