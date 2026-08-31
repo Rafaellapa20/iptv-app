@@ -36,6 +36,7 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         android:stateListAnimator="@animator/selector_item_scale"
+        android:nextFocusLeft="@id/btnFilmes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,7 +99,8 @@
                     android:text="▶ VER FILME"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:nextFocusLeft="@id/btnFilmes" />
             </LinearLayout>
         </FrameLayout>
     </androidx.cardview.widget.CardView>
@@ -260,6 +262,7 @@
                 android:background="@drawable/bg_button_neon"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
+                android:nextFocusRight="@id/btnPlayHeroMovie"
                 android:layout_marginBottom="16dp"/>
 
             <Button
@@ -271,6 +274,7 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="12sp"
+                android:nextFocusRight="@id/btnPlayHeroMovie"
                 android:layout_marginBottom="16dp"/>
 
             <Button
@@ -282,6 +286,7 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="12sp"
+                android:nextFocusRight="@id/btnPlayHeroMovie"
                 android:layout_marginBottom="16dp"/>
 
             <Button
@@ -293,6 +298,7 @@
                 android:textColor="#FFFF00"
                 android:textStyle="bold"
                 android:textSize="10sp"
+                android:nextFocusRight="@id/btnPlayHeroMovie"
                 android:layout_marginBottom="16dp"/>
 
             <Space android:layout_width="wrap_content" android:layout_height="0dp" android:layout_weight="1"/>

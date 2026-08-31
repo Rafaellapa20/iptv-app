@@ -1,6 +1,6 @@
 {
-  "versionCode": 45,
-  "versionName": "5.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.6-debug.apk",
-  "releaseNotes": "v5.6 - Correção Crítica da Reprodução de Vídeo:\n- O ecrã de carregamento/logótipo esconde-se imediatamente assim que o áudio/vídeo arranca\n- Eliminação total do bloqueio visual ao trocar de canal"
+  "versionCode": 46,
+  "versionName": "5.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.7-debug.apk",
+  "releaseNotes": "v5.7 - Navegação por Comando Direta para 'VER FILME':\n- Ao estar nos botões TV, Filmes, Séries ou Favoritos no menu principal e pressionar DIREITA, a seleção salta DIRETAMENTE para o botão '▶ VER FILME'\n- Ao pressionar ESQUERDA, regressa instantaneamente ao menu lateral"
 }
