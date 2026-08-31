@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
                     recentMovies.addAll(moviesData.map { it.first }.take(15))
 
                     withContext(Dispatchers.Main) {
-                        startHeroBannerSlideshow()
+                        startHeroBannerSlideshow(username, password)
                     }
                 }
             } catch (e: Exception) {
@@ -234,23 +234,43 @@ class MainActivity : AppCompatActivity() {
 
     private var bannerJob: kotlinx.coroutines.Job? = null
 
-    private fun startHeroBannerSlideshow() {
+    private fun startHeroBannerSlideshow(username: String, password: String) {
         if (recentMovies.isEmpty()) return
+        val cvHeroCard = findViewById<View>(R.id.cvHeroCard)
         val ivHeroBanner = findViewById<android.widget.ImageView>(R.id.ivHeroBanner)
-        
+        val tvHeroMovieTitle = findViewById<android.widget.TextView>(R.id.tvHeroMovieTitle)
+        val btnPlayHeroMovie = findViewById<android.widget.Button>(R.id.btnPlayHeroMovie)
+
+        cvHeroCard?.visibility = View.VISIBLE
+
         bannerJob?.cancel()
         bannerJob = CoroutineScope(Dispatchers.Main).launch {
             var currentIndex = 0
             while (isActive) {
                 val movie = recentMovies[currentIndex]
                 if (movie.stream_icon.isNotEmpty()) {
+                    tvHeroMovieTitle?.text = movie.name
+
                     com.bumptech.glide.Glide.with(this@MainActivity)
                         .load(movie.stream_icon)
-                        .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(1000))
+                        .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(800))
                         .into(ivHeroBanner)
+
+                    btnPlayHeroMovie?.setOnClickListener {
+                        val intent = Intent(this@MainActivity, MovieInfoActivity::class.java)
+                        val url = "${Constants.SERVER_URL}/movie/$username/$password/${movie.stream_id}.${movie.extension}"
+                        intent.putExtra("VIDEO_URL", url)
+                        intent.putExtra("TITLE", movie.name)
+                        intent.putExtra("STREAM_ID", movie.stream_id)
+                        intent.putExtra("TYPE", "vod")
+                        intent.putExtra("USERNAME", username)
+                        intent.putExtra("PASSWORD", password)
+                        intent.putExtra("COVER", movie.stream_icon)
+                        startActivity(intent)
+                    }
                 }
-                
-                kotlinx.coroutines.delay(5000)
+
+                kotlinx.coroutines.delay(6000)
                 currentIndex = (currentIndex + 1) % recentMovies.size
             }
         }

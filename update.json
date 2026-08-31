@@ -1,6 +1,6 @@
 {
-  "versionCode": 40,
-  "versionName": "5.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.1-debug.apk",
-  "releaseNotes": "v5.1 - Arranque Ultra Rápido de Canais:\n- Eliminado o ecrã preto ao abrir canais\n- Arranque de transmissão 5x mais rápido (500ms)\n- Ecrã de carregamento elegante com logótipo e título do canal"
+  "versionCode": 41,
+  "versionName": "5.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v5.2-debug.apk",
+  "releaseNotes": "v5.2 - Novo Hero Card de Filmes no Menu Inicial:\n- Design Premium com cantos arredondados e gradiente escuro\n- Título do Filme em Destaque no menu inicial\n- Botão de acesso direto '▶ VER FILME' no menu inicial"
 }
