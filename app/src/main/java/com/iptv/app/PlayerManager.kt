@@ -17,10 +17,13 @@ object PlayerManager {
                     60000, // max buffer
                     2500,  // buffer for playback
                     3500   // buffer for playback after rebuffer
-                ).build()
+                )
+                .setBackBuffer(30000, true) // Guarda 30s de buffer anterior para evitar congelamentos
+                .build()
 
             val renderersFactory = DefaultRenderersFactory(context.applicationContext)
                 .setEnableDecoderFallback(true)
+                .setAllowedVideoJoiningTimeMs(5000)
 
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)
                 .setRenderersFactory(renderersFactory)

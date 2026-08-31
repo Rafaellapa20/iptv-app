@@ -225,10 +225,12 @@ class PlayerActivity : AppCompatActivity() {
                 2500,   // buffer for playback
                 3500    // buffer for playback after rebuffer
             )
+            .setBackBuffer(30000, true)
             .build()
 
         val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)
             .setEnableDecoderFallback(true)
+            .setAllowedVideoJoiningTimeMs(5000)
 
         return ExoPlayer.Builder(this)
             .setRenderersFactory(renderersFactory)
