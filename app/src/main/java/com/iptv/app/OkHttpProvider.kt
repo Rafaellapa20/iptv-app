@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.Cache
+import okhttp3.ConnectionPool
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -17,24 +18,26 @@ object OkHttpProvider {
 
     private const val BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
-    // Disfarça todo o tráfego da app como tráfego normal de um navegador Web (evita throttling/DPI dos operadores)
     private val userAgentInterceptor = Interceptor { chain ->
         val original = chain.request()
         val requestBuilder = original.newBuilder()
             .header("User-Agent", BROWSER_USER_AGENT)
             .header("Accept", "*/*")
             .header("Accept-Language", "pt-PT,pt;q=0.9,en-US;q=0.8,en;q=0.7")
+            .header("Connection", "keep-alive")
         chain.proceed(requestBuilder.build())
     }
 
     private var cacheDir: File? = null
     private val appCache: Cache by lazy {
-        Cache(File(cacheDir ?: File("."), "http_cache"), 100L * 1024L * 1024L) // 100MB Cache
+        Cache(File(cacheDir ?: File("."), "http_cache"), 100L * 1024L * 1024L)
     }
+
+    // Pool de ligações persistentes para manter o sinal sempre aberto sem reconexões TCP custosas
+    private val connectionPool = ConnectionPool(10, 5, TimeUnit.MINUTES)
     
     fun init(context: Context) {
         cacheDir = context.cacheDir
-        // Limpeza automática de cache antigo
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val cacheFile = File(context.cacheDir, "http_cache")
@@ -48,16 +51,17 @@ object OkHttpProvider {
         }
     }
     
-    // Cliente Base para fazer as consultas DNS (sem DNS modificado para evitar loop)
     private val bootstrapClient by lazy {
         OkHttpClient.Builder()
             .cache(appCache)
             .addInterceptor(userAgentInterceptor)
-            .connectTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(8, TimeUnit.SECONDS)
+            .readTimeout(8, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .connectionPool(connectionPool)
             .build()
     }
 
-    // Classe de DNS com Defesa Tripla (Cloudflare -> Google -> Quad9 -> Sistema)
     class TripleArmorDns(private val bootstrapClient: OkHttpClient) : okhttp3.Dns {
         private val cloudflareDns by lazy {
             DnsOverHttps.Builder().client(bootstrapClient)
@@ -114,16 +118,22 @@ object OkHttpProvider {
     private val safeDns by lazy { TripleArmorDns(bootstrapClient) }
 
     var client: OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(12, TimeUnit.SECONDS)
+        .readTimeout(12, TimeUnit.SECONDS)
+        .writeTimeout(12, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .connectionPool(connectionPool)
         .addInterceptor(userAgentInterceptor)
         .dns(safeDns)
         .build()
 
     fun enableDoH() {
         client = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(12, TimeUnit.SECONDS)
+            .readTimeout(12, TimeUnit.SECONDS)
+            .writeTimeout(12, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .connectionPool(connectionPool)
             .addInterceptor(userAgentInterceptor)
             .dns(safeDns)
             .build()
@@ -131,8 +141,11 @@ object OkHttpProvider {
 
     fun disableDoH() {
         client = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(12, TimeUnit.SECONDS)
+            .readTimeout(12, TimeUnit.SECONDS)
+            .writeTimeout(12, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .connectionPool(connectionPool)
             .addInterceptor(userAgentInterceptor)
             .build()
     }

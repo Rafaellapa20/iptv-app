@@ -3,6 +3,7 @@ package com.iptv.app
 import android.content.Context
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.DefaultRenderersFactory
 
 object PlayerManager {
     var sharedPlayer: ExoPlayer? = null
@@ -10,16 +11,19 @@ object PlayerManager {
 
     fun getPlayer(context: Context): ExoPlayer {
         if (sharedPlayer == null) {
-            // Buffer ideal para estabilidade máxima sem falhas em transmissões ao vivo
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
                     15000, // min buffer
                     60000, // max buffer
-                    2500,  // buffer for playback (2.5s para estabilidade total contra travamentos)
+                    2500,  // buffer for playback
                     3500   // buffer for playback after rebuffer
                 ).build()
 
+            val renderersFactory = DefaultRenderersFactory(context.applicationContext)
+                .setEnableDecoderFallback(true)
+
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)
+                .setRenderersFactory(renderersFactory)
                 .setLoadControl(loadControl)
                 .build()
         }

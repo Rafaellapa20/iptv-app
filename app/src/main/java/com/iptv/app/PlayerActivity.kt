@@ -222,12 +222,16 @@ class PlayerActivity : AppCompatActivity() {
             .setBufferDurationsMs(
                 15000, // min buffer
                 60000,  // max buffer
-                2500,   // buffer for playback (2.5s para estabilidade total)
+                2500,   // buffer for playback
                 3500    // buffer for playback after rebuffer
             )
             .build()
 
+        val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)
+            .setEnableDecoderFallback(true)
+
         return ExoPlayer.Builder(this)
+            .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
             .setVideoScalingMode(androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)

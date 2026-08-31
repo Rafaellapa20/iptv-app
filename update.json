@@ -1,6 +1,6 @@
 {
-  "versionCode": 51,
-  "versionName": "6.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.2-debug.apk",
-  "releaseNotes": "v6.2 - Estabilidade Total Anti-Travamentos e Resolução Ultra Rápida de Canais:\n- Aumentado o buffer de reprodução do ExoPlayer para 2500ms (evita travamentos e quebras de sinal)\n- Otimizada a consulta DNS (resolução ultrarrápida em 5ms com fallback automático)\n- Reconexão automática transparente caso o servidor IPTV perca pacotes"
+  "versionCode": 52,
+  "versionName": "6.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.3-debug.apk",
+  "releaseNotes": "v6.3 - Blindagem Extrema de Estabilidade (Nível Profissional):\n- Ativado Fallback Automático de Descodificador (Hardware -> Software) para evitar travamentos de vídeo\n- Adicionada repetição automática de conexões OkHttp (retryOnConnectionFailure) com pool de ligações em segundo plano\n- Ativados headers Keep-Alive persistentes para manter o sinal de TV sempre aberto sem oscilações"
 }
