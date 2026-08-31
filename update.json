@@ -1,6 +1,6 @@
 {
-  "versionCode": 37,
-  "versionName": "4.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.7-debug.apk",
-  "releaseNotes": "v4.7 - Correções Finais:\n- Resolvido o bug onde o som da TV continuava a dar em segundo plano após sair para o menu da TV Box."
+  "versionCode": 38,
+  "versionName": "4.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v4.9-debug.apk",
+  "releaseNotes": "v4.9 - Novidades:\n- Sistema Anti-Bloqueio DNS Seguro (DoH)\n- Botão de VPN grátis (WARP)\n- Correção completa no carregamento de Filmes, Séries e TV ao vivo\n- Estabilidade e velocidade melhoradas"
 }
