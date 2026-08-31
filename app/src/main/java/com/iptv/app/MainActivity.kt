@@ -241,6 +241,8 @@ class MainActivity : AppCompatActivity() {
         val tvHeroMovieTitle = findViewById<android.widget.TextView>(R.id.tvHeroMovieTitle)
         val btnPlayHeroMovie = findViewById<android.widget.Button>(R.id.btnPlayHeroMovie)
 
+        val ivMainBackgroundBlur = findViewById<android.widget.ImageView>(R.id.ivMainBackgroundBlur)
+
         cvHeroCard?.visibility = View.VISIBLE
 
         bannerJob?.cancel()
@@ -256,7 +258,15 @@ class MainActivity : AppCompatActivity() {
                         .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(800))
                         .into(ivHeroBanner)
 
-                    btnPlayHeroMovie?.setOnClickListener {
+                    if (ivMainBackgroundBlur != null) {
+                        com.bumptech.glide.Glide.with(this@MainActivity)
+                            .load(movie.stream_icon)
+                            .apply(com.bumptech.glide.request.RequestOptions.bitmapTransform(jp.wasabeef.glide.transformations.BlurTransformation(25, 3)))
+                            .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(1000))
+                            .into(ivMainBackgroundBlur)
+                    }
+
+                    val openMovieAction = View.OnClickListener {
                         val intent = Intent(this@MainActivity, MovieInfoActivity::class.java)
                         val url = "${Constants.SERVER_URL}/movie/$username/$password/${movie.stream_id}.${movie.extension}"
                         intent.putExtra("VIDEO_URL", url)
@@ -268,6 +278,9 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("COVER", movie.stream_icon)
                         startActivity(intent)
                     }
+
+                    cvHeroCard?.setOnClickListener(openMovieAction)
+                    btnPlayHeroMovie?.setOnClickListener(openMovieAction)
                 }
 
                 kotlinx.coroutines.delay(6000)
