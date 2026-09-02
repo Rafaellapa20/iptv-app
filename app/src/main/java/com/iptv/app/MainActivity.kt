@@ -189,17 +189,7 @@ class MainActivity : AppCompatActivity() {
             startMiniPlayer(username, password, lastChannelId)
             fetchChannelEpgTitle(username, password, lastChannelId, tvSubTv)
 
-            cardTv?.setOnClickListener {
-                val intent = Intent(this, PlayerActivity::class.java)
-                val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$lastChannelId.ts"
-                intent.putExtra("VIDEO_URL", streamUrl)
-                intent.putExtra("STREAM_ID", lastChannelId)
-                intent.putExtra("TITLE", lastChannelName)
-                intent.putExtra("USERNAME", username)
-                intent.putExtra("PASSWORD", password)
-                intent.putExtra("TYPE", "live")
-                startActivity(intent)
-            }
+            // Removed cardTv.setOnClickListener here because it overrides the one in onCreate that opens LiveTvActivity
         } else {
             fetchFirstChannelAndPlay(username, password)
         }
@@ -271,17 +261,7 @@ class MainActivity : AppCompatActivity() {
                             startMiniPlayer(username, password, sId)
                             fetchChannelEpgTitle(username, password, sId, findViewById(R.id.tvSubTv))
 
-                            findViewById<View>(R.id.cardTv)?.setOnClickListener {
-                                val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-                                val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$sId.ts"
-                                intent.putExtra("VIDEO_URL", streamUrl)
-                                intent.putExtra("STREAM_ID", sId)
-                                intent.putExtra("TITLE", name)
-                                intent.putExtra("USERNAME", username)
-                                intent.putExtra("PASSWORD", password)
-                                intent.putExtra("TYPE", "live")
-                                startActivity(intent)
-                            }
+                            // Removed cardTv.setOnClickListener here because it overrides the one in onCreate that opens LiveTvActivity
                         }
                     }
                 }
