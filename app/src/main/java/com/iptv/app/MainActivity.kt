@@ -80,8 +80,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.cardTv).setOnClickListener { openLiveTv(username, password) }
         findViewById<View>(R.id.cardFilmes).setOnClickListener { openCategories(username, password, "vod") }
         findViewById<View>(R.id.cardSeries).setOnClickListener { openCategories(username, password, "series") }
-        findViewById<View>(R.id.cardEpg).setOnClickListener {
-            val intent = Intent(this, EpgGridActivity::class.java)
+        findViewById<View>(R.id.cardMultiScreen)?.setOnClickListener {
+            val intent = Intent(this, MultiScreenActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
             startActivity(intent)

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".MultiScreenActivity">
+
+    <!-- BARRA SUPERIOR (HEADER) -->
+    <RelativeLayout
+        android:id="@+id/headerMultiScreen"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingHorizontal="16dp"
+        android:background="#99050A14"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBackMulti"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackground"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="#FFFFFF"
+            android:contentDescription="Voltar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/btnBackMulti"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:text="MULTI-ECRÃ (2 CANAIS SIMULTÂNEOS)"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <!-- Botão Alternar Som entre Ecrã 1 e Ecrã 2 -->
+        <Button
+            android:id="@+id/btnToggleAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_button_neon"
+            android:paddingHorizontal="12dp"
+            android:text="🔊 SOM: ECRÃ 1"
+            android:textColor="#00E5FF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- ÁREA DOS 2 ECRÃS LADO A LADO (DIVISÃO 50% / 50%) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@id/headerMultiScreen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- ECRÃ 1 (ESQUERDA 50%) -->
+        <RelativeLayout
+            android:id="@+id/containerScreen1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#111111"
+            android:padding="2dp">
+
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/playerView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:resize_mode="fit"
+                app:surface_type="surface_view"
+                app:use_controller="false" />
+
+            <!-- Banner com Título e Botão Trocar Canal 1 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:paddingHorizontal="10dp"
+                android:background="#B3000000">
+
+                <TextView
+                    android:id="@+id/tvTitleScreen1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Ecrã 1: RTP 1 HD"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnChangeChannel1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_button_neon"
+                    android:paddingHorizontal="8dp"
+                    android:text="TROCAR CANAL 1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:clickable="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#00E5FF" />
+
+        <!-- ECRÃ 2 (DIREITA 50%) -->
+        <RelativeLayout
+            android:id="@+id/containerScreen2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#111111"
+            android:padding="2dp">
+
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/playerView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:resize_mode="fit"
+                app:surface_type="surface_view"
+                app:use_controller="false" />
+
+            <!-- Banner com Título e Botão Trocar Canal 2 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:paddingHorizontal="10dp"
+                android:background="#B3000000">
+
+                <TextView
+                    android:id="@+id/tvTitleScreen2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Ecrã 2: Sport TV 1 HD"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnChangeChannel2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_button_neon"
+                    android:paddingHorizontal="8dp"
+                    android:text="TROCAR CANAL 2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:clickable="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

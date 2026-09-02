@@ -1,6 +1,6 @@
 {
-  "versionCode": 74,
-  "versionName": "8.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.5-debug.apk",
-  "releaseNotes": "v8.5 Release Oficial:\n- Cartão Live TV exibe o logótipo e nome do ÚLTIMO CANAL VISTO (em vez do logo da app)\n- Titulos explícitos no topo de cada cartão (LIVE TV, MOVIES VOD, SERIES, TV GUIDE EPG)\n- Seção 'CONTINUAR A VER' filtrada EXCLUSIVAMENTE para Filmes e Séries (sem canais em direto)"
+  "versionCode": 75,
+  "versionName": "8.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.6-debug.apk",
+  "releaseNotes": "v8.6 Release Oficial:\n- 1º Clique OK liga o canal no ecrã pequeno (mini-player); 2º Clique OK abre em 100% Ecrã Inteiro\n- Remoção do auto-play ao navegar com as setas para cima/baixo na lista de canais\n- Nova funcionalidade MULTI-ECRÃ (2 Canais Simultâneos lado a lado) no menu principal com alternância de áudio"
 }

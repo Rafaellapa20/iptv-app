@@ -451,9 +451,9 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- CARD 4: TV GUIDE (EPG) (BORDER NEON CYAN) -->
+        <!-- CARD 4: MULTISCREEN (MULTI-ECRÃ PARA 2 ECRÃS) -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardEpg"
+            android:id="@+id/cardMultiScreen"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -472,85 +472,54 @@
                 android:padding="12dp">
 
                 <ImageView
-                    android:id="@+id/ivIconEpg"
+                    android:id="@+id/ivIconMulti"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_today"
+                    android:src="@android:drawable/ic_menu_agenda"
                     app:tint="#00E5FF" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/ivIconEpg"
+                    android:layout_toEndOf="@id/ivIconMulti"
                     android:layout_marginStart="6dp"
                     android:layout_centerVertical="true"
-                    android:text="TV GUIDE (EPG)"
+                    android:text="MULTISCREEN"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- Mini Lista Grelha EPG dos Canais -->
+                <!-- Banner Dual Screen Preview -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/ivIconEpg"
+                    android:layout_below="@id/ivIconMulti"
                     android:layout_marginTop="8dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                    <!-- Canal 1 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:background="#1F00E5FF">
-                        <TextView android:layout_width="45dp" android:layout_height="wrap_content" android:text="RTP1" android:textColor="#00E5FF" android:textSize="10sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Portugal vs. Espanha" android:textColor="#FFFFFF" android:textSize="10sp" android:maxLines="1" android:ellipsize="end"/>
-                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:src="@android:drawable/ic_menu_agenda"
+                        app:tint="#00E5FF" />
 
-                    <!-- Canal 2 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:layout_marginTop="3dp"
-                        android:background="#10FFFFFF">
-                        <TextView android:layout_width="45dp" android:layout_height="wrap_content" android:text="SIC" android:textColor="#8A99AD" android:textSize="10sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Jornal da Noite" android:textColor="#FFFFFF" android:textSize="10sp" android:maxLines="1" android:ellipsize="end"/>
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="MULTI-ECRÃ (2 CANAIS)"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
-                    <!-- Canal 3 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:layout_marginTop="3dp"
-                        android:background="#10FFFFFF">
-                        <TextView android:layout_width="45dp" android:layout_height="wrap_content" android:text="TVI" android:textColor="#8A99AD" android:textSize="10sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cacau - Episódio Especial" android:textColor="#FFFFFF" android:textSize="10sp" android:maxLines="1" android:ellipsize="end"/>
-                    </LinearLayout>
-
-                    <!-- Canal 4 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="4dp"
-                        android:layout_marginTop="3dp"
-                        android:background="#10FFFFFF">
-                        <TextView android:layout_width="45dp" android:layout_height="wrap_content" android:text="SportTV1" android:textColor="#8A99AD" android:textSize="10sp" android:textStyle="bold"/>
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Liga Portugal Betclic" android:textColor="#FFFFFF" android:textSize="10sp" android:maxLines="1" android:ellipsize="end"/>
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Assistir 2 Ecrãs Lado a Lado ▸"
+                        android:textColor="#00E5FF"
+                        android:textSize="10sp" />
                 </LinearLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>

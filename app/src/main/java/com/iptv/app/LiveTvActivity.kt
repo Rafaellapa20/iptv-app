@@ -403,6 +403,8 @@ class LiveTvActivity : AppCompatActivity() {
                     false
                 }
 
+                var lastPreviewStreamId: String? = null
+
                 view.setOnClickListener { v ->
                     if (isLongPressHandled) {
                         isLongPressHandled = false
@@ -411,42 +413,48 @@ class LiveTvActivity : AppCompatActivity() {
                     val pos = adapterPosition
                     if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                     val s = list[pos]
-                    onChannelSelected(s)
-                    
-                    lastPlayedStreamId = s.stream_id
-                    lastPlayedStreamName = s.name
-                    
+
                     val prefs = v.context.getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
                     prefs.edit()
                         .putString("LAST_STREAM_ID", s.stream_id)
                         .putString("LAST_STREAM_NAME", s.name)
                         .apply()
-                    
-                    val intent = Intent(this@LiveTvActivity, PlayerActivity::class.java)
-                    val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/${s.stream_id}.ts"
-                    
-                    val urlsList = ArrayList<String>()
-                    val idsList = ArrayList<String>()
-                    val namesList = ArrayList<String>()
-                    var currentIndex = -1
-                    for ((index, item) in list.withIndex()) {
-                        urlsList.add("${Constants.SERVER_URL}/live/$username/$password/${item.stream_id}.ts")
-                        idsList.add(item.stream_id)
-                        namesList.add(item.name)
-                        if (item.stream_id == s.stream_id) currentIndex = index
+
+                    if (lastPreviewStreamId != s.stream_id) {
+                        // 1º Clique OK: Liga o canal no ecrã pequeno (mini-player)
+                        lastPreviewStreamId = s.stream_id
+                        tvPreviewName.text = s.name
+                        playMiniVideo(s.stream_id)
+                        fetchShortEpg(s.stream_id)
+                        onChannelSelected(s)
+                    } else {
+                        // 2º Clique OK: Abre o canal em 100% Ecrã Inteiro (Fullscreen)
+                        val intent = Intent(this@LiveTvActivity, PlayerActivity::class.java)
+                        val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/${s.stream_id}.ts"
+                        
+                        val urlsList = ArrayList<String>()
+                        val idsList = ArrayList<String>()
+                        val namesList = ArrayList<String>()
+                        var currentIndex = -1
+                        for ((index, item) in list.withIndex()) {
+                            urlsList.add("${Constants.SERVER_URL}/live/$username/$password/${item.stream_id}.ts")
+                            idsList.add(item.stream_id)
+                            namesList.add(item.name)
+                            if (item.stream_id == s.stream_id) currentIndex = index
+                        }
+                        
+                        intent.putStringArrayListExtra("CHANNEL_URLS", urlsList)
+                        intent.putStringArrayListExtra("CHANNEL_IDS", idsList)
+                        intent.putStringArrayListExtra("CHANNEL_NAMES", namesList)
+                        intent.putExtra("CURRENT_INDEX", currentIndex)
+                        intent.putExtra("VIDEO_URL", streamUrl)
+                        intent.putExtra("STREAM_ID", s.stream_id)
+                        intent.putExtra("USERNAME", username)
+                        intent.putExtra("PASSWORD", password)
+                        intent.putExtra("TYPE", "live")
+                        intent.putExtra("TITLE", s.name)
+                        startActivity(intent)
                     }
-                    
-                    intent.putStringArrayListExtra("CHANNEL_URLS", urlsList)
-                    intent.putStringArrayListExtra("CHANNEL_IDS", idsList)
-                    intent.putStringArrayListExtra("CHANNEL_NAMES", namesList)
-                    intent.putExtra("CURRENT_INDEX", currentIndex)
-                    intent.putExtra("VIDEO_URL", streamUrl)
-                    intent.putExtra("STREAM_ID", s.stream_id)
-                    intent.putExtra("USERNAME", username)
-                    intent.putExtra("PASSWORD", password)
-                    intent.putExtra("TYPE", "live")
-                    intent.putExtra("TITLE", s.name)
-                    startActivity(intent)
                 }
 
                 favIcon.setOnClickListener {
@@ -478,20 +486,11 @@ class LiveTvActivity : AppCompatActivity() {
                     true
                 }
 
-                var zappingJob: kotlinx.coroutines.Job? = null
                 view.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus && adapterPosition != RecyclerView.NO_POSITION) {
                         val s = list[adapterPosition]
                         tvPreviewName.text = s.name
                         fetchShortEpg(s.stream_id)
-
-                        zappingJob?.cancel()
-                        zappingJob = CoroutineScope(Dispatchers.Main).launch {
-                            kotlinx.coroutines.delay(250)
-                            if (view.hasFocus()) {
-                                playMiniVideo(s.stream_id)
-                            }
-                        }
                     }
                 }
             }
