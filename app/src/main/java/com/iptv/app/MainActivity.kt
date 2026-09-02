@@ -39,8 +39,9 @@ class MainActivity : AppCompatActivity() {
         rvHomeFavorites = findViewById(R.id.rvHomeFavorites)
         tvFavTitle = findViewById(R.id.tvFavTitle)
 
-        val username = intent.getStringExtra("USERNAME") ?: ""
-        val password = intent.getStringExtra("PASSWORD") ?: ""
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val username = intent.getStringExtra("USERNAME") ?: prefs.getString("USERNAME", "") ?: ""
+        val password = intent.getStringExtra("PASSWORD") ?: prefs.getString("PASSWORD", "") ?: ""
         val vencimento = intent.getStringExtra("VENCIMENTO") ?: "Ilimitado"
 
         val tvVencimento = findViewById<TextView>(R.id.tvVencimento)
@@ -91,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.btnExit).setOnClickListener {
-            val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
             prefs.edit().clear().apply()
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -140,24 +140,6 @@ class MainActivity : AppCompatActivity() {
 
         loadHomeFavorites(username, password)
         fetchRecentMovies(username, password)
-        
-        // Sintonizar automaticamente o último canal visto ao abrir a aplicação
-        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-        val lastStreamId = prefs.getString("LAST_STREAM_ID", "") ?: ""
-        val lastStreamName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
-
-        if (lastStreamId.isNotEmpty() && !intent.getBooleanExtra("AUTO_TUNE_DONE", false)) {
-            intent.putExtra("AUTO_TUNE_DONE", true)
-            val pIntent = Intent(this, PlayerActivity::class.java)
-            val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$lastStreamId.ts"
-            pIntent.putExtra("VIDEO_URL", streamUrl)
-            pIntent.putExtra("STREAM_ID", lastStreamId)
-            pIntent.putExtra("TITLE", lastStreamName)
-            pIntent.putExtra("TYPE", "live")
-            pIntent.putExtra("USERNAME", username)
-            pIntent.putExtra("PASSWORD", password)
-            startActivity(pIntent)
-        }
     }
 
     private fun openCategories(user: String, pass: String, type: String) {
@@ -217,6 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchRecentMovies(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) return
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_vod_streams"

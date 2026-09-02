@@ -1,6 +1,6 @@
 {
-  "versionCode": 66,
-  "versionName": "7.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.7-debug.apk",
-  "releaseNotes": "v7.7 Release Oficial:\n- Novo Visual Dashboard IPTV Smarters Pro com Selo Neon de VPN Protegida 10 Gbps\n- Guia TV Completo em Grelha (EPG Grid) com detalhes de emissão e reprodução instantânea\n- Otimização Anti-Congelamento com Buffer de 2.5s e Algoritmo Google BBR no VPS\n- Qualidade de Imagem 4K/FHD máxima com renderização direta por GPU SurfaceView"
+  "versionCode": 67,
+  "versionName": "7.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.8-debug.apk",
+  "releaseNotes": "v7.8 - Correção de Login & Estabilização do Dashboard:\n- Resolvido o encerramento inesperado no login e entrada direta no Menu Principal Smarters Pro\n- Sintonização automática do último canal ao clicar em TV em Direto"
 }
