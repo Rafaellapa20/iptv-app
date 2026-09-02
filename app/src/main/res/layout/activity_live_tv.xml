@@ -107,64 +107,82 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="#000000"
+        android:padding="24dp"
+        android:background="@drawable/bg_epg_panel"
         app:layout_constraintStart_toEndOf="@id/rvChannels"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Mini Player -->
-        <androidx.media3.ui.PlayerView
-            android:id="@+id/mini_player_view"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#333333"
-            app:use_controller="false"
-            app:resize_mode="fixed_width"/>
+            android:layout_height="220dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#000000">
+
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/mini_player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                app:use_controller="false"
+                app:resize_mode="fit"/>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tvPreviewName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selecione um canal"
+            android:text="Nenhum canal selecionado"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="24dp"/>
 
-        <TextView
-            android:id="@+id/tvEpgCurrent"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#00FFFF"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#1AFFFFFF">
 
-        <ProgressBar
-            android:id="@+id/pbEpgProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_marginTop="4dp"
-            android:progressDrawable="@android:drawable/progress_horizontal"
-            android:progressTint="#00FFFF"
-            android:visibility="gone"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvEpgList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="A DAR AGORA"
+                    android:textColor="#00E5FF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"/>
 
-        <Button
-            android:id="@+id/btnEpgMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EPG"
-            android:layout_gravity="end"
-            android:backgroundTint="#0066FF"/>
+                <TextView
+                    android:id="@+id/tvEpgCurrent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="4dp" />
+
+                <ProgressBar
+                    android:id="@+id/pbEpgProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="12dp"
+                    android:progressDrawable="@drawable/bg_progress"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
     <ProgressBar
@@ -178,3 +196,4 @@
         android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
