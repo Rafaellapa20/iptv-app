@@ -138,7 +138,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun showCustomProxyDialog() {
         val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
         val currentHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
-        val currentPort = prefs.getInt("PROXY_PORT", 8443)
+        val currentPort = prefs.getInt("PROXY_PORT", 443)
 
         val layout = android.widget.LinearLayout(this)
         layout.orientation = android.widget.LinearLayout.VERTICAL

@@ -49,8 +49,16 @@ class MainActivity : AppCompatActivity() {
 
         // Carregar proxy customizada do utilizador
         val proxyHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
-        val proxyPort = prefs.getInt("PROXY_PORT", 8443)
+        val proxyPort = prefs.getInt("PROXY_PORT", 443)
         OkHttpProvider.updateProxy(proxyHost, proxyPort)
+
+        // Aplicar estado inicial da VPN
+        val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", false)
+        if (isVpnEnabled) {
+            OkHttpProvider.enableDoH()
+        } else {
+            OkHttpProvider.disableDoH()
+        }
 
         // Verificar atualizações OTA via GitHub silenciosamente
         UpdateManager.checkForUpdates(this)

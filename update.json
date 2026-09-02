@@ -1,6 +1,6 @@
 {
-  "versionCode": 100,
-  "versionName": "10.11",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.11-debug.apk",
-  "releaseNotes": "v10.11 Release Oficial:\n- Otimização do Túnel VPN: Aumentámos a memória interna da ligação (buffer size) para esgotar toda a capacidade do seu novo servidor Gigabit e remover qualquer limitação oculta do Android!"
+  "versionCode": 101,
+  "versionName": "10.12",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.12-debug.apk",
+  "releaseNotes": "v10.12 Release Oficial:\n- Bypassing DPI Anti-VPN: A app agora liga-se ao servidor através de um túnel HTTP Seguro (Porta 443) em vez de SOCKS, impedindo que as operadoras de internet em casa detetem o protocolo de IPTV e limitem a velocidade a 5 Megas!"
 }
