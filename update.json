@@ -1,6 +1,6 @@
 {
-  "versionCode": 101,
-  "versionName": "10.12",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.12-debug.apk",
-  "releaseNotes": "v10.12 Release Oficial:\n- Bypassing DPI Anti-VPN: A app agora liga-se ao servidor através de um túnel HTTP Seguro (Porta 443) em vez de SOCKS, impedindo que as operadoras de internet em casa detetem o protocolo de IPTV e limitem a velocidade a 5 Megas!"
+  "versionCode": 102,
+  "versionName": "10.13",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.13-debug.apk",
+  "releaseNotes": "v10.13 Release Oficial:\n- UI Melhorada: Os posters dos 'Filmes em Destaque' no ecrã inicial cresceram quase para o dobro do tamanho. O título também foi aumentado para facilitar a leitura na TV!"
 }

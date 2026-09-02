@@ -491,10 +491,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFeaturedMovies"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="140dp"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
-        android:layout_marginBottom="2dp" />
+        android:layout_marginBottom="10dp" />
 
     <View
         android:layout_width="match_parent"
