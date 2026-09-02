@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -145,27 +146,69 @@ class MainActivity : AppCompatActivity() {
         loadLastWatchedLiveChannel(username, password)
     }
 
-    // CARREGAR ÚLTIMO CANAL VISTO NO CARTÃO LIVE TV (SEM USAR LOGO DA APP)
+    // CARREGAR ÚLTIMO CANAL VISTO E EPG NO CARTÃO LIVE TV
     private fun loadLastWatchedLiveChannel(username: String, password: String) {
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-        val lastChannelName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
-        val lastChannelIcon = prefs.getString("LAST_STREAM_ICON", "") ?: ""
-        val lastChannelId = prefs.getString("LAST_STREAM_ID", "") ?: ""
+        var lastChannelName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
+        var lastChannelIcon = prefs.getString("LAST_STREAM_ICON", "") ?: ""
+        var lastChannelId = prefs.getString("LAST_STREAM_ID", "") ?: ""
 
         val ivCardTvBg = findViewById<ImageView>(R.id.ivCardTvBg) ?: return
         val tvTitleTv = findViewById<TextView>(R.id.tvTitleTv) ?: return
         val tvSubTv = findViewById<TextView>(R.id.tvSubTv) ?: return
+        val cardTv = findViewById<View>(R.id.cardTv)
 
-        if (lastChannelName.isNotEmpty()) {
+        if (lastChannelName.isNotEmpty() && lastChannelId.isNotEmpty()) {
             tvTitleTv.text = lastChannelName
-            tvSubTv.text = "Último Canal Assistido"
+            tvSubTv.text = "🔴 A DAR: Programação TV"
             if (lastChannelIcon.isNotEmpty()) {
                 Glide.with(this).load(lastChannelIcon).into(ivCardTvBg)
-            } else {
-                fetchFirstChannelLogo(username, password)
+            }
+
+            fetchChannelEpgTitle(username, password, lastChannelId, tvSubTv)
+
+            cardTv?.setOnClickListener {
+                val intent = Intent(this, PlayerActivity::class.java)
+                val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$lastChannelId.ts"
+                intent.putExtra("VIDEO_URL", streamUrl)
+                intent.putExtra("STREAM_ID", lastChannelId)
+                intent.putExtra("TITLE", lastChannelName)
+                intent.putExtra("USERNAME", username)
+                intent.putExtra("PASSWORD", password)
+                intent.putExtra("TYPE", "live")
+                startActivity(intent)
             }
         } else {
             fetchFirstChannelLogo(username, password)
+            cardTv?.setOnClickListener { openLiveTv(username, password) }
+        }
+    }
+
+    private fun fetchChannelEpgTitle(user: String, pass: String, streamId: String, tvSub: TextView) {
+        if (user.isEmpty() || pass.isEmpty() || streamId.isEmpty()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$user&password=$pass&action=get_short_epg&stream_id=$streamId"
+                val response = OkHttpProvider.client.newCall(Request.Builder().url(url).build()).execute()
+                if (response.isSuccessful) {
+                    val body = response.body?.string() ?: ""
+                    val json = JSONObject(body)
+                    val listings = json.optJSONArray("epg_listings")
+                    if (listings != null && listings.length() > 0) {
+                        val current = listings.getJSONObject(0)
+                        val titleEnc = current.optString("title", "")
+                        val title = try {
+                            String(android.util.Base64.decode(titleEnc, android.util.Base64.DEFAULT), Charsets.UTF_8)
+                        } catch (e: Exception) { titleEnc }
+
+                        withContext(Dispatchers.Main) {
+                            if (title.isNotEmpty()) {
+                                tvSub.text = "🔴 A DAR: $title"
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {}
         }
     }
 
@@ -184,14 +227,27 @@ class MainActivity : AppCompatActivity() {
                         val firstObj = array.getJSONObject(0)
                         val name = firstObj.getString("name")
                         val icon = firstObj.optString("stream_icon", "")
+                        val sId = firstObj.getString("stream_id")
 
                         withContext(Dispatchers.Main) {
                             findViewById<TextView>(R.id.tvTitleTv)?.text = name
-                            findViewById<TextView>(R.id.tvSubTv)?.text = "335 Canais em Direto"
+                            findViewById<TextView>(R.id.tvSubTv)?.text = "🔴 A DAR: Programação TV"
                             if (icon.isNotEmpty()) {
                                 findViewById<ImageView>(R.id.ivCardTvBg)?.let {
                                     Glide.with(this@MainActivity).load(icon).into(it)
                                 }
+                            }
+
+                            findViewById<View>(R.id.cardTv)?.setOnClickListener {
+                                val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+                                val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$sId.ts"
+                                intent.putExtra("VIDEO_URL", streamUrl)
+                                intent.putExtra("STREAM_ID", sId)
+                                intent.putExtra("TITLE", name)
+                                intent.putExtra("USERNAME", username)
+                                intent.putExtra("PASSWORD", password)
+                                intent.putExtra("TYPE", "live")
+                                startActivity(intent)
                             }
                         }
                     }
