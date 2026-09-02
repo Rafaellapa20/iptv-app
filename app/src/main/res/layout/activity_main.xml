@@ -414,9 +414,29 @@
             android:nextFocusUp="@id/cardFilmes"
             android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickEpg"
-            android:nextFocusRight="@id/btnQuickCatchup" />
+            android:nextFocusRight="@id/btnQuickRadios" />
 
         
+
+        
+        <Button
+            android:id="@+id/btnQuickRadios"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="📻 Rádios"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:focusable="true"
+            android:clickable="true"
+            android:nextFocusUp="@id/cardSeries"
+            android:nextFocusDown="@id/rvContinueWatching"
+            android:nextFocusLeft="@id/btnQuickSettings"
+            android:nextFocusRight="@id/btnQuickCatchup" />
 
         <Button
             android:id="@+id/btnQuickCatchup"
@@ -433,7 +453,7 @@
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
             android:nextFocusDown="@id/rvContinueWatching"
-            android:nextFocusLeft="@id/btnQuickSettings" />
+            android:nextFocusLeft="@id/btnQuickRadios" />
     </LinearLayout>
 
     <!-- FILMES EM DESTAQUE REMOVIDOS -->
