@@ -2,5 +2,5 @@
   "versionCode": 66,
   "versionName": "7.7",
   "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.7-debug.apk",
-  "releaseNotes": "v7.7 - Abertura Instantânea de Canais (300ms) & Auto-Sintonização do Último Canal:\n- Otimizado o buffer de arranque para 300ms (0.3s) com priorização de tempo real para abertura imediata de qualquer canal\n- Implementada a sintonização e reprodução automática em ecrã inteiro do último canal assistido assim que a app é aberta"
+  "releaseNotes": "v7.7 Release Oficial:\n- Novo Visual Dashboard IPTV Smarters Pro com Selo Neon de VPN Protegida 10 Gbps\n- Guia TV Completo em Grelha (EPG Grid) com detalhes de emissão e reprodução instantânea\n- Otimização Anti-Congelamento com Buffer de 2.5s e Algoritmo Google BBR no VPS\n- Qualidade de Imagem 4K/FHD máxima com renderização direta por GPU SurfaceView"
 }
