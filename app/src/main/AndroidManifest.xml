@@ -52,6 +52,8 @@
         <activity
             android:name=".PlayerActivity"
             android:exported="false"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
             android:screenOrientation="landscape"
             android:launchMode="singleTask"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
