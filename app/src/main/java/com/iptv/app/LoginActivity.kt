@@ -70,6 +70,9 @@ class LoginActivity : AppCompatActivity() {
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // DESLIGAR VPN TEMPORARIAMENTE PARA O LOGIN PASSAR O IP LOCK
+                OkHttpProvider.disableDoH()
+
                 val apiUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password"
                 val request = Request.Builder().url(apiUrl).build()
                 var responseBody = ""
@@ -112,7 +115,13 @@ class LoginActivity : AppCompatActivity() {
                         } catch (e: Exception) {}
 
                         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-                        prefs.edit().putString("USERNAME", username).putString("PASSWORD", password).apply()
+                        prefs.edit()
+                            .putString("USERNAME", username)
+                            .putString("PASSWORD", password)
+                            .putBoolean("VPN_ENABLED", true) // ATIVAR AUTOMATICAMENTE PARA OS CLIENTES
+                            .apply()
+                        
+                        OkHttpProvider.enableDoH() // Ligar túnel
 
                         // Guardar a conta na Lista Multi-Utilizador
                         AccountsManager.saveAccount(

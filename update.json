@@ -1,6 +1,6 @@
 {
-  "versionCode": 96,
-  "versionName": "10.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.7-debug.apk",
-  "releaseNotes": "v10.7 Release Oficial:\n- Correção Crítica de Login: A verificação de atualizações (OTA) agora também funciona no ecrã de Login! O túnel VPN foi desativado por defeito para evitar bloqueios de 'IP Lock' por parte dos servidores de IPTV ao tentar entrar na app."
+  "versionCode": 97,
+  "versionName": "10.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.8-debug.apk",
+  "releaseNotes": "v10.8 Release Oficial:\n- Auto-VPN Inteligente: A app agora desliga a VPN no milissegundo em que faz o login (para enganar o servidor IPTV e passar o bloqueio) e volta a ligar automaticamente no momento em que entra com sucesso! Já não precisa de ir às definições."
 }
