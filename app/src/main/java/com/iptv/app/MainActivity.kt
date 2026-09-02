@@ -3,10 +3,15 @@ package com.iptv.app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         val tvVencimento = findViewById<TextView>(R.id.tvVencimento)
         val tvUserLogged = findViewById<TextView>(R.id.tvUserLogged)
+        val tvGreeting = findViewById<TextView>(R.id.tvGreeting)
         
         if (vencimento == "null" || vencimento == "Indefinido") {
             tvVencimento.text = "Validade : Ilimitado"
@@ -51,73 +57,34 @@ class MainActivity : AppCompatActivity() {
 
         if (username.isNotEmpty()) {
             tvUserLogged.text = "Utilizador : $username"
+            tvGreeting.text = "Olá, $username"
         }
 
-        // Relógio & Data estilo IPTV Smarters Pro (Ex: 10:20   Jun 22, 2026)
+        // Relógio estilo Pulse TV (20:30)
         val tvClock = findViewById<TextView>(R.id.tvClock)
         clockJob = CoroutineScope(Dispatchers.Main).launch {
-            val sdf = SimpleDateFormat("HH:mm   MMM dd, yyyy", Locale("pt", "PT"))
+            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
             while (isActive) {
                 tvClock.text = sdf.format(Date())
                 kotlinx.coroutines.delay(1000)
             }
         }
 
-        // CARD 1: LIVE TV (GRANDE NA ESQUERDA)
-        findViewById<View>(R.id.cardTv).setOnClickListener {
-            val intent = Intent(this, LiveTvActivity::class.java)
-            intent.putExtra("USERNAME", username)
-            intent.putExtra("PASSWORD", password)
-            startActivity(intent)
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-        }
+        // MENU SUPERIOR DE NAVEGAÇÃO
+        findViewById<View>(R.id.navTv)?.setOnClickListener { openLiveTv(username, password) }
+        findViewById<View>(R.id.navMovies)?.setOnClickListener { openCategories(username, password, "vod") }
+        findViewById<View>(R.id.navSeries)?.setOnClickListener { openCategories(username, password, "series") }
+        findViewById<View>(R.id.navSettings)?.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
 
-        // CARD 2: FILMES VOD
-        findViewById<View>(R.id.cardFilmes).setOnClickListener {
-            openCategories(username, password, "vod")
-        }
-
-        // CARD 3: SÉRIES
-        findViewById<View>(R.id.cardSeries).setOnClickListener {
-            openCategories(username, password, "series")
-        }
-
-        // TILE 1: GUIA TV / CATCH UP (EPG)
+        // CARTÕES NEON PRINCIPAIS
+        findViewById<View>(R.id.cardTv).setOnClickListener { openLiveTv(username, password) }
+        findViewById<View>(R.id.cardFilmes).setOnClickListener { openCategories(username, password, "vod") }
+        findViewById<View>(R.id.cardSeries).setOnClickListener { openCategories(username, password, "series") }
         findViewById<View>(R.id.cardEpg).setOnClickListener {
             val intent = Intent(this, EpgGridActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
             startActivity(intent)
-        }
-
-        // TILE 2: MULTI-ECRÃ
-        findViewById<View>(R.id.cardMultiScreen).setOnClickListener {
-            val intent = Intent(this, LiveTvActivity::class.java)
-            intent.putExtra("USERNAME", username)
-            intent.putExtra("PASSWORD", password)
-            startActivity(intent)
-        }
-
-        // TILE 3: DEFINIÇÕES / SETTINGS
-        findViewById<View>(R.id.cardSettings).setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-
-        findViewById<View>(R.id.btnExit).setOnClickListener {
-            prefs.edit().clear().apply()
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        }
-
-        findViewById<View>(R.id.btnRefresh).setOnClickListener {
-            android.widget.Toast.makeText(this, "Atualizando Portal...", android.widget.Toast.LENGTH_SHORT).show()
-            val intent = intent
-            finish()
-            startActivity(intent)
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
         findViewById<View>(R.id.btnSwitchUser)?.setOnClickListener {
@@ -137,17 +104,26 @@ class MainActivity : AppCompatActivity() {
                 androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
                     .setTitle("Sair do Aplicativo")
                     .setMessage("Deseja realmente sair?")
-                    .setPositiveButton("Sim") { _, _ ->
-                        finishAffinity()
-                    }
+                    .setPositiveButton("Sim") { _, _ -> finishAffinity() }
                     .setNegativeButton("Não", null)
                     .show()
             }
         })
 
-        // Carregar capas de Filmes e Séries para rotação dentro dos cartões
+        // Configurar Linha "CONTINUAR A VER"
+        setupContinueWatching()
+
+        // Carregar capas de Filmes e Séries em rotação
         fetchMoviesPosters(username, password)
         fetchSeriesPosters(username, password)
+    }
+
+    private fun openLiveTv(user: String, pass: String) {
+        val intent = Intent(this, LiveTvActivity::class.java)
+        intent.putExtra("USERNAME", user)
+        intent.putExtra("PASSWORD", pass)
+        startActivity(intent)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
     private fun openCategories(user: String, pass: String, type: String) {
@@ -157,6 +133,14 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("TYPE", type)
         startActivity(intent)
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+    }
+
+    // LINHA INFERIOR "CONTINUAR A VER"
+    private fun setupContinueWatching() {
+        val rv = findViewById<RecyclerView>(R.id.rvContinueWatching) ?: return
+        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val recents = RecentManager.getRecent(this)
+        rv.adapter = ContinueWatchingAdapter(recents)
     }
 
     // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES
@@ -196,6 +180,7 @@ class MainActivity : AppCompatActivity() {
     private fun startMoviesCardSlideshow() {
         if (recentMovies.isEmpty()) return
         val ivCardFilmesBg = findViewById<ImageView>(R.id.ivCardFilmesBg) ?: return
+        val tvTitleFilmes = findViewById<TextView>(R.id.tvTitleFilmes)
         val ivMainBackgroundBlur = findViewById<ImageView>(R.id.ivMainBackgroundBlur)
 
         moviesCardJob?.cancel()
@@ -208,6 +193,10 @@ class MainActivity : AppCompatActivity() {
                         .load(movie.stream_icon)
                         .transition(DrawableTransitionOptions.withCrossFade(1000))
                         .into(ivCardFilmesBg)
+
+                    if (tvTitleFilmes != null) {
+                        tvTitleFilmes.text = movie.name
+                    }
 
                     if (ivMainBackgroundBlur != null && index % 2 == 0) {
                         Glide.with(this@MainActivity)
@@ -256,6 +245,7 @@ class MainActivity : AppCompatActivity() {
     private fun startSeriesCardSlideshow() {
         if (recentSeries.isEmpty()) return
         val ivCardSeriesBg = findViewById<ImageView>(R.id.ivCardSeriesBg) ?: return
+        val tvTitleSeries = findViewById<TextView>(R.id.tvTitleSeries)
 
         seriesCardJob?.cancel()
         seriesCardJob = CoroutineScope(Dispatchers.Main).launch {
@@ -267,11 +257,49 @@ class MainActivity : AppCompatActivity() {
                         .load(s.stream_icon)
                         .transition(DrawableTransitionOptions.withCrossFade(1000))
                         .into(ivCardSeriesBg)
+
+                    if (tvTitleSeries != null) {
+                        tvTitleSeries.text = s.name
+                    }
                 }
                 kotlinx.coroutines.delay(6500)
                 index = (index + 1) % recentSeries.size
             }
         }
+    }
+
+    inner class ContinueWatchingAdapter(private val list: List<Stream>) : RecyclerView.Adapter<ContinueWatchingAdapter.VH>() {
+        inner class VH(v: View) : RecyclerView.ViewHolder(v) {
+            val poster: ImageView = v.findViewById(R.id.ivContinuePoster)
+            val title: TextView = v.findViewById(R.id.tvContinueTitle)
+            val pb: ProgressBar = v.findViewById(R.id.pbContinueProgress)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_continue_watching, parent, false)
+            return VH(view)
+        }
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val item = list[position]
+            holder.title.text = item.name
+            if (item.stream_icon.isNotEmpty()) {
+                Glide.with(holder.itemView.context).load(item.stream_icon).into(holder.poster)
+            } else {
+                holder.poster.setImageResource(R.drawable.logo)
+            }
+            holder.pb.progress = (30..80).random()
+
+            holder.itemView.setOnClickListener {
+                val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+                intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/live/${intent.getStringExtra("USERNAME")}/${intent.getStringExtra("PASSWORD")}/${item.stream_id}.ts")
+                intent.putExtra("STREAM_ID", item.stream_id)
+                intent.putExtra("TITLE", item.name)
+                startActivity(intent)
+            }
+        }
+
+        override fun getItemCount() = list.size
     }
 
     override fun onDestroy() {

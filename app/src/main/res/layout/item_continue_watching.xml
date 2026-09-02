@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardContinue"
+    android:layout_width="170dp"
+    android:layout_height="95dp"
+    android:layout_marginEnd="14dp"
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="#121D33"
+    app:cardElevation="6dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:stateListAnimator="@animator/selector_item_scale">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivContinuePoster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_gradient_card_overlay" />
+
+        <TextView
+            android:id="@+id/tvContinueTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/pbContinueProgress"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="4dp"
+            android:text="Filme / Série"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <ProgressBar
+            android:id="@+id/pbContinueProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignParentBottom="true"
+            android:progress="60"
+            android:max="100"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            android:progressTint="#00E5FF" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

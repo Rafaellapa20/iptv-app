@@ -1,6 +1,6 @@
 {
-  "versionCode": 72,
-  "versionName": "8.3",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.3-debug.apk",
-  "releaseNotes": "v8.3 Release Oficial:\n- Zapping Automático em Ecrã Pequeno: ao navegar para baixo/cima na lista de canais com as setas, o canal abre e reproduz instantaneamente no mini-player\n- Clique em OK / SELECT abre o canal em 100% Ecrã Inteiro\n- Atualização dinâmica de EPG e guia de programação ao focar cada canal"
+  "versionCode": 73,
+  "versionName": "8.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.4-debug.apk",
+  "releaseNotes": "v8.4 Release Oficial:\n- Novo Design Futurista Next-Gen Smart TV idêntico à imagem de referência\n- 4 Cartões Neon Glowing com contornos em vidro iluminado (LIVE TV, MOVIES VOD, SERIES, TV GUIDE EPG)\n- Saudação personalizada 'Olá, Utilizador'\n- Seção inferior 'CONTINUAR A VER' com barra de progresso individual de reprodução"
 }
