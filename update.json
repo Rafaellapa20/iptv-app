@@ -1,6 +1,6 @@
 {
-  "versionCode": 114,
-  "versionName": "10.25",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.25-debug.apk",
-  "releaseNotes": "v10.25 Release Oficial:\n- NOVIDADE: Zapping Transparente! Agora ao ver canais, pressione a seta para CIMA ou para BAIXO para abrir um Mini-Guia espetacular com todos os logótipos na parte inferior da TV, sem parar a emissão!"
+  "versionCode": 115,
+  "versionName": "10.26",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.26-debug.apk",
+  "releaseNotes": "v10.26:\n- Corrigido botão das Rádios que não abria.\n- SpeedTest mais rápido!\n- PIP Inteligente: Agora se pressionar a tecla VOLTAR num canal de TV, o canal continua a dar num mini-ecrã super fluido!"
 }

@@ -1009,9 +1009,21 @@ class PlayerActivity : AppCompatActivity() {
         System.gc()
     }
 
+    
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        super.onBackPressed()
+        val type = intent.getStringExtra("TYPE")
+        if (type == "live" && packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+            val params = android.app.PictureInPictureParams.Builder()
+                .setAspectRatio(android.util.Rational(16, 9))
+                .build()
+            enterPictureInPictureMode(params)
+        } else {
+            super.onBackPressed()
+        }
     }
+
+
 
 
 

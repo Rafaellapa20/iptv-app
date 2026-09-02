@@ -203,7 +203,7 @@ class SpeedTestActivity : AppCompatActivity() {
                 // Em vez de baixar um Live Stream (que o servidor IPTV limita a ~5Mbps para bater certo com a emissão real),
                 // usamos um ficheiro puro da Cloudflare para esgotar o túnel ao máximo.
                 val streamUrl = "https://speed.cloudflare.com/__down?bytes=50000000"
-                val testDurationMs = 8000L
+                val testDurationMs = 3500L
                 val startTime = System.currentTimeMillis()
 
                 val request = Request.Builder().url(streamUrl).build()
