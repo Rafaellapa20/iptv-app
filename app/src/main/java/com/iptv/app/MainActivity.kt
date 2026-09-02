@@ -44,11 +44,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+
+        // Carregar proxy customizada do utilizador
+        val proxyHost = prefs.getString("PROXY_HOST", "65.21.178.77") ?: "65.21.178.77"
+        val proxyPort = prefs.getInt("PROXY_PORT", 8443)
+        OkHttpProvider.updateProxy(proxyHost, proxyPort)
+
         // Verificar atualizações OTA via GitHub silenciosamente
         UpdateManager.checkForUpdates(this)
 
-        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val username = intent.getStringExtra("USERNAME") ?: prefs.getString("USERNAME", "") ?: ""
         val password = intent.getStringExtra("PASSWORD") ?: prefs.getString("PASSWORD", "") ?: ""
         val vencimento = intent.getStringExtra("VENCIMENTO") ?: "Ilimitado"

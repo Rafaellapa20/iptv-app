@@ -31,6 +31,15 @@ class SettingsActivity : AppCompatActivity() {
             tvAppVersion.text = "Versão: Desconhecida"
         }
 
+        var secretClickCount = 0
+        tvAppVersion.setOnClickListener {
+            secretClickCount++
+            if (secretClickCount >= 5) {
+                secretClickCount = 0
+                showCustomProxyDialog()
+            }
+        }
+
         val btnClearCache = findViewById<Button>(R.id.btnClearCache)
         btnClearCache.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
@@ -193,5 +202,53 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showCustomProxyDialog() {
+        val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+        val currentHost = prefs.getString("PROXY_HOST", "65.21.178.77") ?: "65.21.178.77"
+        val currentPort = prefs.getInt("PROXY_PORT", 8443)
+
+        val layout = android.widget.LinearLayout(this)
+        layout.orientation = android.widget.LinearLayout.VERTICAL
+        layout.setPadding(50, 40, 50, 10)
+
+        val ipInput = android.widget.EditText(this)
+        ipInput.hint = "IP do Servidor"
+        ipInput.setText(currentHost)
+        layout.addView(ipInput)
+
+        val portInput = android.widget.EditText(this)
+        portInput.hint = "Porta (ex: 8443)"
+        portInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+        portInput.setText(currentPort.toString())
+        layout.addView(portInput)
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Configuração de Proxy/VPN Customizada")
+            .setMessage("Introduza os dados do seu novo servidor privado:")
+            .setView(layout)
+            .setPositiveButton("Guardar") { _, _ ->
+                val newIp = ipInput.text.toString().trim()
+                val newPort = portInput.text.toString().toIntOrNull() ?: 8443
+                if (newIp.isNotEmpty()) {
+                    prefs.edit()
+                        .putString("PROXY_HOST", newIp)
+                        .putInt("PROXY_PORT", newPort)
+                        .apply()
+                    OkHttpProvider.updateProxy(newIp, newPort)
+                    Toast.makeText(this, "Novo servidor guardado com sucesso!", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .setNeutralButton("Repor Padrão") { _, _ ->
+                prefs.edit()
+                    .putString("PROXY_HOST", "65.21.178.77")
+                    .putInt("PROXY_PORT", 8443)
+                    .apply()
+                OkHttpProvider.updateProxy("65.21.178.77", 8443)
+                Toast.makeText(this, "Servidor original restaurado!", Toast.LENGTH_SHORT).show()
+            }
+            .show()
     }
 }

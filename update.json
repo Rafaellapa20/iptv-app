@@ -1,6 +1,6 @@
 {
-  "versionCode": 92,
-  "versionName": "10.3",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.3-debug.apk",
-  "releaseNotes": "v10.3 Release Oficial:\n- Multi-ecrã: Correção das proporções (sem aspeto esticado)\n- Multi-ecrã: Toda a interface e botões desaparecem automaticamente ao selecionar os canais, ficando apenas as imagens limpas na TV (pressione qualquer tecla do comando para os trazer de volta)."
+  "versionCode": 93,
+  "versionName": "10.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.4-debug.apk",
+  "releaseNotes": "v10.4 Release Oficial:\n- Menu Secreto de Servidor: Pressione 5 vezes seguidas na 'Versão Atual' no fundo das Definições para configurar o seu próprio servidor de Anti-Bloqueio (IP e Porta) para velocidades superiores!"
 }
