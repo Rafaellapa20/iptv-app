@@ -3,14 +3,12 @@ package com.iptv.app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
@@ -24,10 +22,13 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val recentMovies = mutableListOf<Stream>()
-    private lateinit var rvHomeFavorites: RecyclerView
-    private lateinit var tvFavTitle: TextView
+    private val recentSeries = mutableListOf<Stream>()
+    private val recentTv = mutableListOf<Stream>()
+
     private var clockJob: kotlinx.coroutines.Job? = null
-    private var backgroundJob: kotlinx.coroutines.Job? = null
+    private var moviesCardJob: kotlinx.coroutines.Job? = null
+    private var seriesCardJob: kotlinx.coroutines.Job? = null
+    private var tvCardJob: kotlinx.coroutines.Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +36,6 @@ class MainActivity : AppCompatActivity() {
         
         // Verificar atualizações OTA via GitHub silenciosamente
         UpdateManager.checkForUpdates(this)
-
-        rvHomeFavorites = findViewById(R.id.rvHomeFavorites)
-        tvFavTitle = findViewById(R.id.tvFavTitle)
 
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val username = intent.getStringExtra("USERNAME") ?: prefs.getString("USERNAME", "") ?: ""
@@ -138,8 +136,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        loadHomeFavorites(username, password)
-        fetchRecentMovies(username, password)
+        // Carregar capas de Filmes, Séries e Canais para exibição dinâmica nos cartões
+        fetchMoviesPosters(username, password)
+        fetchSeriesPosters(username, password)
+        fetchTvLogos(username, password)
     }
 
     private fun openCategories(user: String, pass: String, type: String) {
@@ -151,54 +151,8 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    private fun loadHomeFavorites(user: String, pass: String) {
-        val favs = FavoritesManager.getFavorites(this).take(10)
-        if (favs.isNotEmpty()) {
-            tvFavTitle.visibility = View.VISIBLE
-            rvHomeFavorites.visibility = View.VISIBLE
-            rvHomeFavorites.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            
-            rvHomeFavorites.adapter = object : RecyclerView.Adapter<FavViewHolder>() {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavViewHolder {
-                    val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-                    return FavViewHolder(view)
-                }
-
-                override fun onBindViewHolder(holder: FavViewHolder, position: Int) {
-                    val stream = favs[position]
-                    holder.name.text = stream.name
-                    if (stream.stream_icon.isNotEmpty()) {
-                        com.bumptech.glide.Glide.with(this@MainActivity).load(stream.stream_icon).into(holder.icon)
-                    }
-                    holder.itemView.setOnClickListener {
-                        val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-                        val ext = if (stream.stream_type == "movie") ".${stream.extension}" else ".ts"
-                        val folder = if (stream.stream_type == "movie") "movie" else "live"
-                        val url = "${Constants.SERVER_URL}/$folder/$user/$pass/${stream.stream_id}$ext"
-                        
-                        intent.putExtra("VIDEO_URL", url)
-                        intent.putExtra("STREAM_ID", stream.stream_id)
-                        intent.putExtra("TYPE", stream.stream_type)
-                        intent.putExtra("USERNAME", user)
-                        intent.putExtra("PASSWORD", pass)
-                        startActivity(intent)
-                    }
-                }
-
-                override fun getItemCount() = favs.size
-            }
-        } else {
-            tvFavTitle.visibility = View.GONE
-            rvHomeFavorites.visibility = View.GONE
-        }
-    }
-
-    class FavViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.findViewById(R.id.tvName)
-        val icon: ImageView = view.findViewById(R.id.ivIcon)
-    }
-
-    private fun fetchRecentMovies(username: String, password: String) {
+    // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES VOD
+    private fun fetchMoviesPosters(username: String, password: String) {
         if (username.isEmpty() || password.isEmpty()) return
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -207,55 +161,158 @@ class MainActivity : AppCompatActivity() {
                 val response = OkHttpProvider.client.newCall(request).execute()
 
                 if (response.isSuccessful) {
-                    val responseBody = response.body?.string() ?: "[]"
-                    val jsonArray = JSONArray(responseBody)
-                    
-                    val moviesData = mutableListOf<Pair<Stream, Long>>()
-                    for (i in 0 until jsonArray.length()) {
-                        val obj = jsonArray.getJSONObject(i)
-                        val addedStr = obj.optString("added", "0")
-                        val added = addedStr.toLongOrNull() ?: 0L
-                        val streamId = obj.getString("stream_id")
-                        val name = obj.getString("name")
-                        val streamIcon = obj.optString("stream_icon", "")
-                        val streamType = obj.optString("stream_type", "movie")
-                        val extension = obj.optString("container_extension", "mp4")
-                        
-                        if (streamIcon.isNotEmpty()) {
-                            moviesData.add(Stream(streamId, name, streamIcon, streamType, extension) to added)
+                    val body = response.body?.string() ?: "[]"
+                    val array = JSONArray(body)
+                    recentMovies.clear()
+
+                    val list = mutableListOf<Pair<Stream, Long>>()
+                    for (i in 0 until array.length()) {
+                        val obj = array.getJSONObject(i)
+                        val icon = obj.optString("stream_icon", "")
+                        val added = obj.optString("added", "0").toLongOrNull() ?: 0L
+                        if (icon.isNotEmpty()) {
+                            list.add(Stream(obj.getString("stream_id"), obj.getString("name"), icon, "movie", "mp4") to added)
                         }
                     }
-                    
-                    moviesData.sortByDescending { it.second }
-                    recentMovies.clear()
-                    recentMovies.addAll(moviesData.map { it.first }.take(15))
+                    list.sortByDescending { it.second }
+                    recentMovies.addAll(list.map { it.first }.take(20))
 
                     withContext(Dispatchers.Main) {
-                        startBackgroundSlideshow()
+                        startMoviesCardSlideshow()
                     }
                 }
             } catch (e: Exception) {}
         }
     }
 
-    private fun startBackgroundSlideshow() {
+    private fun startMoviesCardSlideshow() {
         if (recentMovies.isEmpty()) return
-        val ivMainBackgroundBlur = findViewById<ImageView>(R.id.ivMainBackgroundBlur) ?: return
+        val ivCardFilmesBg = findViewById<ImageView>(R.id.ivCardFilmesBg) ?: return
+        val ivMainBackgroundBlur = findViewById<ImageView>(R.id.ivMainBackgroundBlur)
 
-        backgroundJob?.cancel()
-        backgroundJob = CoroutineScope(Dispatchers.Main).launch {
-            var currentIndex = 0
+        moviesCardJob?.cancel()
+        moviesCardJob = CoroutineScope(Dispatchers.Main).launch {
+            var index = 0
             while (isActive) {
-                val movie = recentMovies[currentIndex]
+                val movie = recentMovies[index]
                 if (movie.stream_icon.isNotEmpty()) {
-                    com.bumptech.glide.Glide.with(this@MainActivity)
+                    Glide.with(this@MainActivity)
                         .load(movie.stream_icon)
-                        .apply(com.bumptech.glide.request.RequestOptions.bitmapTransform(jp.wasabeef.glide.transformations.BlurTransformation(25, 3)))
-                        .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(1200))
-                        .into(ivMainBackgroundBlur)
+                        .transition(DrawableTransitionOptions.withCrossFade(1000))
+                        .into(ivCardFilmesBg)
+
+                    if (ivMainBackgroundBlur != null && index % 2 == 0) {
+                        Glide.with(this@MainActivity)
+                            .load(movie.stream_icon)
+                            .apply(com.bumptech.glide.request.RequestOptions.bitmapTransform(jp.wasabeef.glide.transformations.BlurTransformation(25, 3)))
+                            .transition(DrawableTransitionOptions.withCrossFade(1200))
+                            .into(ivMainBackgroundBlur)
+                    }
                 }
-                kotlinx.coroutines.delay(8000)
-                currentIndex = (currentIndex + 1) % recentMovies.size
+                kotlinx.coroutines.delay(6000)
+                index = (index + 1) % recentMovies.size
+            }
+        }
+    }
+
+    // SLIDESHOW DE CAPAS DE SÉRIES DENTRO DO CARD DE SÉRIES
+    private fun fetchSeriesPosters(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_series"
+                val request = Request.Builder().url(url).build()
+                val response = OkHttpProvider.client.newCall(request).execute()
+
+                if (response.isSuccessful) {
+                    val body = response.body?.string() ?: "[]"
+                    val array = JSONArray(body)
+                    recentSeries.clear()
+
+                    for (i in 0 until Math.min(array.length(), 20)) {
+                        val obj = array.getJSONObject(i)
+                        val icon = obj.optString("cover", "")
+                        if (icon.isNotEmpty()) {
+                            recentSeries.add(Stream(obj.getString("series_id"), obj.getString("name"), icon, "series", "mp4"))
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        startSeriesCardSlideshow()
+                    }
+                }
+            } catch (e: Exception) {}
+        }
+    }
+
+    private fun startSeriesCardSlideshow() {
+        if (recentSeries.isEmpty()) return
+        val ivCardSeriesBg = findViewById<ImageView>(R.id.ivCardSeriesBg) ?: return
+
+        seriesCardJob?.cancel()
+        seriesCardJob = CoroutineScope(Dispatchers.Main).launch {
+            var index = 0
+            while (isActive) {
+                val s = recentSeries[index]
+                if (s.stream_icon.isNotEmpty()) {
+                    Glide.with(this@MainActivity)
+                        .load(s.stream_icon)
+                        .transition(DrawableTransitionOptions.withCrossFade(1000))
+                        .into(ivCardSeriesBg)
+                }
+                kotlinx.coroutines.delay(6500)
+                index = (index + 1) % recentSeries.size
+            }
+        }
+    }
+
+    // SLIDESHOW DE LOGOS DE CANAIS DENTRO DO CARD DE TV EM DIRETO
+    private fun fetchTvLogos(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
+                val request = Request.Builder().url(url).build()
+                val response = OkHttpProvider.client.newCall(request).execute()
+
+                if (response.isSuccessful) {
+                    val body = response.body?.string() ?: "[]"
+                    val array = JSONArray(body)
+                    recentTv.clear()
+
+                    for (i in 0 until Math.min(array.length(), 25)) {
+                        val obj = array.getJSONObject(i)
+                        val icon = obj.optString("stream_icon", "")
+                        if (icon.isNotEmpty()) {
+                            recentTv.add(Stream(obj.getString("stream_id"), obj.getString("name"), icon, "live", "ts"))
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        startTvCardSlideshow()
+                    }
+                }
+            } catch (e: Exception) {}
+        }
+    }
+
+    private fun startTvCardSlideshow() {
+        if (recentTv.isEmpty()) return
+        val ivCardTvBg = findViewById<ImageView>(R.id.ivCardTvBg) ?: return
+
+        tvCardJob?.cancel()
+        tvCardJob = CoroutineScope(Dispatchers.Main).launch {
+            var index = 0
+            while (isActive) {
+                val tv = recentTv[index]
+                if (tv.stream_icon.isNotEmpty()) {
+                    Glide.with(this@MainActivity)
+                        .load(tv.stream_icon)
+                        .transition(DrawableTransitionOptions.withCrossFade(1000))
+                        .into(ivCardTvBg)
+                }
+                kotlinx.coroutines.delay(7000)
+                index = (index + 1) % recentTv.size
             }
         }
     }
@@ -263,6 +320,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         clockJob?.cancel()
-        backgroundJob?.cancel()
+        moviesCardJob?.cancel()
+        seriesCardJob?.cancel()
+        tvCardJob?.cancel()
     }
 }

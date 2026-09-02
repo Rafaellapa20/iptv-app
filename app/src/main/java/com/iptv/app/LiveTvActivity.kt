@@ -540,8 +540,10 @@ class LiveTvActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        miniPlayer?.pause()
+        miniPlayer?.stop()
+        miniPlayer?.clearMediaItems()
         miniPlayerView.player = null
+        PlayerManager.currentStreamId = null
     }
 
     override fun onDestroy() {

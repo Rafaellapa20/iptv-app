@@ -240,12 +240,19 @@ class PlayerActivity : AppCompatActivity() {
             .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
             .setAllowedVideoJoiningTimeMs(4000)
 
+        val audioAttributes = androidx.media3.common.AudioAttributes.Builder()
+            .setUsage(androidx.media3.common.C.USAGE_MEDIA)
+            .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MOVIE)
+            .build()
+
         return ExoPlayer.Builder(this)
             .setRenderersFactory(renderersFactory)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
+            .setAudioAttributes(audioAttributes, true)
             .setVideoScalingMode(androidx.media3.common.C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
             .build().apply {
+                volume = 1.0f
                 addPlayerListener(this)
             }
     }

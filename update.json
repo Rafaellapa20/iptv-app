@@ -1,6 +1,6 @@
 {
-  "versionCode": 67,
-  "versionName": "7.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.8-debug.apk",
-  "releaseNotes": "v7.8 - Correção de Login & Estabilização do Dashboard:\n- Resolvido o encerramento inesperado no login e entrada direta no Menu Principal Smarters Pro\n- Sintonização automática do último canal ao clicar em TV em Direto"
+  "versionCode": 68,
+  "versionName": "7.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.9-debug.apk",
+  "releaseNotes": "v7.9 Release Oficial:\n- Ecrã Inteiro Corrigido: resize_mode=fit para acabar com canais cortados/ampliados\n- Áudio Resolvido em Ecrã Inteiro com gestão automática de AudioFocus\n- Capas de Filmes a trocar dinamicamente no cartão de Filmes VOD\n- Capas de Séries a trocar dinamicamente no cartão de Séries\n- Remoção dos favoritos rápidos no fundo do menu inicial"
 }
