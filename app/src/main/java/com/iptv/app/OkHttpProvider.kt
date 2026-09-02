@@ -20,7 +20,7 @@ object OkHttpProvider {
 
     private const val BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
-    // Túnel VPN Dedicado Privado (Hetzner Gigabit Cloud - 65.21.178.77:8443)
+    // Proxy VPN Dedicado Privado (Hetzner Gigabit - 65.21.178.77:8443)
     private val vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("65.21.178.77", 8443))
 
     private val userAgentInterceptor = Interceptor { chain ->
@@ -70,7 +70,6 @@ object OkHttpProvider {
             .readTimeout(8, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .connectionPool(connectionPool)
-            .proxy(vpsProxy)
             .build()
     }
 
@@ -100,23 +99,17 @@ object OkHttpProvider {
             try {
                 val results = okhttp3.Dns.SYSTEM.lookup(hostname)
                 if (results.isNotEmpty()) return results
-            } catch (e: Exception) {
-                android.util.Log.w("TripleArmorDns", "DNS do Sistema falhou ou bloqueado, a tentar Cloudflare DoH...")
-            }
+            } catch (e: Exception) {}
 
             try {
                 val results = cloudflareDns.lookup(hostname)
                 if (results.isNotEmpty()) return results
-            } catch (e: Exception) {
-                android.util.Log.e("TripleArmorDns", "Cloudflare DoH falhou, a tentar Google DoH...")
-            }
+            } catch (e: Exception) {}
 
             try {
                 val results = googleDns.lookup(hostname)
                 if (results.isNotEmpty()) return results
-            } catch (e: Exception) {
-                android.util.Log.e("TripleArmorDns", "Google DoH falhou, a tentar Quad9 DoH...")
-            }
+            } catch (e: Exception) {}
 
             try {
                 val results = quad9Dns.lookup(hostname)
@@ -129,7 +122,20 @@ object OkHttpProvider {
 
     private val safeDns by lazy { TripleArmorDns(bootstrapClient) }
 
+    // Cliente Principal para Login e APIs (Direct Streamer + TripleArmorDns + Chrome Headers)
+    // Evita o bloqueio de IP do painel de login Xtream Codes
     var client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(12, TimeUnit.SECONDS)
+        .readTimeout(12, TimeUnit.SECONDS)
+        .writeTimeout(12, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(true)
+        .connectionPool(connectionPool)
+        .addInterceptor(userAgentInterceptor)
+        .dns(safeDns)
+        .build()
+
+    // Cliente VPS VPN Dedicado (usado para streaming de alta velocidade sem cortes)
+    var vpsClient: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(12, TimeUnit.SECONDS)
         .readTimeout(12, TimeUnit.SECONDS)
         .writeTimeout(12, TimeUnit.SECONDS)
@@ -140,28 +146,6 @@ object OkHttpProvider {
         .dns(safeDns)
         .build()
 
-    fun enableDoH() {
-        client = OkHttpClient.Builder()
-            .connectTimeout(12, TimeUnit.SECONDS)
-            .readTimeout(12, TimeUnit.SECONDS)
-            .writeTimeout(12, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .connectionPool(connectionPool)
-            .addInterceptor(userAgentInterceptor)
-            .proxy(vpsProxy)
-            .dns(safeDns)
-            .build()
-    }
-
-    fun disableDoH() {
-        client = OkHttpClient.Builder()
-            .connectTimeout(12, TimeUnit.SECONDS)
-            .readTimeout(12, TimeUnit.SECONDS)
-            .writeTimeout(12, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true)
-            .connectionPool(connectionPool)
-            .addInterceptor(userAgentInterceptor)
-            .proxy(vpsProxy)
-            .build()
-    }
+    fun enableDoH() {}
+    fun disableDoH() {}
 }
