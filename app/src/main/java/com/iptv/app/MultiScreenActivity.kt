@@ -38,6 +38,8 @@ class MultiScreenActivity : AppCompatActivity() {
     private var username = ""
     private var password = ""
 
+    private var uiHidden = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multiscreen)
@@ -178,9 +180,46 @@ class MultiScreenActivity : AppCompatActivity() {
             .setItems(namesArray) { _, which ->
                 val selectedStream = allChannels[which]
                 playChannelOnScreen(screenNum, selectedStream)
+                hideUI()
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun hideUI() {
+        uiHidden = true
+        findViewById<View>(R.id.headerMultiScreen).visibility = View.GONE
+        findViewById<View>(R.id.bannerScreen1).visibility = View.GONE
+        findViewById<View>(R.id.bannerScreen2).visibility = View.GONE
+    }
+
+    private fun showUI() {
+        uiHidden = false
+        findViewById<View>(R.id.headerMultiScreen).visibility = View.VISIBLE
+        findViewById<View>(R.id.bannerScreen1).visibility = View.VISIBLE
+        findViewById<View>(R.id.bannerScreen2).visibility = View.VISIBLE
+    }
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+            val keyCode = event.keyCode
+            if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER || keyCode == android.view.KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                if (uiHidden) {
+                    showUI()
+                    return true
+                }
+            } else if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+                if (uiHidden) {
+                    showUI()
+                    return true // intercepta o voltar para apenas mostrar UI
+                }
+            } else {
+                if (uiHidden) {
+                    showUI()
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onDestroy() {

@@ -1,6 +1,6 @@
 {
-  "versionCode": 91,
-  "versionName": "10.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.2-debug.apk",
-  "releaseNotes": "v10.2 Release Oficial:\n- Reparação do botão 'Anti-Bloqueio (DNS Seguro)': agora pode desligar o túnel VPN para ver canais à velocidade máxima da sua casa sem estrangulamentos."
+  "versionCode": 92,
+  "versionName": "10.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.3-debug.apk",
+  "releaseNotes": "v10.3 Release Oficial:\n- Multi-ecrã: Correção das proporções (sem aspeto esticado)\n- Multi-ecrã: Toda a interface e botões desaparecem automaticamente ao selecionar os canais, ficando apenas as imagens limpas na TV (pressione qualquer tecla do comando para os trazer de volta)."
 }

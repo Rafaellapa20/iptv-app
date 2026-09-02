@@ -78,12 +78,13 @@
                 android:id="@+id/playerView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:resize_mode="fill"
+                app:resize_mode="fit"
                 app:surface_type="texture_view"
                 app:use_controller="false" />
 
             <!-- Banner com Título e Botão Trocar Canal 1 -->
             <RelativeLayout
+                android:id="@+id/bannerScreen1"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:paddingHorizontal="10dp"
@@ -133,12 +134,13 @@
                 android:id="@+id/playerView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:resize_mode="fill"
+                app:resize_mode="fit"
                 app:surface_type="texture_view"
                 app:use_controller="false" />
 
             <!-- Banner com Título e Botão Trocar Canal 2 -->
             <RelativeLayout
+                android:id="@+id/bannerScreen2"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:paddingHorizontal="10dp"
