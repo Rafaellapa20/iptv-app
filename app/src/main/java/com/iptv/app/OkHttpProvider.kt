@@ -12,14 +12,17 @@ import okhttp3.OkHttpClient
 import okhttp3.dnsoverhttps.DnsOverHttps
 import java.io.File
 import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 object OkHttpProvider {
 
     private const val BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
-    // Camuflagem profunda de tráfego Web (disfarça 100% dos pacotes como navegação real no Chrome)
-    // Passa despercebido pelos sistemas DPI (Deep Packet Inspection) de bloqueio das operadoras
+    // Túnel VPN Dedicado Privado (Hetzner Gigabit Cloud - 65.21.178.77:8443)
+    private val vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("65.21.178.77", 8443))
+
     private val userAgentInterceptor = Interceptor { chain ->
         val original = chain.request()
         val requestBuilder = original.newBuilder()
@@ -67,6 +70,7 @@ object OkHttpProvider {
             .readTimeout(8, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .connectionPool(connectionPool)
+            .proxy(vpsProxy)
             .build()
     }
 
@@ -132,6 +136,7 @@ object OkHttpProvider {
         .retryOnConnectionFailure(true)
         .connectionPool(connectionPool)
         .addInterceptor(userAgentInterceptor)
+        .proxy(vpsProxy)
         .dns(safeDns)
         .build()
 
@@ -143,6 +148,7 @@ object OkHttpProvider {
             .retryOnConnectionFailure(true)
             .connectionPool(connectionPool)
             .addInterceptor(userAgentInterceptor)
+            .proxy(vpsProxy)
             .dns(safeDns)
             .build()
     }
@@ -155,6 +161,7 @@ object OkHttpProvider {
             .retryOnConnectionFailure(true)
             .connectionPool(connectionPool)
             .addInterceptor(userAgentInterceptor)
+            .proxy(vpsProxy)
             .build()
     }
 }
