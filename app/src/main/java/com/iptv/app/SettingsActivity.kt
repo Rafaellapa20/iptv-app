@@ -54,8 +54,8 @@ class SettingsActivity : AppCompatActivity() {
         val switchVpn = findViewById<Switch>(R.id.switchVpn)
         val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
         
-        // Anti-Bloqueio vem ativado por padrão
-        val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", true)
+        // Anti-Bloqueio vem desativado por padrão
+        val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", false)
         switchVpn.isChecked = isVpnEnabled
 
         switchVpn.setOnCheckedChangeListener { _, isChecked ->
@@ -87,75 +87,6 @@ class SettingsActivity : AppCompatActivity() {
         btnUpdateApp.setOnClickListener {
             Toast.makeText(this, "A procurar atualizações...", Toast.LENGTH_SHORT).show()
             UpdateManager.checkForUpdates(this, showNoUpdateToast = true)
-        }
-
-        val btnSpeedTest = findViewById<Button>(R.id.btnSpeedTest)
-        val tvSpeedResult = findViewById<TextView>(R.id.tvSpeedResult)
-
-        btnSpeedTest.setOnClickListener {
-            tvSpeedResult.visibility = View.VISIBLE
-            tvSpeedResult.text = "A testar a sua internet... (Aguarde 5s)"
-            tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FFFF"))
-            btnSpeedTest.isEnabled = false
-
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-                try {
-                    val request = okhttp3.Request.Builder()
-                        .url("https://speed.cloudflare.com/__down?bytes=50000000") // 50MB
-                        .build()
-
-                    // Bypass do proxy VPS para podermos medir a velocidade real da casa do utilizador
-                    val directClient = okhttp3.OkHttpClient.Builder().build()
-                    val response = directClient.newCall(request).execute()
-                    if (response.isSuccessful) {
-                        val inputStream = response.body?.byteStream()
-                        val buffer = ByteArray(32768)
-                        var bytesReadTotal = 0L
-                        val startTime = System.currentTimeMillis()
-                        if (inputStream != null) {
-                            var read: Int
-                            while (inputStream.read(buffer).also { read = it } != -1) {
-                                bytesReadTotal += read
-                            }
-                            inputStream.close()
-                        }
-                        val endTime = System.currentTimeMillis()
-                        
-                        val timeTakenMs = endTime - startTime
-                        val timeTakenSecs = timeTakenMs / 1000.0
-                        
-                        // Convert bytes to megabits: (bytes * 8) / 1,000,000
-                        val megabits = (bytesReadTotal * 8.0) / 1000000.0
-                        // Fix infinity/NaN if time is too short
-                        val safeTimeSecs = if (timeTakenSecs < 0.1) 0.1 else timeTakenSecs
-                        
-                        val speedMbps = (megabits / safeTimeSecs).toInt()
-
-                        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                            btnSpeedTest.isEnabled = true
-                            tvSpeedResult.text = "Velocidade: $speedMbps Megas (Mbps)\n" +
-                                if (speedMbps > 25) {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#00FF00"))
-                                    "🟢 Excelente! Sem travamentos."
-                                } else if (speedMbps in 10..25) {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FFFF00"))
-                                    "🟡 Razoável. Pode haver pequenos delays."
-                                } else {
-                                    tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FF0000"))
-                                    "🔴 Lenta! Sua internet causará travamentos."
-                                }
-                        }
-                    } else {
-                        throw Exception("Falha no download")
-                    }
-                } catch (e: Exception) {
-                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                        btnSpeedTest.isEnabled = true
-                        tvSpeedResult.setTextColor(android.graphics.Color.parseColor("#FF0000"))
-                        tvSpeedResult.text = "🔴 Erro no Teste. Verifique a sua conexão."
-                    }
-                }
-            }
         }
 
         val btnOptimize = findViewById<Button>(R.id.btnOptimize)
@@ -252,3 +183,4 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 }
+

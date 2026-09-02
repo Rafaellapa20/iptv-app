@@ -1,6 +1,6 @@
 {
-  "versionCode": 98,
-  "versionName": "10.9",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.9-debug.apk",
-  "releaseNotes": "v10.9 Release Oficial:\n- SpeedTest Corrigido: O teste de velocidade agora avalia a largura de banda pura (em vez de descarregar um canal ao vivo que limitava o mostrador a 5 Mbps). E o IP de Lisboa (PTisp) já é reconhecido oficialmente com o selo verde de 'VPN ATIVA'."
+  "versionCode": 99,
+  "versionName": "10.10",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.10-debug.apk",
+  "releaseNotes": "v10.10 Release Oficial:\n- Limpeza de UI: O pequeno teste de velocidade redundante foi removido das Definições, mantendo apenas o ecrã de SpeedTest principal, mais fiável e rápido."
 }
