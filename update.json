@@ -1,6 +1,6 @@
 {
-  "versionCode": 104,
-  "versionName": "10.15",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.15-debug.apk",
-  "releaseNotes": "v10.15 Release Oficial:\n- CLOUD SYNC PREMIUM: A app agora guarda os seus Favoritos, Histórico de Visualização e Filmes deixados a meio numa base de dados na Nuvem (no seu servidor PTisp). Sempre que um cliente faz login numa TV nova ou no telemóvel, tem a sua conta exatamente como a deixou!"
+  "versionCode": 105,
+  "versionName": "10.16",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.16-debug.apk",
+  "releaseNotes": "v10.16 Release Oficial:\n- VOD Inteligente: Separadores independentes para 'Continuar a Ver' (filmes a meio), 'Já Visto' (filmes concluídos) e 'Favoritos' tanto nos Filmes como nas Séries!\n- Limpeza de UI: Botão de Multi-Ecrã removido do ecrã inicial."
 }

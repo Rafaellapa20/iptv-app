@@ -302,7 +302,7 @@
             android:focusable="true"
             android:clickable="true"
             android:descendantFocusability="blocksDescendants"
-            android:nextFocusDown="@+id/btnQuickMultiScreen"
+            android:nextFocusDown="@+id/btnQuickCatchup"
             android:foreground="?attr/selectableItemBackground"
             android:stateListAnimator="@animator/selector_item_scale">
 
@@ -414,26 +414,9 @@
             android:nextFocusUp="@id/cardFilmes"
             android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickEpg"
-            android:nextFocusRight="@id/btnQuickMultiScreen" />
-
-        <Button
-            android:id="@+id/btnQuickMultiScreen"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            android:background="@drawable/bg_smarters_sage"
-            android:text="🔲 Multi-Ecrã"
-            android:textColor="#FFFFFF"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:focusable="true"
-            android:clickable="true"
-            android:nextFocusUp="@id/cardSeries"
-            android:nextFocusDown="@id/rvContinueWatching"
-            android:nextFocusLeft="@id/btnQuickSettings"
             android:nextFocusRight="@id/btnQuickCatchup" />
+
+        
 
         <Button
             android:id="@+id/btnQuickCatchup"
@@ -450,7 +433,7 @@
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
             android:nextFocusDown="@id/rvContinueWatching"
-            android:nextFocusLeft="@id/btnQuickMultiScreen" />
+            android:nextFocusLeft="@id/btnQuickSettings" />
     </LinearLayout>
 
     <!-- FILMES EM DESTAQUE REMOVIDOS -->

@@ -104,13 +104,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SpeedTestActivity::class.java)) }
-        findViewById<View>(R.id.btnQuickMultiScreen)?.setOnClickListener {
-            val intent = Intent(this, MultiScreenActivity::class.java)
-            intent.putExtra("USERNAME", username)
-            intent.putExtra("PASSWORD", password)
-            startActivity(intent)
-        }
-        findViewById<View>(R.id.btnQuickCatchup)?.setOnClickListener {
+                findViewById<View>(R.id.btnQuickCatchup)?.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 

@@ -146,8 +146,9 @@ class VodNetflixActivity : AppCompatActivity() {
     // Mapeamento de géneros - baseado nas categorias exactas do servidor
     // Funciona para Filmes (por género) e Séries (por plataforma)
     private val genreMap = linkedMapOf(
-        "▶️ Continuar a Assistir" to listOf("continue_watching"),
-        "❤️ A Minha Lista" to listOf("my_list"),
+        "▶️ Continuar a Ver" to listOf("continue_watching"),
+        "✅ Já Visto" to listOf("already_watched"),
+        "❤️ Favoritos" to listOf("favorites"),
         // --- FILMES ---
         "🆕 Novidades" to listOf("novidades"),
         "💥 Ação" to listOf("acção", "ação", "acao", "action"),
@@ -193,20 +194,33 @@ class VodNetflixActivity : AppCompatActivity() {
                         serverCategories.add(Category(obj.getString("category_id"), obj.getString("category_name"), 0))
                     }
 
-                    // --- CONTINUAR A ASSISTIR ---
+                    // --- CONTINUAR A VER e JÁ VISTO ---
                     val recent = ProgressManager.getRecentProgressList(this@VodNetflixActivity).filter { it.type == type }
-                    if (recent.isNotEmpty()) {
-                        val sList = recent.map { Stream(it.streamId, it.title, it.coverUrl, it.type, "") }
-                        categories.add(Category("continue_watching", "▶️ Continuar a Assistir", 0))
+                    
+                    val continueWatchingList = recent.filter { 
+                        it.duration == 0L || (it.position.toDouble() / it.duration) < 0.90
+                    }
+                    if (continueWatchingList.isNotEmpty()) {
+                        val sList = continueWatchingList.map { Stream(it.streamId, it.title, it.coverUrl, it.type, "") }
+                        categories.add(Category("continue_watching", "▶️ Continuar a Ver", 0))
                         streamsByCategory["continue_watching"] = sList
                     }
 
-                    // --- A MINHA LISTA ---
+                    val alreadyWatchedList = recent.filter { 
+                        it.duration > 0L && (it.position.toDouble() / it.duration) >= 0.90
+                    }
+                    if (alreadyWatchedList.isNotEmpty()) {
+                        val sList = alreadyWatchedList.map { Stream(it.streamId, it.title, it.coverUrl, it.type, "") }
+                        categories.add(Category("already_watched", "✅ Já Visto", 0))
+                        streamsByCategory["already_watched"] = sList
+                    }
+
+                    // --- FAVORITOS ---
                     val favorites = FavoritesManager.getFavorites(this@VodNetflixActivity).filter { it.type == type }
                     if (favorites.isNotEmpty()) {
                         val sList = favorites.map { Stream(it.streamId, it.title, it.coverUrl, it.type, "") }
-                        categories.add(Category("my_list", "❤️ A Minha Lista", 0))
-                        streamsByCategory["my_list"] = sList
+                        categories.add(Category("favorites", "❤️ Favoritos", 0))
+                        streamsByCategory["favorites"] = sList
                     }
 
                     // Grupos de categorias
@@ -221,7 +235,7 @@ class VodNetflixActivity : AppCompatActivity() {
                     }
 
                     for (genreName in genreMap.keys) {
-                        if (genreName == "▶️ Continuar a Assistir" || genreName == "❤️ A Minha Lista") continue
+                        if (genreName == "▶️ Continuar a Ver" || genreName == "✅ Já Visto" || genreName == "❤️ Favoritos") continue
                         if (genreToCatIds.containsKey(genreName)) {
                             val catId = "genre_${genreName.replace(" ", "_")}"
                             categories.add(Category(catId, genreName, 0))
@@ -258,7 +272,7 @@ class VodNetflixActivity : AppCompatActivity() {
     private val genreServerCatIds = mutableMapOf<String, List<String>>()
 
     private fun loadCategoryStreams(catId: String) {
-        // Se já temos as streams (ex: "continue_watching", "my_list" ou já feito cache), mostra logo
+        // Se já temos as streams (ex: "continue_watching", "favorites" ou já feito cache), mostra logo
         if (streamsByCategory.containsKey(catId) && streamsByCategory[catId]!!.isNotEmpty()) {
             movieGridAdapter = MovieGridAdapter(streamsByCategory[catId]!!)
             rvMovieGrid.adapter = movieGridAdapter
@@ -433,3 +447,5 @@ class VodNetflixActivity : AppCompatActivity() {
         override fun getItemCount() = movies.size
     }
 }
+
+
