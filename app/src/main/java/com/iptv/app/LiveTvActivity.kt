@@ -478,11 +478,20 @@ class LiveTvActivity : AppCompatActivity() {
                     true
                 }
 
+                var zappingJob: kotlinx.coroutines.Job? = null
                 view.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus && adapterPosition != RecyclerView.NO_POSITION) {
                         val s = list[adapterPosition]
                         tvPreviewName.text = s.name
                         fetchShortEpg(s.stream_id)
+
+                        zappingJob?.cancel()
+                        zappingJob = CoroutineScope(Dispatchers.Main).launch {
+                            kotlinx.coroutines.delay(250)
+                            if (view.hasFocus()) {
+                                playMiniVideo(s.stream_id)
+                            }
+                        }
                     }
                 }
             }

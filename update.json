@@ -1,6 +1,6 @@
 {
-  "versionCode": 71,
-  "versionName": "8.2",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.2-debug.apk",
-  "releaseNotes": "v8.2 Release Oficial:\n- Sistema de Gestão Multi-Utilizador completo estilo IPTV Smarters Pro\n- Permite guardar múltiplas contas e alternar de utilizador com 1 clique\n- Ecrã dedicado 'Mudar de Utilizador' com cartões de conta e validade\n- Ícone de perfil rápido no cabeçalho e botão 'Adicionar Novo Utilizador'"
+  "versionCode": 72,
+  "versionName": "8.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.3-debug.apk",
+  "releaseNotes": "v8.3 Release Oficial:\n- Zapping Automático em Ecrã Pequeno: ao navegar para baixo/cima na lista de canais com as setas, o canal abre e reproduz instantaneamente no mini-player\n- Clique em OK / SELECT abre o canal em 100% Ecrã Inteiro\n- Atualização dinâmica de EPG e guia de programação ao focar cada canal"
 }
