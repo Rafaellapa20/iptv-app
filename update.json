@@ -1,6 +1,6 @@
 {
-  "versionCode": 80,
-  "versionName": "9.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.1-debug.apk",
-  "releaseNotes": "v9.1 Release Oficial:\n- Redução de tamanho das capas dos filmes e do logo do canal Live TV para um design mais elegante\n- Cartão Live TV exibe RTP 1 HD (ou o último canal) + Título do Programa EPG a dar no momento (ex: Telejornal)\n- Clicar no cartão Live TV abre diretamente a emissão em direto do canal\n- Correção da navegação do comando (D-Pad): a seleção desce diretamente para os botões da Quick Access Bar sem os ignorar"
+  "versionCode": 83,
+  "versionName": "9.4",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.4-debug.apk",
+  "releaseNotes": "v9.4 Release Oficial:\n- Correção do crash no Live TV (fecho inesperado da app)"
 }
