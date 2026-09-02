@@ -900,7 +900,7 @@ class PlayerActivity : AppCompatActivity() {
                         // Avançar 10s em VOD
                         getActivePlayer().seekTo(getActivePlayer().currentPosition + 10000)
                     } else {
-                        showOverlays()
+                        return super.dispatchKeyEvent(event)
                     }
                     return true
                 }
@@ -915,7 +915,7 @@ class PlayerActivity : AppCompatActivity() {
                         // Recuar 10s em VOD
                         getActivePlayer().seekTo(kotlin.math.max(0L, getActivePlayer().currentPosition - 10000))
                     } else {
-                        showOverlays()
+                        return super.dispatchKeyEvent(event)
                     }
                     return true
                 }
@@ -935,6 +935,9 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
+                    if (isMiniGuiaVisible) {
+                        return super.dispatchKeyEvent(event)
+                    }
                     if (!isControlsVisible) {
                         showOverlays()
                         return true
