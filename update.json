@@ -1,6 +1,6 @@
 {
-  "versionCode": 106,
-  "versionName": "10.17",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.17-debug.apk",
-  "releaseNotes": "v10.17 Release Oficial:\n- Navegação Fluída: Ao descer na lista de categorias de VOD (ex: Novidades), basta clicar para a DIREITA no comando para saltar logo para os filmes dessa categoria, mantendo também o botão OK funcional para quem prefere!"
+  "versionCode": 108,
+  "versionName": "10.19",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.19-debug.apk",
+  "releaseNotes": "v10.19 Release Oficial:\n- MODO SUPER DESPORTO (Zero Delay): A aplicação agora ativa automaticamente um modo de ultra baixa latência (sem buffer) ao abrir canais de Live TV (Desporto), para garantir que ouve o Golo antes dos vizinhos todos!"
 }

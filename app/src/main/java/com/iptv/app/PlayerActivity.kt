@@ -237,14 +237,18 @@ class PlayerActivity : AppCompatActivity() {
                     .setExceedRendererCapabilitiesIfNecessary(true)
             )
         }
+        val type = intent.getStringExtra("TYPE") ?: "live"
+        val isLive = type == "live"
+        
+        val minBuffer = if (isLive) 1500 else 30000
+        val maxBuffer = if (isLive) 5000 else 120000
+        val bufferForPlayback = if (isLive) 500 else 3500
+        val bufferForPlaybackAfterRebuffer = if (isLive) 1000 else 5000
+        
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
-            .setBufferDurationsMs(
-                30000, // min buffer (30s)
-                120000, // max buffer (2 minutes)
-                3500,  // buffer for playback (3.5s)
-                5000   // buffer for playback after rebuffer
-            )
-            .setBackBuffer(15000, true)
+            .setBufferDurationsMs(minBuffer, maxBuffer, bufferForPlayback, bufferForPlaybackAfterRebuffer)
+            .setPrioritizeTimeOverSizeThresholds(isLive)
+            .setBackBuffer(if (isLive) 5000 else 15000, true)
             .build()
 
         val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)
