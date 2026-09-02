@@ -1,6 +1,6 @@
 {
-  "versionCode": 68,
-  "versionName": "7.9",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.9-debug.apk",
-  "releaseNotes": "v7.9 Release Oficial:\n- Ecrã Inteiro Corrigido: resize_mode=fit para acabar com canais cortados/ampliados\n- Áudio Resolvido em Ecrã Inteiro com gestão automática de AudioFocus\n- Capas de Filmes a trocar dinamicamente no cartão de Filmes VOD\n- Capas de Séries a trocar dinamicamente no cartão de Séries\n- Remoção dos favoritos rápidos no fundo do menu inicial"
+  "versionCode": 69,
+  "versionName": "8.0",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.0-debug.apk",
+  "releaseNotes": "v8.0 Release Oficial:\n- Compatibilidade Universal de Imagem: ativação forçada de faixas de vídeo em 100% das TV Boxes\n- Descodificação H.265/HEVC Non-IDR e fallback automático para HLS .m3u8\n- Resolução total dos canais sem imagem/ecrã preto"
 }

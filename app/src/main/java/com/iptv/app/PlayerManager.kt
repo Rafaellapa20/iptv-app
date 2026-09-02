@@ -15,8 +15,10 @@ object PlayerManager {
             val trackSelector = DefaultTrackSelector(context.applicationContext).apply {
                 setParameters(
                     buildUponParameters()
-                        .setForceHighestSupportedBitrate(true)
+                        .setAllowVideoMixedMimeTypeAdaptiveness(true)
                         .setAllowVideoNonSeamlessAdaptiveness(true)
+                        .setExceedVideoConstraintsIfNecessary(true)
+                        .setExceedRendererCapabilitiesIfNecessary(true)
                 )
             }
 
