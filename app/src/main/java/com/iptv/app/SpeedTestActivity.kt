@@ -207,7 +207,8 @@ class SpeedTestActivity : AppCompatActivity() {
                 val startTime = System.currentTimeMillis()
 
                 val request = Request.Builder().url(streamUrl).build()
-                val response = OkHttpProvider.client.newCall(request).execute()
+                val directClient = okhttp3.OkHttpClient.Builder().build()
+                val response = directClient.newCall(request).execute()
                 val inputStream = response.body?.byteStream()
 
                 if (inputStream != null) {

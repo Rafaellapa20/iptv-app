@@ -1,6 +1,6 @@
 {
-  "versionCode": 102,
-  "versionName": "10.13",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.13-debug.apk",
-  "releaseNotes": "v10.13 Release Oficial:\n- UI Melhorada: Os posters dos 'Filmes em Destaque' no ecrã inicial cresceram quase para o dobro do tamanho. O título também foi aumentado para facilitar a leitura na TV!"
+  "versionCode": 103,
+  "versionName": "10.14",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.14-debug.apk",
+  "releaseNotes": "v10.14 Release Oficial:\n- Speedtest Desbloqueado: O teste de velocidade principal agora usa a medição direta da box (tal como o antigo teste das definições que dava 'mais megas'), medindo o verdadeiro poder da sua internet em vez do afunilamento que as operadoras aplicam sobre ligações remotas em horas de ponta!"
 }
