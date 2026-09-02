@@ -1,6 +1,6 @@
 {
-  "versionCode": 112,
-  "versionName": "10.23",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.23-debug.apk",
-  "releaseNotes": "v10.23 Release Oficial:\n- Algoritmo de Recomendações: A app agora sugere filmes e séries novos com base no que não viu!\n- Protetor de Ecrã OLED: Se a box ficar parada 5 minutos, aparece um relógio animado para não queimar a TV."
+  "versionCode": 113,
+  "versionName": "10.24",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.24-debug.apk",
+  "releaseNotes": "v10.24 Release Oficial:\n- Zapping Clássico por Números: Prima os números (ex: 1, 1, 4) no comando da sua TV Box para mudar diretamente para o canal, sem usar os menus!\n- Protetor de Ecrã OLED: Se a box ficar parada 5 minutos, aparece um relógio animado para não queimar a TV."
 }

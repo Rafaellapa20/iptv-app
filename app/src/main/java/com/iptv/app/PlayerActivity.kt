@@ -75,7 +75,10 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var rlBufferingOverlay: View
     private lateinit var ivLoadingCover: android.widget.ImageView
     private lateinit var tvLoadingTitle: android.widget.TextView
-    private lateinit var tvDiagnostics: android.widget.TextView
+        private lateinit var tvDiagnostics: android.widget.TextView
+    private lateinit var tvChannelNumber: android.widget.TextView
+    private var channelNumberBuffer = ""
+    private var channelNumberJob: kotlinx.coroutines.Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +103,8 @@ class PlayerActivity : AppCompatActivity() {
         rlBufferingOverlay = findViewById(R.id.rlBufferingOverlay)
         ivLoadingCover = findViewById(R.id.ivLoadingCover)
         tvLoadingTitle = findViewById(R.id.tvLoadingTitle)
-        tvDiagnostics = findViewById(R.id.tvDiagnostics)
+                tvDiagnostics = findViewById(R.id.tvDiagnostics)
+        tvChannelNumber = findViewById(R.id.tvChannelNumber)
 
         val initialTitle = intent.getStringExtra("TITLE") ?: "A carregar canal..."
         val initialCover = intent.getStringExtra("COVER") ?: ""
@@ -741,9 +745,64 @@ class PlayerActivity : AppCompatActivity() {
         // Gestos horizontais desativados a pedido para não trocar de canal por engano
     }
 
+    
+        private fun handleNumericZapping(keyCode: Int): Boolean {
+        val digit = when (keyCode) {
+            KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_NUMPAD_0 -> "0"
+            KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_NUMPAD_1 -> "1"
+            KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_NUMPAD_2 -> "2"
+            KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_NUMPAD_3 -> "3"
+            KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_NUMPAD_4 -> "4"
+            KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_NUMPAD_5 -> "5"
+            KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_NUMPAD_6 -> "6"
+            KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_NUMPAD_7 -> "7"
+            KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_NUMPAD_8 -> "8"
+            KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_NUMPAD_9 -> "9"
+            else -> return false
+        }
+
+        val t = intent.getStringExtra("TYPE")
+        if (t != "live") return false // Apenas para Live TV
+
+        channelNumberBuffer += digit
+        tvChannelNumber.text = channelNumberBuffer
+        tvChannelNumber.visibility = View.VISIBLE
+
+        channelNumberJob?.cancel()
+        channelNumberJob = CoroutineScope(Dispatchers.Main).launch {
+            delay(2500)
+            val num = channelNumberBuffer.toIntOrNull()
+            channelNumberBuffer = ""
+            tvChannelNumber.visibility = View.GONE
+
+            if (num != null && num > 0) {
+                val urls = intent.getStringArrayListExtra("CHANNEL_URLS")
+                val names = intent.getStringArrayListExtra("CHANNEL_NAMES")
+                val targetIndex = num - 1
+                if (urls != null && targetIndex in 0 until urls.size) {
+                    intent.putExtra("CURRENT_INDEX", targetIndex)
+                    currentStreamUrl = urls[targetIndex]
+                    val title = names?.getOrNull(targetIndex) ?: "Canal "
+                    intent.putExtra("TITLE", title)
+                    tvLoadingTitle.text = title
+                    playUrlInPlayer(getActivePlayer(), currentStreamUrl)
+                    hideOverlays()
+                } else {
+                    Toast.makeText(this@PlayerActivity, "Canal ${num} não encontrado", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        return true
+    }
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         cancelScreensaverTimer()
         if (!getActivePlayer().isPlaying) startScreensaverTimer()
+        
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            if (handleNumericZapping(event.keyCode)) return true
+        }
+
         if (event.action == KeyEvent.ACTION_DOWN) {
             val isControlsVisible = llFloatingControls.visibility == View.VISIBLE || epgContainer.visibility == View.VISIBLE
             val isFocusedOnControls = btnFavPlayer.hasFocus() || btnRec.hasFocus() || btnSplitScreen.hasFocus()

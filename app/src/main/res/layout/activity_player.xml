@@ -227,4 +227,22 @@
             android:textSize="12sp"
             android:textStyle="bold" />
     </RelativeLayout>
+
+    <!-- Zapping Numérico Overlay -->
+    <TextView
+        android:id="@+id/tvChannelNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="48dp"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:visibility="gone" />
+
 </FrameLayout>
