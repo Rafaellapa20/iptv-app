@@ -1,6 +1,6 @@
 {
-  "versionCode": 75,
-  "versionName": "8.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.6-debug.apk",
-  "releaseNotes": "v8.6 Release Oficial:\n- 1º Clique OK liga o canal no ecrã pequeno (mini-player); 2º Clique OK abre em 100% Ecrã Inteiro\n- Remoção do auto-play ao navegar com as setas para cima/baixo na lista de canais\n- Nova funcionalidade MULTI-ECRÃ (2 Canais Simultâneos lado a lado) no menu principal com alternância de áudio"
+  "versionCode": 76,
+  "versionName": "8.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.7-debug.apk",
+  "releaseNotes": "v8.7 Release Oficial:\n- Nome da aplicação atualizado no cabeçalho superior para IPTV GLOBAL\n- Identidade visual unificada em todos os menus"
 }
