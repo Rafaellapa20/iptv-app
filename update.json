@@ -1,6 +1,6 @@
 {
-  "versionCode": 59,
-  "versionName": "7.0",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.0-debug.apk",
-  "releaseNotes": "v7.0 - Arquitetura de Rede Híbrida Inteligente (Resolução de Erro de Utilizador Incorreto):\n- As requisições de autenticação de utilizador/palavra-passe passam com proteção de cabeçalhos Chrome diretamente no servidor IPTV (evita bloqueios de IPs de data-center em painéis Xtream Codes)\n- O tráfego pesado de streaming de vídeo continua 100% otimizado via VPN dedicada do teu servidor Gigabit Hetzner"
+  "versionCode": 60,
+  "versionName": "7.1",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.1-debug.apk",
+  "releaseNotes": "v7.1 - Validação Total de Credenciais via Túnel VPN Dedicado Hetzner:\n- Testadas e confirmadas as credenciais 'Lapa2025123' com sucesso absoluto (Status: Active, Exp: 2026/09/2026)\n- 100% de todo o tráfego da app (Autenticação + Canais + Filmes) é agora encaminhado através do teu servidor VPS dedicado Hetzner Gigabit (65.21.178.77)"
 }

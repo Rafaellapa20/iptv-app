@@ -27,16 +27,8 @@ object OkHttpProvider {
         val original = chain.request()
         val requestBuilder = original.newBuilder()
             .header("User-Agent", BROWSER_USER_AGENT)
-            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-            .header("Accept-Language", "pt-PT,pt;q=0.9,en-US;q=0.8,en;q=0.7")
-            .header("Accept-Encoding", "gzip, deflate")
+            .header("Accept", "*/*")
             .header("Connection", "keep-alive")
-            .header("Upgrade-Insecure-Requests", "1")
-            .header("Sec-Fetch-Dest", "document")
-            .header("Sec-Fetch-Mode", "navigate")
-            .header("Sec-Fetch-Site", "none")
-            .header("Sec-Fetch-User", "?1")
-            .header("Cache-Control", "max-age=0")
         chain.proceed(requestBuilder.build())
     }
 
@@ -70,6 +62,7 @@ object OkHttpProvider {
             .readTimeout(8, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .connectionPool(connectionPool)
+            .proxy(vpsProxy)
             .build()
     }
 
@@ -122,20 +115,8 @@ object OkHttpProvider {
 
     private val safeDns by lazy { TripleArmorDns(bootstrapClient) }
 
-    // Cliente Principal para Login e APIs (Direct Streamer + TripleArmorDns + Chrome Headers)
-    // Evita o bloqueio de IP do painel de login Xtream Codes
+    // Cliente principal com VPN Dedicada Hetzner para 100% das chamadas (Login + Vídeos)
     var client: OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(12, TimeUnit.SECONDS)
-        .readTimeout(12, TimeUnit.SECONDS)
-        .writeTimeout(12, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(true)
-        .connectionPool(connectionPool)
-        .addInterceptor(userAgentInterceptor)
-        .dns(safeDns)
-        .build()
-
-    // Cliente VPS VPN Dedicado (usado para streaming de alta velocidade sem cortes)
-    var vpsClient: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(12, TimeUnit.SECONDS)
         .readTimeout(12, TimeUnit.SECONDS)
         .writeTimeout(12, TimeUnit.SECONDS)
@@ -145,6 +126,8 @@ object OkHttpProvider {
         .proxy(vpsProxy)
         .dns(safeDns)
         .build()
+
+    var vpsClient: OkHttpClient = client
 
     fun enableDoH() {}
     fun disableDoH() {}
