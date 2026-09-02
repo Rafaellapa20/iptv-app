@@ -468,16 +468,56 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFeaturedMovies(movies: List<Stream>) {
-        val rvFeatured = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvFeaturedMovies) ?: return
-        rvFeatured.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-        val adapter = VodAdapter(movies) { stream ->
-            val intent = android.content.Intent(this, PlayerActivity::class.java)
-            intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/movie/${getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE).getString("USERNAME", "")}/${getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE).getString("PASSWORD", "")}/${stream.stream_id}.${stream.container_extension}")
-            intent.putExtra("STREAM_NAME", stream.name)
-            intent.putExtra("TYPE", "movie")
-            startActivity(intent)
+        val rv = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvFeaturedMovies) ?: return
+        rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        if (movies.isEmpty()) {
+            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.GONE
+            rv.visibility = View.GONE
+        } else {
+            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.VISIBLE
+            rv.visibility = View.VISIBLE
+            rv.adapter = FeaturedMoviesAdapter(movies)
         }
-        rvFeatured.adapter = adapter
+    }
+
+    inner class FeaturedMoviesAdapter(private val list: List<Stream>) : androidx.recyclerview.widget.RecyclerView.Adapter<FeaturedMoviesAdapter.VH>() {
+        inner class VH(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+            val poster: ImageView = v.findViewById(R.id.ivMoviePosterCard)
+            val title: TextView = v.findViewById(R.id.tvMoviePosterTitle)
+        }
+
+        override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
+            val view = android.view.LayoutInflater.from(parent.context).inflate(R.layout.item_movie_poster_card, parent, false)
+            return VH(view)
+        }
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val item = list[position]
+            holder.title.text = item.name
+            if (item.stream_icon.isNotEmpty()) {
+                com.bumptech.glide.Glide.with(holder.itemView.context).load(item.stream_icon).into(holder.poster)
+            } else {
+                holder.poster.setImageResource(R.drawable.logo)
+            }
+
+            holder.itemView.setOnClickListener {
+                val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+                val user = prefs.getString("USERNAME", "") ?: ""
+                val pass = prefs.getString("PASSWORD", "") ?: ""
+
+                val intent = android.content.Intent(this@MainActivity, MovieInfoActivity::class.java)
+                val videoUrl = "${Constants.SERVER_URL}/movie/$user/$pass/${item.stream_id}.${item.extension}"
+                intent.putExtra("STREAM_ID", item.stream_id)
+                intent.putExtra("TITLE", item.name)
+                intent.putExtra("COVER", item.stream_icon)
+                intent.putExtra("VIDEO_URL", videoUrl)
+                intent.putExtra("USERNAME", user)
+                intent.putExtra("PASSWORD", pass)
+                startActivity(intent)
+            }
+        }
+
+        override fun getItemCount() = list.size
     }
 
     override fun onPause() {
