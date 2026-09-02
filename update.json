@@ -1,6 +1,6 @@
 {
-  "versionCode": 64,
-  "versionName": "7.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.5-debug.apk",
-  "releaseNotes": "v7.5 - Otimização Total para Sport TV 1, 2 e Canais de Desporto H.265 / HEVC:\n- Ativados os extractores de payload TS com suporte a fotogramas non-IDR keyframes e descodificação avançada DTS/HEVC\n- Garantida a reprodução imediata de transmissões desportivas com fotogramas comprimidos sem ecrã preto ou paragens"
+  "versionCode": 65,
+  "versionName": "7.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.6-debug.apk",
+  "releaseNotes": "v7.6 - Auditoria e Estabilização Final da App:\n- Garantido que todas as chamadas de autenticação secundárias utilizam a VPN Hetzner de alta velocidade\n- Verificação de 100% de estabilidade de código em todas as telas da aplicação"
 }

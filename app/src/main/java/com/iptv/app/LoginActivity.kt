@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                 if (!responseBody.contains("user_info")) {
                     try {
                         val fallbackReq = Request.Builder().url(apiUrl).build()
-                        val fallbackResp = okhttp3.OkHttpClient().newCall(fallbackReq).execute()
+                        val fallbackResp = OkHttpProvider.client.newCall(fallbackReq).execute()
                         if (fallbackResp.isSuccessful) {
                             val fBody = fallbackResp.body?.string() ?: ""
                             if (fBody.contains("user_info")) {
