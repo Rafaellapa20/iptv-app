@@ -14,7 +14,28 @@ import java.io.File
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Proxy
+import java.net.Socket
 import java.util.concurrent.TimeUnit
+import javax.net.SocketFactory
+
+class FastSocketFactory : SocketFactory() {
+    private val delegate = SocketFactory.getDefault()
+    
+    private fun setupSocket(socket: Socket): Socket {
+        try {
+            socket.receiveBufferSize = 2 * 1024 * 1024 // 2MB
+            socket.sendBufferSize = 2 * 1024 * 1024
+            socket.tcpNoDelay = true
+        } catch (e: Exception) {}
+        return socket
+    }
+
+    override fun createSocket(): Socket = setupSocket(delegate.createSocket())
+    override fun createSocket(host: String, port: Int): Socket = setupSocket(delegate.createSocket(host, port))
+    override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket = setupSocket(delegate.createSocket(host, port, localHost, localPort))
+    override fun createSocket(host: InetAddress, port: Int): Socket = setupSocket(delegate.createSocket(host, port))
+    override fun createSocket(address: InetAddress, port: Int, localAddress: InetAddress, localPort: Int): Socket = setupSocket(delegate.createSocket(address, port, localAddress, localPort))
+}
 
 object OkHttpProvider {
 
@@ -128,6 +149,7 @@ object OkHttpProvider {
             .readTimeout(12, TimeUnit.SECONDS)
             .writeTimeout(12, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
+            .socketFactory(FastSocketFactory())
             .connectionPool(connectionPool)
             .addInterceptor(userAgentInterceptor)
 

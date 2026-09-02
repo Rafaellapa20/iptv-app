@@ -1,6 +1,6 @@
 {
-  "versionCode": 99,
-  "versionName": "10.10",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.10-debug.apk",
-  "releaseNotes": "v10.10 Release Oficial:\n- Limpeza de UI: O pequeno teste de velocidade redundante foi removido das Definições, mantendo apenas o ecrã de SpeedTest principal, mais fiável e rápido."
+  "versionCode": 100,
+  "versionName": "10.11",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.11-debug.apk",
+  "releaseNotes": "v10.11 Release Oficial:\n- Otimização do Túnel VPN: Aumentámos a memória interna da ligação (buffer size) para esgotar toda a capacidade do seu novo servidor Gigabit e remover qualquer limitação oculta do Android!"
 }
