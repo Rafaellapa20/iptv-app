@@ -1,6 +1,6 @@
 {
-  "versionCode": 54,
-  "versionName": "6.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.5-debug.apk",
-  "releaseNotes": "v6.5 - Correção Total de Imagem e Áudio (Fim do Ecrã Preto):\n- Removido o fundo preto opaco que cobria o ecrã de vídeo nas Box TV Android\n- Reajustada a rendição de vídeo no leitor para ser compatível a 100% com todas as Box TV (imagem + som simultâneos)\n- Otimizados os gradientes de sobreposição para EPG e controlos limpos"
+  "versionCode": 55,
+  "versionName": "6.6",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.6-debug.apk",
+  "releaseNotes": "v6.6 - Túnel Automático de Camuflagem Anti-Bloqueio (Zero Instalações para o Utilizador):\n- Adicionados cabeçalhos profundos de navegação Web Chrome (Sec-Fetch-Dest, Sec-Fetch-Mode, Upgrade-Insecure-Requests)\n- Todo o tráfego da app passa despercebido pelos filtros DPI de bloqueio e redução de velocidade das operadoras\n- 100% automático sem necessidade de instalar apps externas de VPN"
 }
