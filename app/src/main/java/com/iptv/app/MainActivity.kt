@@ -145,6 +145,9 @@ class MainActivity : AppCompatActivity() {
         // Carregar capas de Filmes e Séries em rotação
         // fetchMoviesPosters(username, password) - Removed as per user request
         fetchSeriesPosters(username, password)
+
+        // Verificar atualizações automaticamente sempre que a app inicia
+        UpdateManager.checkForUpdates(this, showNoUpdateToast = false)
     }
 
     override fun onResume() {
