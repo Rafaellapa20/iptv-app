@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
 
         // Carregar proxy customizada do utilizador
-        val proxyHost = prefs.getString("PROXY_HOST", "65.21.178.77") ?: "65.21.178.77"
+        val proxyHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
         val proxyPort = prefs.getInt("PROXY_PORT", 8443)
         OkHttpProvider.updateProxy(proxyHost, proxyPort)
 

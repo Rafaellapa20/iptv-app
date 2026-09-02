@@ -1,6 +1,6 @@
 {
-  "versionCode": 93,
-  "versionName": "10.4",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.4-debug.apk",
-  "releaseNotes": "v10.4 Release Oficial:\n- Menu Secreto de Servidor: Pressione 5 vezes seguidas na 'Versão Atual' no fundo das Definições para configurar o seu próprio servidor de Anti-Bloqueio (IP e Porta) para velocidades superiores!"
+  "versionCode": 94,
+  "versionName": "10.5",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.5-debug.apk",
+  "releaseNotes": "v10.5 Release Oficial:\n- Novo Servidor Anti-Bloqueio (PTisp - Portugal): A partir de agora, a app usa por defeito um servidor localizado fisicamente em Lisboa. Diga adeus aos bloqueios e usufrua de uma velocidade incrível e sem limites de banda!"
 }

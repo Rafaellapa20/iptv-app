@@ -206,7 +206,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showCustomProxyDialog() {
         val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
-        val currentHost = prefs.getString("PROXY_HOST", "65.21.178.77") ?: "65.21.178.77"
+        val currentHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
         val currentPort = prefs.getInt("PROXY_PORT", 8443)
 
         val layout = android.widget.LinearLayout(this)
@@ -243,10 +243,10 @@ class SettingsActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null)
             .setNeutralButton("Repor Padrão") { _, _ ->
                 prefs.edit()
-                    .putString("PROXY_HOST", "65.21.178.77")
+                    .putString("PROXY_HOST", "176.111.109.14")
                     .putInt("PROXY_PORT", 8443)
                     .apply()
-                OkHttpProvider.updateProxy("65.21.178.77", 8443)
+                OkHttpProvider.updateProxy("176.111.109.14", 8443)
                 Toast.makeText(this, "Servidor original restaurado!", Toast.LENGTH_SHORT).show()
             }
             .show()

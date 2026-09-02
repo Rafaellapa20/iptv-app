@@ -20,8 +20,8 @@ object OkHttpProvider {
 
     private const val BROWSER_USER_AGENT = "IPTVSmartersPlayer/3.0.9 (Linux; Android 10)"
 
-    // Proxy VPN Dedicado Privado (Padrão: Hetzner Gigabit - 65.21.178.77:8443)
-    private var vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("65.21.178.77", 8443))
+    // Proxy VPN Dedicado Privado (Padrão: PTisp Lisboa - 176.111.109.14:8443)
+    private var vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("176.111.109.14", 8443))
 
     fun updateProxy(host: String, port: Int) {
         vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress(host, port))
