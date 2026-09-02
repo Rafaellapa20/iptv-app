@@ -97,9 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         // QUICK ACCESS BAR (BARRA DE ACESSO RÁPIDO IGUAL À IMAGEM DE REFERÊNCIA)
         findViewById<View>(R.id.btnQuickFavorites)?.setOnClickListener { openLiveTv(username, password) }
-        findViewById<View>(R.id.btnQuickRadios)?.setOnClickListener {
-            startActivity(android.content.Intent(this, RadiosActivity::class.java))
-        }
+
         findViewById<View>(R.id.btnQuickEpg)?.setOnClickListener {
             val intent = Intent(this, EpgGridActivity::class.java)
             intent.putExtra("USERNAME", username)

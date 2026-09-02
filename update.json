@@ -1,6 +1,6 @@
 {
-  "versionCode": 118,
-  "versionName": "10.29",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.29-debug.apk",
-  "releaseNotes": "v10.29:\n- Corrigido botão OK no Zapping Transparente\n- Removido EPG das setas Esquerda/Direita."
+  "versionCode": 119,
+  "versionName": "10.30",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.30-debug.apk",
+  "releaseNotes": "v10.30:\n- Removida a secção de Rádios a pedido do utilizador, para manter a app focada e limpa."
 }
