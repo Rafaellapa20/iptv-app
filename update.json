@@ -1,6 +1,6 @@
 {
-  "versionCode": 88,
-  "versionName": "9.9",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.9-debug.apk",
-  "releaseNotes": "v9.9 Release Oficial:\n- Correção do bug do ecrã preto (apenas som) ao sair do ecrã inteiro\n- Aumento massivo do buffer de vídeo (para evitar travamentos em ligações instáveis ou limitadas pelo Proxy)"
+  "versionCode": 90,
+  "versionName": "10.1",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.1-debug.apk",
+  "releaseNotes": "v10.1 Release Oficial:\n- Multi-ecrã a preencher 100% (metade para cada lado)\n- Filmes em Destaque voltaram, mas agora colocados no fundo do ecrã para não atrapalhar o Quick Access\n- Capas de Filmes e Séries nos cartões agora mostram-se inteiras sem cortes\n- SpeedTest a ler velocidade da rede real fora do Proxy"
 }
