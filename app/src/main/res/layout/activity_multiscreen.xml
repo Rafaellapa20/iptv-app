@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:resize_mode="fit"
-                app:surface_type="surface_view"
+                app:surface_type="texture_view"
                 app:use_controller="false" />
 
             <!-- Banner com Título e Botão Trocar Canal 1 -->
@@ -136,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:resize_mode="fit"
-                app:surface_type="surface_view"
+                app:surface_type="texture_view"
                 app:use_controller="false" />
 
             <!-- Banner com Título e Botão Trocar Canal 2 -->
