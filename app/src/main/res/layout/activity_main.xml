@@ -7,31 +7,32 @@
     android:background="#050A14"
     tools:context=".MainActivity">
 
-    <!-- Fundo de iluminação ambiente dinâmico -->
+    <!-- Fundo Desfocado Ambiente -->
     <ImageView
         android:id="@+id/ivMainBackgroundBlur"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/logo"
-        android:alpha="0.2" />
+        android:alpha="0.2"
+        android:src="@drawable/logo"/>
 
+    <!-- Mascara de Gradiente Escuro -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ED050A14" />
+        android:background="#F0050A14"/>
 
-    <!-- TOP HEADER BAR (LOGO, LINKS NAVEGAÇÃO, HORA, PESQUISA, PERFIL) -->
+    <!-- BARRA SUPERIOR (HEADER BAR) -->
     <RelativeLayout
         android:id="@+id/headerBar"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:paddingHorizontal="28dp"
+        android:layout_height="52dp"
+        android:paddingHorizontal="24dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Logo & Titulo -->
+        <!-- Logotipo & Titulo IPTV GLOBAL -->
         <LinearLayout
             android:id="@+id/llHeaderLogo"
             android:layout_width="wrap_content"
@@ -40,17 +41,10 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/logo"
-                android:scaleType="fitCenter" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="IPTV "
+                android:text="▼ IPTV "
                 android:textColor="#00E5FF"
                 android:textSize="17sp"
                 android:textStyle="bold"
@@ -66,143 +60,114 @@
                 android:letterSpacing="0.05" />
         </LinearLayout>
 
-        <!-- Menu de Links Centrais -->
+        <!-- Direita: Perfil, Pesquisa, Refresh, Hora, Playlist Ativa -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/llHeaderLogo"
-            android:layout_marginStart="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/navTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Live TV"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground" />
-
-            <TextView
-                android:id="@+id/navMovies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Movies"
-                android:textColor="#8A99AD"
-                android:textSize="14sp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground" />
-
-            <TextView
-                android:id="@+id/navSeries"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Series"
-                android:textColor="#8A99AD"
-                android:textSize="14sp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground" />
-
-            <TextView
-                android:id="@+id/navSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textColor="#8A99AD"
-                android:textSize="14sp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp"
-                android:focusable="true"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground" />
-        </LinearLayout>
-
-        <!-- Lado Direito: Pesquisa, Hora, Perfil -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <!-- Perfil Utilizador -->
+            <TextView
+                android:id="@+id/tvUserLogged"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perfil: Rafael"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_vpn_badge" />
+
+            <!-- Botao Switch User -->
+            <ImageButton
+                android:id="@+id/btnSwitchUser"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:tint="#00E5FF"
+                android:contentDescription="Mudar Utilizador" />
+
+            <!-- Pesquisa Global -->
             <ImageButton
                 android:id="@+id/btnSearch"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="?attr/selectableItemBackground"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_search"
                 app:tint="#FFFFFF"
-                android:focusable="true"
-                android:clickable="true"
-                android:contentDescription="Pesquisar"
-                android:layout_marginEnd="16dp" />
+                android:contentDescription="Pesquisar" />
 
+            <!-- Refresh Button -->
+            <ImageButton
+                android:id="@+id/btnRefresh"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_popup_sync"
+                app:tint="#FFFFFF"
+                android:contentDescription="Atualizar" />
+
+            <!-- Relogio Digital -->
             <TextView
                 android:id="@+id/tvClock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20:30"
+                android:layout_marginStart="12dp"
+                android:text="15:42"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginEnd="18dp" />
+                android:textStyle="bold" />
 
-            <!-- Avatar Perfil Utilizador (Mudar de Conta) -->
-            <ImageButton
-                android:id="@+id/btnSwitchUser"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:background="@drawable/bg_button_neon"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="#00E5FF"
-                android:focusable="true"
-                android:clickable="true"
-                android:contentDescription="Perfil Utilizador" />
+            <!-- Playlist Ativa Status -->
+            <TextView
+                android:id="@+id/tvPlaylistStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="🟢 1 playlist ativa"
+                android:textColor="#00FF88"
+                android:textSize="11sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- SAUDAÇÃO PERSONALIZADA DO UTILIZADOR -->
+    <!-- HERO ZONE (3 CARTÕES NEON EM DESTAQUE: LIVE TV, MOVIES, SERIES) -->
     <TextView
-        android:id="@+id/tvGreeting"
+        android:id="@+id/tvHeroTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Olá, Rafael"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:text="Hero Zone"
+        android:textColor="#8A99AD"
+        android:textSize="13sp"
         android:textStyle="bold"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintTop_toBottomOf="@id/headerBar"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- GRELHA CENTRAL DOS 4 CARTÕES NEON EM DESTAQUE (LIVE TV, MOVIES, SERIES, TV GUIDE) -->
     <LinearLayout
-        android:id="@+id/gridNeonCards"
+        android:id="@+id/gridHeroCards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        android:weightSum="4"
-        app:layout_constraintTop_toBottomOf="@id/tvGreeting"
-        app:layout_constraintBottom_toTopOf="@id/tvContinueTitleHeader"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/tvHeroTitle"
+        app:layout_constraintBottom_toTopOf="@id/tvQuickAccessTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- CARD 1: LIVE TV (BORDER NEON AMBER/ORANGE) -->
+        <!-- CARD 1: LIVE TV (BORDER NEON CYAN) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardTv"
             android:layout_width="0dp"
@@ -220,49 +185,30 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/bg_neon_card_orange"
+                android:background="@drawable/bg_neon_card_cyan"
                 android:padding="12dp">
 
-                <!-- Header Interno -->
-                <ImageView
-                    android:id="@+id/ivIconTv"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_slideshow"
-                    app:tint="#FF9100" />
-
                 <TextView
+                    android:id="@+id/tvLiveBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/ivIconTv"
-                    android:layout_marginStart="6dp"
-                    android:layout_centerVertical="true"
-                    android:text="LIVE TV"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:text="🔴 LIVE"
                     android:textColor="#FFFFFF"
-                    android:textSize="9sp"
+                    android:textSize="10sp"
                     android:textStyle="bold"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
                     android:background="@drawable/bg_live_badge" />
 
-                <!-- Poster Emissão em Direto -->
+                <!-- Poster / Screenshots de Transmissão -->
                 <ImageView
                     android:id="@+id/ivCardTvBg"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_below="@id/ivIconTv"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/tvLiveBadge"
                     android:layout_above="@id/tvTitleTv"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/logo" />
 
@@ -271,33 +217,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/tvSubTv"
-                    android:text="RTP 1 HD: Portugal vs. Spain"
+                    android:text="LIVE TV"
                     android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvSubTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/pbTvProgress"
-                    android:layout_marginBottom="4dp"
-                    android:text="19:30 - 21:30"
-                    android:textColor="#8A99AD"
-                    android:textSize="11sp" />
-
-                <ProgressBar
-                    android:id="@+id/pbTvProgress"
-                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="4dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:progress="70"
-                    android:max="100"
-                    android:progressDrawable="@android:drawable/progress_horizontal"
-                    android:progressTint="#FF9100" />
+                    android:text="335 Canais em Direto"
+                    android:textColor="#00E5FF"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
@@ -323,32 +260,11 @@
                 android:padding="12dp">
 
                 <ImageView
-                    android:id="@+id/ivIconFilmes"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_media_play"
-                    app:tint="#00E5FF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/ivIconFilmes"
-                    android:layout_marginStart="6dp"
-                    android:layout_centerVertical="true"
-                    android:text="MOVIES (VOD)"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <!-- Poster Filme em Destaque -->
-                <ImageView
                     android:id="@+id/ivCardFilmesBg"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_below="@id/ivIconFilmes"
+                    android:layout_height="match_parent"
                     android:layout_above="@id/tvTitleFilmes"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/logo" />
 
@@ -357,22 +273,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/tvSubFilmes"
-                    android:text="DUNE: PART TWO"
+                    android:text="MOVIES (VOD)"
                     android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvSubFilmes"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:text="Assistir Agora ▸"
+                    android:text="Catálogo de Filmes ▸"
                     android:textColor="#00E5FF"
                     android:textSize="11sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
@@ -382,7 +300,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginEnd="10dp"
             app:cardCornerRadius="18dp"
             app:cardBackgroundColor="#00000000"
             app:cardElevation="8dp"
@@ -398,32 +315,11 @@
                 android:padding="12dp">
 
                 <ImageView
-                    android:id="@+id/ivIconSeries"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="#00E5FF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/ivIconSeries"
-                    android:layout_marginStart="6dp"
-                    android:layout_centerVertical="true"
-                    android:text="SERIES"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <!-- Poster Série em Destaque -->
-                <ImageView
                     android:id="@+id/ivCardSeriesBg"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_below="@id/ivIconSeries"
+                    android:layout_height="match_parent"
                     android:layout_above="@id/tvTitleSeries"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/logo" />
 
@@ -432,130 +328,183 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/tvSubSeries"
-                    android:text="THE LAST OF US"
+                    android:text="SERIES"
                     android:textColor="#FFFFFF"
-                    android:textSize="13sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvSubSeries"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:text="Continuar S1 E6 ▸"
+                    android:text="Temporadas &amp; Episódios ▸"
                     android:textColor="#00E5FF"
                     android:textSize="11sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- CARD 4: MULTISCREEN (MULTI-ECRÃ PARA 2 ECRÃS) -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardMultiScreen"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:cardCornerRadius="18dp"
-            app:cardBackgroundColor="#00000000"
-            app:cardElevation="8dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:stateListAnimator="@animator/selector_item_scale">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_neon_card_cyan"
-                android:padding="12dp">
-
-                <ImageView
-                    android:id="@+id/ivIconMulti"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="#00E5FF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/ivIconMulti"
-                    android:layout_marginStart="6dp"
-                    android:layout_centerVertical="true"
-                    android:text="MULTISCREEN"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <!-- Banner Dual Screen Preview -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/ivIconMulti"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:src="@android:drawable/ic_menu_agenda"
-                        app:tint="#00E5FF" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="MULTI-ECRÃ (2 CANAIS)"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Assistir 2 Ecrãs Lado a Lado ▸"
-                        android:textColor="#00E5FF"
-                        android:textSize="10sp" />
-                </LinearLayout>
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <!-- LINHA INFERIOR "CONTINUAR A VER" -->
+    <!-- QUICK ACCESS BAR (BARRA DE ACESSO RÁPIDO IGUAL À IMAGEM DE REFERÊNCIA) -->
     <TextView
-        android:id="@+id/tvContinueTitleHeader"
+        android:id="@+id/tvQuickAccessTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CONTINUAR A VER"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:text="Quick Access Bar"
+        android:textColor="#8A99AD"
+        android:textSize="13sp"
         android:textStyle="bold"
-        android:letterSpacing="0.05"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="24dp"
         android:layout_marginBottom="6dp"
-        app:layout_constraintBottom_toTopOf="@id/rvContinueWatching"
+        app:layout_constraintBottom_toTopOf="@id/llQuickAccessBar"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvContinueWatching"
+    <LinearLayout
+        android:id="@+id/llQuickAccessBar"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="48dp"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
+        android:paddingHorizontal="20dp"
+        android:weightSum="5"
+        android:layout_marginBottom="6dp"
+        app:layout_constraintBottom_toTopOf="@id/llBottomRows"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Quick 1: Favoritos -->
+        <Button
+            android:id="@+id/btnQuickFavorites"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="⭐ Favoritos"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Quick 2: Guia EPG Completo -->
+        <Button
+            android:id="@+id/btnQuickEpg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="📺 Guia EPG"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Quick 3: Definições -->
+        <Button
+            android:id="@+id/btnQuickSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="⚙ Definições"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Quick 4: Multi-Ecrã -->
+        <Button
+            android:id="@+id/btnQuickMultiScreen"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="🔲 Multi-Ecrã"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <!-- Quick 5: Catch-up 7d -->
+        <Button
+            android:id="@+id/btnQuickCatchup"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="⏱ Catch-up 7d"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:focusable="true"
+            android:clickable="true" />
+    </LinearLayout>
+
+    <!-- LINHA INFERIOR "FILMES EM DESTAQUE" E "CONTINUAR A VER" -->
+    <LinearLayout
+        android:id="@+id/llBottomRows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toTopOf="@id/footerBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvFeaturedTitleHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎬 FILMES EM DESTAQUE &amp; LANÇAMENTOS"
+            android:textColor="#00E5FF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="2dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFeaturedMovies"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvContinueTitleHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONTINUAR A VER"
+            android:textColor="#FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="2dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvContinueWatching"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:orientation="horizontal" />
+    </LinearLayout>
 
     <!-- BARRA DE RODAPÉ (VPN BADGE & VALIDADE) -->
     <RelativeLayout
         android:id="@+id/footerBar"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:paddingHorizontal="28dp"
+        android:layout_height="28dp"
+        android:paddingHorizontal="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -568,29 +517,35 @@
             android:layout_centerVertical="true"
             android:text="Validade : Ilimitado"
             android:textColor="#8A99AD"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:textSize="10sp" />
 
-        <TextView
-            android:id="@+id/tvVpnBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="🛡️ Conexão Protegida com VPN Dedicada 10 Gbps"
-            android:textColor="#00FF66"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvUserLogged"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="Utilizador : Lapa2025123"
-            android:textColor="#8A99AD"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒 SOCKS5 VPS PROTECTED"
+                android:textColor="#00FF88"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:background="@drawable/bg_vpn_badge" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="v8.9"
+                android:textColor="#8A99AD"
+                android:textSize="9sp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

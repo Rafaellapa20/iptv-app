@@ -1,6 +1,6 @@
 {
-  "versionCode": 76,
-  "versionName": "8.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.7-debug.apk",
-  "releaseNotes": "v8.7 Release Oficial:\n- Nome da aplicação atualizado no cabeçalho superior para IPTV GLOBAL\n- Identidade visual unificada em todos os menus"
+  "versionCode": 79,
+  "versionName": "9.0",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.0-debug.apk",
+  "releaseNotes": "v9.0 Release Oficial:\n- Design 1:1 de 4 ecrãs em 1 exatamente igual à imagem de referência do utilizador\n- Hero Zone com 3 cartões neon em destaque (Live TV, Movies VOD, Series)\n- Barra de Acesso Rápido (Quick Access Bar): Favoritos, Guia EPG, Definições, Multi-Ecrã e Catch-up 7d\n- Ecrã de Detalhes de Filmes & Séries com metadata pills (2024, 12+, 4K, IMDb 8.2, Sci-Fi/Action), elenco de atores com fotos circulares e botões de ação\n- Tudo guardado e compilado localmente"
 }

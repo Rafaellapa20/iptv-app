@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D071E">
+    android:background="#050A14"
+    tools:context=".MovieInfoActivity">
 
-    <!-- Fundo Desfocado -->
+    <!-- Fundo Desfocado Ambiente -->
     <ImageView
         android:id="@+id/ivBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:alpha="0.3"/>
+        android:alpha="0.25"
+        android:src="@drawable/logo"/>
 
-    <!-- Máscara de Gradiente -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_gradient_movie_info"/>
+        android:background="#F0050A14"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,136 +29,215 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp">
+            android:padding="28dp">
 
-            <!-- Capa do Filme -->
+            <!-- Capa / Poster Principal (Esquerda) -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvPoster"
-                android:layout_width="200dp"
-                android:layout_height="300dp"
-                app:cardCornerRadius="12dp"
+                android:layout_width="210dp"
+                android:layout_height="310dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-                
+
                 <ImageView
                     android:id="@+id/ivPoster"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:transitionName="poster_transition"/>
+                    android:src="@drawable/logo" />
             </androidx.cardview.widget.CardView>
 
-            <!-- Título e Dados -->
+            <!-- Título do Filme / Série -->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="28dp"
                 android:textColor="#FFFFFF"
-                android:textSize="36sp"
+                android:textSize="34sp"
                 android:textStyle="bold"
-                android:text="A Carregar..."
+                android:text="OPPENHEIMER"
                 app:layout_constraintStart_toEndOf="@id/cvPoster"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <TextView
-                android:id="@+id/tvRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFCC00"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
-
-            <TextView
-                android:id="@+id/tvDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:textColor="#AAAAAA"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@id/tvRating"
-                app:layout_constraintTop_toTopOf="@id/tvRating"
-                app:layout_constraintBottom_toBottomOf="@id/tvRating"/>
-                
-            <TextView
-                android:id="@+id/tvGenre"
+            <!-- Linha Metadata Pills: 2024 · 12+ · 4K · IMDb 8.2 · Sci-Fi/Action -->
+            <LinearLayout
+                android:id="@+id/llMetadata"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#00FFFF"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvRating"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <!-- Botões -->
-            <LinearLayout
-                android:id="@+id/llButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvGenre">
+                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <Button
-                    android:id="@+id/btnPlay"
-                    android:layout_width="200dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/bg_button_neon"
-                    android:text="▶ VER AGORA"
+                <TextView
+                    android:id="@+id/tvYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2024"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:elevation="8dp"/>
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:background="#33FFFFFF" />
 
-                <Button
-                    android:id="@+id/btnFavorite"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/bg_button_neon"
-                    android:text="❤"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="12+"
                     android:textColor="#FFFFFF"
-                    android:textSize="24sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:elevation="8dp"/>
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:background="#33FFFFFF" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="4K"
+                    android:textColor="#00E5FF"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="2dp"
+                    android:background="#3300E5FF" />
+
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="IMDb 8.2 ★"
+                    android:textColor="#FFCC00"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:background="#33FFCC00" />
+
+                <TextView
+                    android:id="@+id/tvGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="Sci-Fi/Action"
+                    android:textColor="#8A99AD"
+                    android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Sinopse -->
+            <!-- Sinopse / Overview -->
             <TextView
                 android:id="@+id/tvPlot"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:textColor="#DDDDDD"
-                android:textSize="16sp"
-                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#D0D8E4"
+                android:textSize="13sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:lineSpacingExtra="3dp"
+                android:text="Synopsis, the Trinity test chosen to mes with a Trinity test vplosnc monter of Oppenheimer..."
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/llButtons"
+                app:layout_constraintTop_toBottomOf="@id/llMetadata"
                 app:layout_constraintEnd_toEndOf="parent"/>
-                
-            <TextView
-                android:id="@+id/tvCast"
+
+            <!-- Seção de Atores (CAST) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCast"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="#888888"
-                android:textSize="14sp"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvPlot"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Botões de Ação (Reproduzir & Trailer) -->
+            <LinearLayout
+                android:id="@+id/llMainActionButtons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/rvCast"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <Button
+                    android:id="@+id/btnPlay"
+                    android:layout_width="160dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/bg_button_neon"
+                    android:text="▶ Reproduzir"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:clickable="true" />
+
+                <Button
+                    android:id="@+id/btnTrailer"
+                    android:layout_width="140dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_smarters_sage"
+                    android:text="▶ Trailer"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:focusable="true"
+                    android:clickable="true" />
+            </LinearLayout>
+
+            <!-- Botão Adicionar aos Favoritos (Barra Completa) -->
+            <Button
+                android:id="@+id/btnFavorite"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_smarters_sage"
+                android:text="⭐ Adicionar aos Favoritos"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:clickable="true"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/llMainActionButtons"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Botão Failover Backup (Barra Completa) -->
+            <Button
+                android:id="@+id/btnBackup"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_smarters_sage"
+                android:text="🔄 Failover (Backup Servidor 2)"
+                android:textColor="#8A99AD"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:clickable="true"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/btnFavorite"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ProgressBar
                 android:id="@+id/pbLoading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminateTint="#00FFFF"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="#00E5FF"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

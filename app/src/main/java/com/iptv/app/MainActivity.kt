@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         val tvVencimento = findViewById<TextView>(R.id.tvVencimento)
         val tvUserLogged = findViewById<TextView>(R.id.tvUserLogged)
-        val tvGreeting = findViewById<TextView>(R.id.tvGreeting)
         
         if (vencimento == "null" || vencimento == "Indefinido") {
             tvVencimento.text = "Validade : Ilimitado"
@@ -56,11 +56,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (username.isNotEmpty()) {
-            tvUserLogged.text = "Utilizador : $username"
-            tvGreeting.text = "Olá, $username"
+            tvUserLogged.text = "Perfil: $username"
         }
 
-        // Relógio estilo Pulse TV (20:30)
+        // Relógio digital
         val tvClock = findViewById<TextView>(R.id.tvClock)
         clockJob = CoroutineScope(Dispatchers.Main).launch {
             val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -70,21 +69,37 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // MENU SUPERIOR DE NAVEGAÇÃO
-        findViewById<View>(R.id.navTv)?.setOnClickListener { openLiveTv(username, password) }
-        findViewById<View>(R.id.navMovies)?.setOnClickListener { openCategories(username, password, "vod") }
-        findViewById<View>(R.id.navSeries)?.setOnClickListener { openCategories(username, password, "series") }
-        findViewById<View>(R.id.navSettings)?.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
-
-        // CARTÕES NEON PRINCIPAIS
+        // HERO ZONE CARTÕES PRINCIPAIS
         findViewById<View>(R.id.cardTv).setOnClickListener { openLiveTv(username, password) }
         findViewById<View>(R.id.cardFilmes).setOnClickListener { openCategories(username, password, "vod") }
         findViewById<View>(R.id.cardSeries).setOnClickListener { openCategories(username, password, "series") }
-        findViewById<View>(R.id.cardMultiScreen)?.setOnClickListener {
+
+        // QUICK ACCESS BAR (BARRA DE ACESSO RÁPIDO IGUAL À IMAGEM DE REFERÊNCIA)
+        findViewById<View>(R.id.btnQuickFavorites)?.setOnClickListener { openLiveTv(username, password) }
+        findViewById<View>(R.id.btnQuickEpg)?.setOnClickListener {
+            val intent = Intent(this, EpgGridActivity::class.java)
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+        findViewById<View>(R.id.btnQuickMultiScreen)?.setOnClickListener {
             val intent = Intent(this, MultiScreenActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
             startActivity(intent)
+        }
+        findViewById<View>(R.id.btnQuickCatchup)?.setOnClickListener {
+            val intent = Intent(this, EpgGridActivity::class.java)
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+        }
+
+        findViewById<View>(R.id.btnRefresh)?.setOnClickListener {
+            fetchMoviesPosters(username, password)
+            fetchSeriesPosters(username, password)
+            Toast.makeText(this, "Listas e Conteúdos Atualizados!", Toast.LENGTH_SHORT).show()
         }
 
         findViewById<View>(R.id.btnSwitchUser)?.setOnClickListener {
@@ -251,6 +266,7 @@ class MainActivity : AppCompatActivity() {
 
                     withContext(Dispatchers.Main) {
                         startMoviesCardSlideshow()
+                        setupFeaturedMovies(recentMovies)
                     }
                 }
             } catch (e: Exception) {}
@@ -388,6 +404,59 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("STREAM_ID", item.stream_id)
                 intent.putExtra("TITLE", item.name)
                 intent.putExtra("TYPE", item.stream_type)
+                startActivity(intent)
+            }
+        }
+
+        override fun getItemCount() = list.size
+    }
+
+    private fun setupFeaturedMovies(movies: List<Stream>) {
+        val rv = findViewById<RecyclerView>(R.id.rvFeaturedMovies) ?: return
+        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        if (movies.isEmpty()) {
+            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.GONE
+            rv.visibility = View.GONE
+        } else {
+            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.VISIBLE
+            rv.visibility = View.VISIBLE
+            rv.adapter = FeaturedMoviesAdapter(movies)
+        }
+    }
+
+    inner class FeaturedMoviesAdapter(private val list: List<Stream>) : RecyclerView.Adapter<FeaturedMoviesAdapter.VH>() {
+        inner class VH(v: View) : RecyclerView.ViewHolder(v) {
+            val poster: ImageView = v.findViewById(R.id.ivMoviePosterCard)
+            val title: TextView = v.findViewById(R.id.tvMoviePosterTitle)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_poster_card, parent, false)
+            return VH(view)
+        }
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val item = list[position]
+            holder.title.text = item.name
+            if (item.stream_icon.isNotEmpty()) {
+                Glide.with(holder.itemView.context).load(item.stream_icon).into(holder.poster)
+            } else {
+                holder.poster.setImageResource(R.drawable.logo)
+            }
+
+            holder.itemView.setOnClickListener {
+                val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+                val user = prefs.getString("USERNAME", "") ?: ""
+                val pass = prefs.getString("PASSWORD", "") ?: ""
+
+                val intent = Intent(this@MainActivity, MovieInfoActivity::class.java)
+                val videoUrl = "${Constants.SERVER_URL}/movie/$user/$pass/${item.stream_id}.${item.extension}"
+                intent.putExtra("STREAM_ID", item.stream_id)
+                intent.putExtra("TITLE", item.name)
+                intent.putExtra("COVER", item.stream_icon)
+                intent.putExtra("VIDEO_URL", videoUrl)
+                intent.putExtra("USERNAME", user)
+                intent.putExtra("PASSWORD", pass)
                 startActivity(intent)
             }
         }
