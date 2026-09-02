@@ -23,12 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     private val recentMovies = mutableListOf<Stream>()
     private val recentSeries = mutableListOf<Stream>()
-    private val recentTv = mutableListOf<Stream>()
 
     private var clockJob: kotlinx.coroutines.Job? = null
     private var moviesCardJob: kotlinx.coroutines.Job? = null
     private var seriesCardJob: kotlinx.coroutines.Job? = null
-    private var tvCardJob: kotlinx.coroutines.Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,24 +41,29 @@ class MainActivity : AppCompatActivity() {
         val vencimento = intent.getStringExtra("VENCIMENTO") ?: "Ilimitado"
 
         val tvVencimento = findViewById<TextView>(R.id.tvVencimento)
+        val tvUserLogged = findViewById<TextView>(R.id.tvUserLogged)
         
         if (vencimento == "null" || vencimento == "Indefinido") {
-            tvVencimento.text = "VALIDADE: Ilimitado"
+            tvVencimento.text = "Validade : Ilimitado"
         } else {
-            tvVencimento.text = "VALIDADE: $vencimento"
+            tvVencimento.text = "Validade : $vencimento"
         }
 
-        // Relógio em tempo real estilo IPTV Smarters Pro
+        if (username.isNotEmpty()) {
+            tvUserLogged.text = "Utilizador : $username"
+        }
+
+        // Relógio & Data estilo IPTV Smarters Pro (Ex: 10:20   Jun 22, 2026)
         val tvClock = findViewById<TextView>(R.id.tvClock)
         clockJob = CoroutineScope(Dispatchers.Main).launch {
-            val sdf = SimpleDateFormat("HH:mm - EEE, dd MMM", Locale("pt", "PT"))
+            val sdf = SimpleDateFormat("HH:mm   MMM dd, yyyy", Locale("pt", "PT"))
             while (isActive) {
                 tvClock.text = sdf.format(Date())
                 kotlinx.coroutines.delay(1000)
             }
         }
 
-        // Card 1: TV Em Direto
+        // CARD 1: LIVE TV (GRANDE NA ESQUERDA)
         findViewById<View>(R.id.cardTv).setOnClickListener {
             val intent = Intent(this, LiveTvActivity::class.java)
             intent.putExtra("USERNAME", username)
@@ -69,23 +72,35 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
 
-        // Card 2: Filmes VOD
+        // CARD 2: FILMES VOD
         findViewById<View>(R.id.cardFilmes).setOnClickListener {
             openCategories(username, password, "vod")
         }
 
-        // Card 3: Séries
+        // CARD 3: SÉRIES
         findViewById<View>(R.id.cardSeries).setOnClickListener {
             openCategories(username, password, "series")
         }
 
-        // Card 4: Favoritos
-        findViewById<View>(R.id.cardFavorites).setOnClickListener {
-            val intent = Intent(this, StreamsActivity::class.java)
+        // TILE 1: GUIA TV / CATCH UP (EPG)
+        findViewById<View>(R.id.cardEpg).setOnClickListener {
+            val intent = Intent(this, EpgGridActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
-            intent.putExtra("TYPE", "favorites")
-            intent.putExtra("CATEGORY_NAME", "Meus Favoritos")
+            startActivity(intent)
+        }
+
+        // TILE 2: MULTI-ECRÃ
+        findViewById<View>(R.id.cardMultiScreen).setOnClickListener {
+            val intent = Intent(this, LiveTvActivity::class.java)
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+        }
+
+        // TILE 3: DEFINIÇÕES / SETTINGS
+        findViewById<View>(R.id.cardSettings).setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 
@@ -96,10 +111,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        findViewById<View>(R.id.btnSettings).setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
 
         findViewById<View>(R.id.btnRefresh).setOnClickListener {
             android.widget.Toast.makeText(this, "Atualizando Portal...", android.widget.Toast.LENGTH_SHORT).show()
@@ -107,13 +118,6 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
-
-        findViewById<View>(R.id.btnEpg)?.setOnClickListener {
-            val intent = Intent(this, EpgGridActivity::class.java)
-            intent.putExtra("USERNAME", username)
-            intent.putExtra("PASSWORD", password)
-            startActivity(intent)
         }
 
         findViewById<View>(R.id.btnSearch).setOnClickListener {
@@ -136,10 +140,9 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // Carregar capas de Filmes, Séries e Canais para exibição dinâmica nos cartões
+        // Carregar capas de Filmes e Séries para rotação dentro dos cartões
         fetchMoviesPosters(username, password)
         fetchSeriesPosters(username, password)
-        fetchTvLogos(username, password)
     }
 
     private fun openCategories(user: String, pass: String, type: String) {
@@ -151,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES VOD
+    // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES
     private fun fetchMoviesPosters(username: String, password: String) {
         if (username.isEmpty() || password.isEmpty()) return
         CoroutineScope(Dispatchers.IO).launch {
@@ -266,62 +269,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // SLIDESHOW DE LOGOS DE CANAIS DENTRO DO CARD DE TV EM DIRETO
-    private fun fetchTvLogos(username: String, password: String) {
-        if (username.isEmpty() || password.isEmpty()) return
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
-                val request = Request.Builder().url(url).build()
-                val response = OkHttpProvider.client.newCall(request).execute()
-
-                if (response.isSuccessful) {
-                    val body = response.body?.string() ?: "[]"
-                    val array = JSONArray(body)
-                    recentTv.clear()
-
-                    for (i in 0 until Math.min(array.length(), 25)) {
-                        val obj = array.getJSONObject(i)
-                        val icon = obj.optString("stream_icon", "")
-                        if (icon.isNotEmpty()) {
-                            recentTv.add(Stream(obj.getString("stream_id"), obj.getString("name"), icon, "live", "ts"))
-                        }
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        startTvCardSlideshow()
-                    }
-                }
-            } catch (e: Exception) {}
-        }
-    }
-
-    private fun startTvCardSlideshow() {
-        if (recentTv.isEmpty()) return
-        val ivCardTvBg = findViewById<ImageView>(R.id.ivCardTvBg) ?: return
-
-        tvCardJob?.cancel()
-        tvCardJob = CoroutineScope(Dispatchers.Main).launch {
-            var index = 0
-            while (isActive) {
-                val tv = recentTv[index]
-                if (tv.stream_icon.isNotEmpty()) {
-                    Glide.with(this@MainActivity)
-                        .load(tv.stream_icon)
-                        .transition(DrawableTransitionOptions.withCrossFade(1000))
-                        .into(ivCardTvBg)
-                }
-                kotlinx.coroutines.delay(7000)
-                index = (index + 1) % recentTv.size
-            }
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         clockJob?.cancel()
         moviesCardJob?.cancel()
         seriesCardJob?.cancel()
-        tvCardJob?.cancel()
     }
 }

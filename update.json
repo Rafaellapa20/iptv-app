@@ -1,6 +1,6 @@
 {
-  "versionCode": 69,
-  "versionName": "8.0",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.0-debug.apk",
-  "releaseNotes": "v8.0 Release Oficial:\n- Compatibilidade Universal de Imagem: ativação forçada de faixas de vídeo em 100% das TV Boxes\n- Descodificação H.265/HEVC Non-IDR e fallback automático para HLS .m3u8\n- Resolução total dos canais sem imagem/ecrã preto"
+  "versionCode": 70,
+  "versionName": "8.1",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.1-debug.apk",
+  "releaseNotes": "v8.1 Release Oficial:\n- Novo Layout 1:1 Idêntico ao IPTV Smarters Pro Oficial da Imagem enviado pelo Utilizador\n- Card LIVE TV Alto na Esquerda em Turquesa (#00E676 -> #2979FF)\n- Cards MOVIES e SERIES na Esfera Superior Direita (Coral e Roxo)\n- 3 Tiles no Fundo (GUIA TV, MULTI-ECRÃ, DEFINIÇÕES em Verde Muted)\n- Fundo de Raios Azuis Radial Smarters Pro com Selo Neon de VPN Protegida 10 Gbps no Footer"
 }
