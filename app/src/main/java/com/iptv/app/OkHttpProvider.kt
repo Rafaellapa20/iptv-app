@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 object OkHttpProvider {
 
-    private const val BROWSER_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    private const val BROWSER_USER_AGENT = "IPTVSmartersPlayer/3.0.9 (Linux; Android 10)"
 
     // Proxy VPN Dedicado Privado (Hetzner Gigabit - 65.21.178.77:8443)
     private val vpsProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("65.21.178.77", 8443))
