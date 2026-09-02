@@ -218,22 +218,27 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun createExoPlayer(): ExoPlayer {
-        val trackSelector = androidx.media3.exoplayer.trackselection.DefaultTrackSelector(this)
+        val trackSelector = androidx.media3.exoplayer.trackselection.DefaultTrackSelector(this).apply {
+            setParameters(
+                buildUponParameters()
+                    .setForceHighestSupportedBitrate(true)
+                    .setAllowVideoNonSeamlessAdaptiveness(true)
+            )
+        }
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
             .setBufferDurationsMs(
-                5000,  // min buffer
-                30000, // max buffer
-                300,   // buffer for playback (0.3s - Abertura ultrarrápida instantânea!)
-                600    // buffer for playback after rebuffer
+                15000, // min buffer (15s)
+                50000, // max buffer (50s)
+                2500,  // buffer for playback (2.5s - Fluidez 100% sem travamentos!)
+                3500   // buffer for playback after rebuffer
             )
-            .setPrioritizeTimeOverSizeThresholds(true)
-            .setBackBuffer(10000, true)
+            .setBackBuffer(15000, true)
             .build()
 
         val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)
             .setEnableDecoderFallback(true)
-            .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
-            .setAllowedVideoJoiningTimeMs(5000)
+            .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+            .setAllowedVideoJoiningTimeMs(4000)
 
         return ExoPlayer.Builder(this)
             .setRenderersFactory(renderersFactory)

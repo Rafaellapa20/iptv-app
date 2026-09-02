@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 
 object PlayerManager {
     var sharedPlayer: ExoPlayer? = null
@@ -11,25 +12,32 @@ object PlayerManager {
 
     fun getPlayer(context: Context): ExoPlayer {
         if (sharedPlayer == null) {
-            // LoadControl otimizado para abertura INSTANTÂNEA de canais (300ms)
+            val trackSelector = DefaultTrackSelector(context.applicationContext).apply {
+                setParameters(
+                    buildUponParameters()
+                        .setForceHighestSupportedBitrate(true)
+                        .setAllowVideoNonSeamlessAdaptiveness(true)
+                )
+            }
+
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
-                    5000,  // min buffer
-                    30000, // max buffer
-                    300,   // buffer for playback (0.3s - Abertura instantânea!)
-                    600    // buffer for playback after rebuffer
+                    15000, // min buffer (15s)
+                    50000, // max buffer (50s)
+                    2500,  // buffer for playback (2.5s - Fluidez 100% sem travamentos)
+                    3500   // buffer for playback after rebuffer
                 )
-                .setPrioritizeTimeOverSizeThresholds(true)
-                .setBackBuffer(10000, true)
+                .setBackBuffer(15000, true)
                 .build()
 
             val renderersFactory = DefaultRenderersFactory(context.applicationContext)
                 .setEnableDecoderFallback(true)
-                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
-                .setAllowedVideoJoiningTimeMs(2000)
+                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
+                .setAllowedVideoJoiningTimeMs(4000)
 
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)
                 .setRenderersFactory(renderersFactory)
+                .setTrackSelector(trackSelector)
                 .setLoadControl(loadControl)
                 .build()
         }

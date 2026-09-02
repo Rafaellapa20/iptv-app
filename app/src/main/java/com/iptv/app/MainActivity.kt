@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private val recentMovies = mutableListOf<Stream>()
     private lateinit var rvHomeFavorites: RecyclerView
     private lateinit var tvFavTitle: TextView
+    private var clockJob: kotlinx.coroutines.Job? = null
+    private var backgroundJob: kotlinx.coroutines.Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +46,23 @@ class MainActivity : AppCompatActivity() {
         val tvVencimento = findViewById<TextView>(R.id.tvVencimento)
         
         if (vencimento == "null" || vencimento == "Indefinido") {
-            tvVencimento.text = "VENCIMENTO: Ilimitado"
+            tvVencimento.text = "VALIDADE: Ilimitado"
         } else {
-            tvVencimento.text = "VENCIMENTO: $vencimento"
+            tvVencimento.text = "VALIDADE: $vencimento"
         }
 
-        findViewById<Button>(R.id.btnTv).setOnClickListener {
+        // Relógio em tempo real estilo IPTV Smarters Pro
+        val tvClock = findViewById<TextView>(R.id.tvClock)
+        clockJob = CoroutineScope(Dispatchers.Main).launch {
+            val sdf = SimpleDateFormat("HH:mm - EEE, dd MMM", Locale("pt", "PT"))
+            while (isActive) {
+                tvClock.text = sdf.format(Date())
+                kotlinx.coroutines.delay(1000)
+            }
+        }
+
+        // Card 1: TV Em Direto
+        findViewById<View>(R.id.cardTv).setOnClickListener {
             val intent = Intent(this, LiveTvActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
@@ -58,15 +70,18 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         }
 
-        findViewById<Button>(R.id.btnFilmes).setOnClickListener {
+        // Card 2: Filmes VOD
+        findViewById<View>(R.id.cardFilmes).setOnClickListener {
             openCategories(username, password, "vod")
         }
 
-        findViewById<Button>(R.id.btnSeries).setOnClickListener {
+        // Card 3: Séries
+        findViewById<View>(R.id.cardSeries).setOnClickListener {
             openCategories(username, password, "series")
         }
 
-        findViewById<Button>(R.id.btnFavorites).setOnClickListener {
+        // Card 4: Favoritos
+        findViewById<View>(R.id.cardFavorites).setOnClickListener {
             val intent = Intent(this, StreamsActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
@@ -75,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        findViewById<Button>(R.id.btnExit).setOnClickListener {
+        findViewById<View>(R.id.btnExit).setOnClickListener {
             val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
             prefs.edit().clear().apply()
             val intent = Intent(this, LoginActivity::class.java)
@@ -83,12 +98,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        findViewById<android.view.View>(R.id.btnSettings).setOnClickListener {
+        findViewById<View>(R.id.btnSettings).setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 
-        findViewById<android.view.View>(R.id.btnRefresh).setOnClickListener {
+        findViewById<View>(R.id.btnRefresh).setOnClickListener {
             android.widget.Toast.makeText(this, "Atualizando Portal...", android.widget.Toast.LENGTH_SHORT).show()
             val intent = intent
             finish()
@@ -96,7 +111,14 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
-        findViewById<android.view.View>(R.id.btnSearch).setOnClickListener {
+        findViewById<View>(R.id.btnEpg)?.setOnClickListener {
+            val intent = Intent(this, EpgGridActivity::class.java)
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+        }
+
+        findViewById<View>(R.id.btnSearch).setOnClickListener {
             val intent = Intent(this, GlobalSearchActivity::class.java)
             intent.putExtra("USERNAME", username)
             intent.putExtra("PASSWORD", password)
@@ -109,15 +131,12 @@ class MainActivity : AppCompatActivity() {
                     .setTitle("Sair do Aplicativo")
                     .setMessage("Deseja realmente sair?")
                     .setPositiveButton("Sim") { _, _ ->
-                        finishAffinity() // Fecha o aplicativo completamente
+                        finishAffinity()
                     }
-                    .setNegativeButton("Não", null) // Fecha o dialog e volta pro menu
+                    .setNegativeButton("Não", null)
                     .show()
             }
         })
-
-        // Verifica atualizações ao abrir a home
-        UpdateManager.checkForUpdates(this)
 
         loadHomeFavorites(username, password)
         fetchRecentMovies(username, password)
@@ -138,17 +157,6 @@ class MainActivity : AppCompatActivity() {
             pIntent.putExtra("USERNAME", username)
             pIntent.putExtra("PASSWORD", password)
             startActivity(pIntent)
-        }
-        
-        // Auto-Update de Canais ao entrar
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_categories"
-                OkHttpProvider.client.newCall(okhttp3.Request.Builder().url(url).build()).execute()
-                withContext(Dispatchers.Main) {
-                    android.util.Log.d("MainActivity", "Canais atualizados automaticamente.")
-                }
-            } catch (e: Exception) {}
         }
     }
 
@@ -230,76 +238,40 @@ class MainActivity : AppCompatActivity() {
                         val streamType = obj.optString("stream_type", "movie")
                         val extension = obj.optString("container_extension", "mp4")
                         
-                        moviesData.add(Stream(streamId, name, streamIcon, streamType, extension) to added)
+                        if (streamIcon.isNotEmpty()) {
+                            moviesData.add(Stream(streamId, name, streamIcon, streamType, extension) to added)
+                        }
                     }
                     
-                    // Ordena por data adicionada (maior para menor) e pega os top 15
                     moviesData.sortByDescending { it.second }
                     recentMovies.clear()
                     recentMovies.addAll(moviesData.map { it.first }.take(15))
 
                     withContext(Dispatchers.Main) {
-                        startHeroBannerSlideshow(username, password)
+                        startBackgroundSlideshow()
                     }
                 }
-            } catch (e: Exception) {
-                // Falha silenciosa para não travar a home
-            }
+            } catch (e: Exception) {}
         }
     }
 
-    private var bannerJob: kotlinx.coroutines.Job? = null
-
-    private fun startHeroBannerSlideshow(username: String, password: String) {
+    private fun startBackgroundSlideshow() {
         if (recentMovies.isEmpty()) return
-        val cvHeroCard = findViewById<View>(R.id.cvHeroCard)
-        val ivHeroBanner = findViewById<android.widget.ImageView>(R.id.ivHeroBanner)
-        val tvHeroMovieTitle = findViewById<android.widget.TextView>(R.id.tvHeroMovieTitle)
-        val btnPlayHeroMovie = findViewById<android.widget.Button>(R.id.btnPlayHeroMovie)
+        val ivMainBackgroundBlur = findViewById<ImageView>(R.id.ivMainBackgroundBlur) ?: return
 
-        val ivMainBackgroundBlur = findViewById<android.widget.ImageView>(R.id.ivMainBackgroundBlur)
-
-        cvHeroCard?.visibility = View.VISIBLE
-
-        bannerJob?.cancel()
-        bannerJob = CoroutineScope(Dispatchers.Main).launch {
+        backgroundJob?.cancel()
+        backgroundJob = CoroutineScope(Dispatchers.Main).launch {
             var currentIndex = 0
             while (isActive) {
                 val movie = recentMovies[currentIndex]
                 if (movie.stream_icon.isNotEmpty()) {
-                    tvHeroMovieTitle?.text = movie.name
-
                     com.bumptech.glide.Glide.with(this@MainActivity)
                         .load(movie.stream_icon)
-                        .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(800))
-                        .into(ivHeroBanner)
-
-                    if (ivMainBackgroundBlur != null) {
-                        com.bumptech.glide.Glide.with(this@MainActivity)
-                            .load(movie.stream_icon)
-                            .apply(com.bumptech.glide.request.RequestOptions.bitmapTransform(jp.wasabeef.glide.transformations.BlurTransformation(25, 3)))
-                            .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(1000))
-                            .into(ivMainBackgroundBlur)
-                    }
-
-                    val openMovieAction = View.OnClickListener {
-                        val intent = Intent(this@MainActivity, MovieInfoActivity::class.java)
-                        val url = "${Constants.SERVER_URL}/movie/$username/$password/${movie.stream_id}.${movie.extension}"
-                        intent.putExtra("VIDEO_URL", url)
-                        intent.putExtra("TITLE", movie.name)
-                        intent.putExtra("STREAM_ID", movie.stream_id)
-                        intent.putExtra("TYPE", "vod")
-                        intent.putExtra("USERNAME", username)
-                        intent.putExtra("PASSWORD", password)
-                        intent.putExtra("COVER", movie.stream_icon)
-                        startActivity(intent)
-                    }
-
-                    cvHeroCard?.setOnClickListener(openMovieAction)
-                    btnPlayHeroMovie?.setOnClickListener(openMovieAction)
+                        .apply(com.bumptech.glide.request.RequestOptions.bitmapTransform(jp.wasabeef.glide.transformations.BlurTransformation(25, 3)))
+                        .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(1200))
+                        .into(ivMainBackgroundBlur)
                 }
-
-                kotlinx.coroutines.delay(6000)
+                kotlinx.coroutines.delay(8000)
                 currentIndex = (currentIndex + 1) % recentMovies.size
             }
         }
@@ -307,6 +279,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bannerJob?.cancel()
+        clockJob?.cancel()
+        backgroundJob?.cancel()
     }
 }
