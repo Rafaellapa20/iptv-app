@@ -1,6 +1,6 @@
 {
-  "versionCode": 119,
-  "versionName": "10.30",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.30-debug.apk",
-  "releaseNotes": "v10.30:\n- Removida a secção de Rádios a pedido do utilizador, para manter a app focada e limpa."
+  "versionCode": 120,
+  "versionName": "10.31",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.31-debug.apk",
+  "releaseNotes": "v10.31:\n- Limpeza aprofundada: O botão de Rádios foi permanentemente removido da interface principal."
 }

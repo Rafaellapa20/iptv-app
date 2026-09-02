@@ -414,7 +414,7 @@
             android:nextFocusUp="@id/cardFilmes"
             android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickEpg"
-            android:nextFocusRight="@id/btnQuickRadios" />
+            android:nextFocusRight="@id/btnQuickCatchup" />
 
         
 
@@ -453,7 +453,7 @@
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
             android:nextFocusDown="@id/rvContinueWatching"
-            android:nextFocusLeft="@id/btnQuickRadios" />
+            android:nextFocusLeft="@id/btnQuickSettings" />
     </LinearLayout>
 
     <!-- FILMES EM DESTAQUE REMOVIDOS -->
