@@ -1,6 +1,6 @@
 {
-  "versionCode": 86,
-  "versionName": "9.7",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.7-debug.apk",
-  "releaseNotes": "v9.7 Release Oficial:\n- Correção do tamanho dos cartões principais (voltaram ao tamanho normal)\n- As capas dos filmes voltaram a aparecer no cartão central\n- O SpeedTest agora faz o teste com um ficheiro maior (50MB) para medir melhor ligações Gigabit\n- Os botões da Quick Access Bar agora mudam de cor quando selecionados com o comando"
+  "versionCode": 87,
+  "versionName": "9.8",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v9.8-debug.apk",
+  "releaseNotes": "v9.8 Release Oficial:\n- Correção do ecrã 2 no modo Multi-Ecrã (agora usa TextureView para evitar conflitos de vídeo na TV Box)"
 }
