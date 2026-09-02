@@ -92,27 +92,33 @@ class SettingsActivity : AppCompatActivity() {
             kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                 try {
                     val request = okhttp3.Request.Builder()
-                        .url("https://speed.cloudflare.com/__down?bytes=10000000")
+                        .url("https://speed.cloudflare.com/__down?bytes=50000000") // 50MB
                         .build()
 
-                    val startTime = System.currentTimeMillis()
                     val response = OkHttpProvider.client.newCall(request).execute()
                     if (response.isSuccessful) {
                         val inputStream = response.body?.byteStream()
-                        val buffer = ByteArray(8192)
+                        val buffer = ByteArray(32768)
+                        var bytesReadTotal = 0L
+                        val startTime = System.currentTimeMillis()
                         if (inputStream != null) {
-                            while (inputStream.read(buffer) != -1) {
-                                // Ler para descartar da memória
+                            var read: Int
+                            while (inputStream.read(buffer).also { read = it } != -1) {
+                                bytesReadTotal += read
                             }
                             inputStream.close()
                         }
-
                         val endTime = System.currentTimeMillis()
+                        
                         val timeTakenMs = endTime - startTime
                         val timeTakenSecs = timeTakenMs / 1000.0
                         
-                        // 10MB = 80 Megabits
-                        val speedMbps = (80.0 / timeTakenSecs).toInt()
+                        // Convert bytes to megabits: (bytes * 8) / 1,000,000
+                        val megabits = (bytesReadTotal * 8.0) / 1000000.0
+                        // Fix infinity/NaN if time is too short
+                        val safeTimeSecs = if (timeTakenSecs < 0.1) 0.1 else timeTakenSecs
+                        
+                        val speedMbps = (megabits / safeTimeSecs).toInt()
 
                         kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                             btnSpeedTest.isEnabled = true

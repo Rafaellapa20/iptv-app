@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         setupContinueWatching()
 
         // Carregar capas de Filmes e Séries em rotação
-        // fetchMoviesPosters(username, password) - Removed as per user request
+        fetchMoviesPosters(username, password)
         fetchSeriesPosters(username, password)
 
         // Verificar atualizações automaticamente sempre que a app inicia
