@@ -1,6 +1,6 @@
 {
-  "versionCode": 94,
-  "versionName": "10.5",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.5-debug.apk",
-  "releaseNotes": "v10.5 Release Oficial:\n- Novo Servidor Anti-Bloqueio (PTisp - Portugal): A partir de agora, a app usa por defeito um servidor localizado fisicamente em Lisboa. Diga adeus aos bloqueios e usufrua de uma velocidade incrível e sem limites de banda!"
+  "versionCode": 96,
+  "versionName": "10.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.7-debug.apk",
+  "releaseNotes": "v10.7 Release Oficial:\n- Correção Crítica de Login: A verificação de atualizações (OTA) agora também funciona no ecrã de Login! O túnel VPN foi desativado por defeito para evitar bloqueios de 'IP Lock' por parte dos servidores de IPTV ao tentar entrar na app."
 }

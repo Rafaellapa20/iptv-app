@@ -25,9 +25,20 @@ class LoginActivity : AppCompatActivity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
+        // Verificar atualizações OTA mesmo no ecrã de login
+        UpdateManager.checkForUpdates(this)
+
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val savedUser = prefs.getString("USERNAME", "") ?: ""
         val savedPass = prefs.getString("PASSWORD", "") ?: ""
+
+        // Aplicar estado inicial da VPN antes de tentar login
+        val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", false)
+        if (isVpnEnabled) {
+            OkHttpProvider.enableDoH()
+        } else {
+            OkHttpProvider.disableDoH()
+        }
 
         if (savedUser.isNotEmpty() && savedPass.isNotEmpty()) {
             etUsername.setText(savedUser)
