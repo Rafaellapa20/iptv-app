@@ -75,6 +75,7 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var rlBufferingOverlay: View
     private lateinit var ivLoadingCover: android.widget.ImageView
     private lateinit var tvLoadingTitle: android.widget.TextView
+    private lateinit var tvDiagnostics: android.widget.TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +100,7 @@ class PlayerActivity : AppCompatActivity() {
         rlBufferingOverlay = findViewById(R.id.rlBufferingOverlay)
         ivLoadingCover = findViewById(R.id.ivLoadingCover)
         tvLoadingTitle = findViewById(R.id.tvLoadingTitle)
+        tvDiagnostics = findViewById(R.id.tvDiagnostics)
 
         val initialTitle = intent.getStringExtra("TITLE") ?: "A carregar canal..."
         val initialCover = intent.getStringExtra("COVER") ?: ""
@@ -587,6 +589,39 @@ class PlayerActivity : AppCompatActivity() {
         val tvName: android.widget.TextView = view.findViewById(R.id.tvQuickChannelName)
     }
 
+    
+    private var diagnosticJob: kotlinx.coroutines.Job? = null
+
+    private fun startDiagnostics() {
+        diagnosticJob?.cancel()
+        tvDiagnostics.visibility = View.VISIBLE
+        tvDiagnostics.text = "A analisar ligação..."
+        
+        diagnosticJob = CoroutineScope(Dispatchers.IO).launch {
+            delay(5000) // Wait 5s before declaring an issue
+            
+            val isGoogleReachable = try {
+                val ping = Runtime.getRuntime().exec("ping -c 1 8.8.8.8")
+                ping.waitFor() == 0
+            } catch (e: Exception) { false }
+
+            withContext(Dispatchers.Main) {
+                if (!isGoogleReachable) {
+                    tvDiagnostics.text = "⚠️ Diagnóstico: A sua ligação à Internet (Wi-Fi/Cabo) caiu ou está muito lenta!"
+                } else {
+                    tvDiagnostics.text = "⚠️ Diagnóstico: A sua Internet está boa. O servidor IPTV está com lentidão neste canal específico."
+                }
+            }
+        }
+    }
+
+    private fun stopDiagnostics() {
+        diagnosticJob?.cancel()
+        runOnUiThread {
+            tvDiagnostics.visibility = View.GONE
+        }
+    }
+
     private fun updateNetworkStatus(playbackState: Int) {
         when (playbackState) {
             androidx.media3.common.Player.STATE_BUFFERING -> {
@@ -594,12 +629,14 @@ class PlayerActivity : AppCompatActivity() {
                 ivNetworkStatus.setColorFilter(android.graphics.Color.YELLOW)
                 tvNetworkSpeed.text = "Buffering"
                 tvNetworkSpeed.setTextColor(android.graphics.Color.YELLOW)
+                startDiagnostics()
             }
             androidx.media3.common.Player.STATE_READY -> {
                 ivNetworkStatus.setImageResource(android.R.drawable.presence_online)
                 ivNetworkStatus.setColorFilter(android.graphics.Color.GREEN)
                 tvNetworkSpeed.text = "Estável"
                 tvNetworkSpeed.setTextColor(android.graphics.Color.GREEN)
+                stopDiagnostics()
             }
         }
     }
