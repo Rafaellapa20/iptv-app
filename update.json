@@ -1,6 +1,6 @@
 {
-  "versionCode": 108,
-  "versionName": "10.19",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.19-debug.apk",
-  "releaseNotes": "v10.19 Release Oficial:\n- MODO SUPER DESPORTO (Zero Delay): A aplicação agora ativa automaticamente um modo de ultra baixa latência (sem buffer) ao abrir canais de Live TV (Desporto), para garantir que ouve o Golo antes dos vizinhos todos!"
+  "versionCode": 109,
+  "versionName": "10.20",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.20-debug.apk",
+  "releaseNotes": "v10.20 Release Oficial:\n- Picture-in-Picture (PiP): Ao ver TV, se carregar na tecla 'Home' do comando, a imagem encolhe para um canto do ecrã e continua a dar enquanto navega noutras apps!"
 }
