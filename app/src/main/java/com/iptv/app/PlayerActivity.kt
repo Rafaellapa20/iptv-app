@@ -429,7 +429,7 @@ class PlayerActivity : AppCompatActivity() {
         llMiniGuia.visibility = View.VISIBLE
         hideOverlays()
 
-        rvMiniGuia.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.RecyclerView.HORIZONTAL, false)
+        rvMiniGuia.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.RecyclerView.VERTICAL, false)
         rvMiniGuia.adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<MiniGuiaViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MiniGuiaViewHolder {
                 val view = layoutInflater.inflate(R.layout.item_mini_guia, parent, false)
@@ -926,13 +926,13 @@ class PlayerActivity : AppCompatActivity() {
                     if (intent.getStringExtra("TYPE") == "live") {
                         if (!isMiniGuiaVisible) {
                             showMiniGuia()
-                        } else {
-                            hideMiniGuia()
+                            return true
                         }
+                        // Se já estiver visível, deixar o RecyclerView (setas) navegar normalmente
                     } else {
                         changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                        return true
                     }
-                    return true
                 }
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
                     if (!isControlsVisible) {
@@ -979,8 +979,12 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveCurrentProgress()
-        player1?.pause()
-        player2?.pause()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && isInPictureInPictureMode) {
+            // Continuar a dar em PiP
+        } else {
+            player1?.pause()
+            player2?.pause()
+        }
     }
 
     override fun onStop() {
