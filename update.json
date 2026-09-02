@@ -1,6 +1,6 @@
 {
-  "versionCode": 57,
-  "versionName": "6.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.8-debug.apk",
-  "releaseNotes": "v6.8 - Túnel VPN Privado Dedicado Integrado (Servidor Hetzner Gigabit 65.21.178.77:8443):\n- Todo o tráfego da app passa agora pelo teu servidor VPS privado na Alemanha/Finlândia (65.21.178.77)\n- Zero bloqueios e zero redução de velocidade pelas operadoras portuguesas (MEO/NOS/Vodafone)\n- 100% automático, transparente e invisível para todos os utilizadores (sem necessidade de instalar apps adicionais)"
+  "versionCode": 58,
+  "versionName": "6.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.9-debug.apk",
+  "releaseNotes": "v6.9 - Transmissão em Tempo Real Sem Atraso (Zero Latency Mode):\n- Reduzido o buffer de arranque para 1.0s tirando partido da linha Gigabit da nossa VPN privada\n- Sinal de TV 100% sintonizado em tempo real, sem atraso/lag em relação à transmissão original da TV"
 }
