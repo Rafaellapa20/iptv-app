@@ -239,10 +239,10 @@ class PlayerActivity : AppCompatActivity() {
         }
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
             .setBufferDurationsMs(
-                15000, // min buffer (15s)
-                50000, // max buffer (50s)
-                2500,  // buffer for playback (2.5s - Fluidez 100% sem travamentos!)
-                3500   // buffer for playback after rebuffer
+                30000, // min buffer (30s)
+                120000, // max buffer (2 minutes)
+                3500,  // buffer for playback (3.5s)
+                5000   // buffer for playback after rebuffer
             )
             .setBackBuffer(15000, true)
             .build()
@@ -791,8 +791,11 @@ class PlayerActivity : AppCompatActivity() {
         saveCurrentProgress()
         if (player1 != PlayerManager.sharedPlayer) {
             player1?.release()
+            playerView1.player = null
+        } else {
+            // Se for partilhado, apenas retiramos a associação se ainda estiver ligada ao nosso PlayerView,
+            // mas é melhor não tocar para não roubar a surface do LiveTvActivity que já chamou onResume.
         }
-        playerView1.player = null
         player2?.release()
         stopRecording()
     }
@@ -802,6 +805,7 @@ class PlayerActivity : AppCompatActivity() {
         progressJob?.cancel()
         if (player1 != PlayerManager.sharedPlayer) {
             player1?.release()
+            playerView1.player = null
         }
         player2?.release()
         stopRecording()

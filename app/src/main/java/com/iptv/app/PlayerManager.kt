@@ -24,10 +24,10 @@ object PlayerManager {
 
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
-                    15000, // min buffer (15s)
-                    50000, // max buffer (50s)
-                    2500,  // buffer for playback (2.5s - Fluidez 100% sem travamentos)
-                    3500   // buffer for playback after rebuffer
+                    30000, // min buffer (30s)
+                    120000, // max buffer (2 minutes)
+                    3500,  // buffer for playback (3.5s)
+                    5000   // buffer for playback after rebuffer
                 )
                 .setBackBuffer(15000, true)
                 .build()
