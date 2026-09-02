@@ -122,11 +122,27 @@ class MainActivity : AppCompatActivity() {
         loadHomeFavorites(username, password)
         fetchRecentMovies(username, password)
         
+        // Sintonizar automaticamente o último canal visto ao abrir a aplicação
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val lastStreamId = prefs.getString("LAST_STREAM_ID", "") ?: ""
+        val lastStreamName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
+
+        if (lastStreamId.isNotEmpty() && !intent.getBooleanExtra("AUTO_TUNE_DONE", false)) {
+            intent.putExtra("AUTO_TUNE_DONE", true)
+            val pIntent = Intent(this, PlayerActivity::class.java)
+            val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$lastStreamId.ts"
+            pIntent.putExtra("VIDEO_URL", streamUrl)
+            pIntent.putExtra("STREAM_ID", lastStreamId)
+            pIntent.putExtra("TITLE", lastStreamName)
+            pIntent.putExtra("TYPE", "live")
+            pIntent.putExtra("USERNAME", username)
+            pIntent.putExtra("PASSWORD", password)
+            startActivity(pIntent)
+        }
+        
         // Auto-Update de Canais ao entrar
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Simplesmente forçamos uma pequena chamada para validar se a conta está ativa
-                // e ao mesmo tempo garantimos que o sistema sabe que houve um novo login.
                 val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_categories"
                 OkHttpProvider.client.newCall(okhttp3.Request.Builder().url(url).build()).execute()
                 withContext(Dispatchers.Main) {

@@ -221,12 +221,13 @@ class PlayerActivity : AppCompatActivity() {
         val trackSelector = androidx.media3.exoplayer.trackselection.DefaultTrackSelector(this)
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
             .setBufferDurationsMs(
-                15000, // min buffer
-                60000,  // max buffer
-                1500,   // buffer for playback (1.5s - abertura estável de 100% dos canais)
-                2500    // buffer for playback after rebuffer
+                5000,  // min buffer
+                30000, // max buffer
+                300,   // buffer for playback (0.3s - Abertura ultrarrápida instantânea!)
+                600    // buffer for playback after rebuffer
             )
-            .setBackBuffer(20000, true)
+            .setPrioritizeTimeOverSizeThresholds(true)
+            .setBackBuffer(10000, true)
             .build()
 
         val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)

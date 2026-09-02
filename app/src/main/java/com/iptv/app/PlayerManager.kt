@@ -11,19 +11,21 @@ object PlayerManager {
 
     fun getPlayer(context: Context): ExoPlayer {
         if (sharedPlayer == null) {
-            // Ajuste Ultra Low Latency (Tempo Real) graças à velocidade Gigabit da nossa VPN privada
+            // LoadControl otimizado para abertura INSTANTÂNEA de canais (300ms)
             val loadControl = DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
-                    15000, // min buffer
-                    60000, // max buffer
-                    1000,  // buffer for playback (apenas 1.0s para arranque em TEMPO REAL sem atrasos no sinal)
-                    1500   // buffer for playback after rebuffer
+                    5000,  // min buffer
+                    30000, // max buffer
+                    300,   // buffer for playback (0.3s - Abertura instantânea!)
+                    600    // buffer for playback after rebuffer
                 )
-                .setBackBuffer(15000, true)
+                .setPrioritizeTimeOverSizeThresholds(true)
+                .setBackBuffer(10000, true)
                 .build()
 
             val renderersFactory = DefaultRenderersFactory(context.applicationContext)
                 .setEnableDecoderFallback(true)
+                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
                 .setAllowedVideoJoiningTimeMs(2000)
 
             sharedPlayer = ExoPlayer.Builder(context.applicationContext)

@@ -1,6 +1,6 @@
 {
-  "versionCode": 65,
-  "versionName": "7.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.6-debug.apk",
-  "releaseNotes": "v7.6 - Auditoria e Estabilização Final da App:\n- Garantido que todas as chamadas de autenticação secundárias utilizam a VPN Hetzner de alta velocidade\n- Verificação de 100% de estabilidade de código em todas as telas da aplicação"
+  "versionCode": 66,
+  "versionName": "7.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.7-debug.apk",
+  "releaseNotes": "v7.7 - Abertura Instantânea de Canais (300ms) & Auto-Sintonização do Último Canal:\n- Otimizado o buffer de arranque para 300ms (0.3s) com priorização de tempo real para abertura imediata de qualquer canal\n- Implementada a sintonização e reprodução automática em ecrã inteiro do último canal assistido assim que a app é aberta"
 }

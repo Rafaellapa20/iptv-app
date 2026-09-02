@@ -241,11 +241,35 @@ class LiveTvActivity : AppCompatActivity() {
     }
 
     private fun updateChannelAdapter() {
-        rvChannels.adapter = ChannelAdapter(channels) { stream ->
+        val adapter = ChannelAdapter(channels) { stream ->
             tvPreviewName.text = stream.name
             playMiniVideo(stream.stream_id)
             fetchShortEpg(stream.stream_id)
             RecentManager.addRecent(this, stream)
+        }
+        rvChannels.adapter = adapter
+
+        val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+        val lastStreamId = prefs.getString("LAST_STREAM_ID", "") ?: ""
+        if (lastStreamId.isNotEmpty()) {
+            val idx = channels.indexOfFirst { it.stream_id == lastStreamId }
+            if (idx != -1) {
+                rvChannels.scrollToPosition(idx)
+                val targetStream = channels[idx]
+                tvPreviewName.text = targetStream.name
+                playMiniVideo(targetStream.stream_id)
+                fetchShortEpg(targetStream.stream_id)
+            } else if (channels.isNotEmpty()) {
+                val first = channels[0]
+                tvPreviewName.text = first.name
+                playMiniVideo(first.stream_id)
+                fetchShortEpg(first.stream_id)
+            }
+        } else if (channels.isNotEmpty()) {
+            val first = channels[0]
+            tvPreviewName.text = first.name
+            playMiniVideo(first.stream_id)
+            fetchShortEpg(first.stream_id)
         }
     }
 
