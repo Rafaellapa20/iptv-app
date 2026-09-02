@@ -1,6 +1,6 @@
 {
-  "versionCode": 55,
-  "versionName": "6.6",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.6-debug.apk",
-  "releaseNotes": "v6.6 - Túnel Automático de Camuflagem Anti-Bloqueio (Zero Instalações para o Utilizador):\n- Adicionados cabeçalhos profundos de navegação Web Chrome (Sec-Fetch-Dest, Sec-Fetch-Mode, Upgrade-Insecure-Requests)\n- Todo o tráfego da app passa despercebido pelos filtros DPI de bloqueio e redução de velocidade das operadoras\n- 100% automático sem necessidade de instalar apps externas de VPN"
+  "versionCode": 56,
+  "versionName": "6.7",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v6.7-debug.apk",
+  "releaseNotes": "v6.7 - Suporte Total a Comandos de TV Box para Favoritos:\n- Pressionar e manter o botão OK no comando durante 0.5s adiciona/remove instantaneamente dos Favoritos (repeatCount D-Pad)\n- Adicionada compatibilidade com botões de atalho Amarelo/Menu do comando da TV"
 }

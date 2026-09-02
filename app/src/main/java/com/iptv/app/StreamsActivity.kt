@@ -216,7 +216,38 @@ class StreamsActivity : AppCompatActivity() {
             val ivFavorite: ImageView = view.findViewById(R.id.ivFavorite)
             
             init {
-                view.setOnClickListener { onClick(list[adapterPosition]) }
+                var isLongPressHandled = false
+
+                view.setOnKeyListener { v, keyCode, event ->
+                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER || keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
+                        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                            if (event.repeatCount >= 4 && !isLongPressHandled) {
+                                isLongPressHandled = true
+                                val position = adapterPosition
+                                if (position != RecyclerView.NO_POSITION) {
+                                    val stream = list[position]
+                                    val isFav = FavoritesManager.toggleFavorite(v.context, stream)
+                                    updateFavIcon(ivFavorite, isFav)
+                                    Toast.makeText(v.context, if (isFav) "⭐ Adicionado aos Favoritos" else "❌ Removido dos Favoritos", Toast.LENGTH_SHORT).show()
+                                }
+                                return@setOnKeyListener true
+                            }
+                        } else if (event.action == android.view.KeyEvent.ACTION_UP) {
+                            if (isLongPressHandled) {
+                                return@setOnKeyListener true
+                            }
+                        }
+                    }
+                    false
+                }
+
+                view.setOnClickListener { 
+                    if (isLongPressHandled) {
+                        isLongPressHandled = false
+                        return@setOnClickListener
+                    }
+                    onClick(list[adapterPosition])
+                }
                 
                 view.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {

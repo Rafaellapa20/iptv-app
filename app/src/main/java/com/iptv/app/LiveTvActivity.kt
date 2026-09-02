@@ -350,7 +350,40 @@ class LiveTvActivity : AppCompatActivity() {
             val favIcon: ImageView = view.findViewById(R.id.ivFavIcon)
 
             init {
+                var isLongPressHandled = false
+
+                view.setOnKeyListener { _, keyCode, event ->
+                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER || keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
+                        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
+                            if (event.repeatCount >= 4 && !isLongPressHandled) {
+                                isLongPressHandled = true
+                                val pos = adapterPosition
+                                if (pos != RecyclerView.NO_POSITION) {
+                                    val s = list[pos]
+                                    val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
+                                    notifyItemChanged(pos)
+                                    val statusText = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
+                                    android.widget.Toast.makeText(this@LiveTvActivity, "${s.name}\n$statusText", android.widget.Toast.LENGTH_SHORT).show()
+                                    if (selectedCategoryId == "fav") {
+                                        fetchChannels("fav")
+                                    }
+                                }
+                                return@setOnKeyListener true
+                            }
+                        } else if (event.action == android.view.KeyEvent.ACTION_UP) {
+                            if (isLongPressHandled) {
+                                return@setOnKeyListener true
+                            }
+                        }
+                    }
+                    false
+                }
+
                 view.setOnClickListener { v ->
+                    if (isLongPressHandled) {
+                        isLongPressHandled = false
+                        return@setOnClickListener
+                    }
                     val pos = adapterPosition
                     if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                     val s = list[pos]
