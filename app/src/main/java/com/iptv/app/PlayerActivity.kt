@@ -21,6 +21,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
+import androidx.media3.extractor.DefaultExtractorsFactory
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
@@ -284,7 +285,8 @@ class PlayerActivity : AppCompatActivity() {
                         }
                         currentStreamUrl = retryUrl
                         val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
-                        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
+                        val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(1 or 16)
+                        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                             .createMediaSource(MediaItem.fromUri(Uri.parse(retryUrl)))
                         exoPlayer.setMediaSource(mediaSource)
                         exoPlayer.prepare()
@@ -309,7 +311,8 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
-        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
+        val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(1 or 16)
+        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
             .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
         
         exoPlayer.setMediaSource(mediaSource)
