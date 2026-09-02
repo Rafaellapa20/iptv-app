@@ -1,6 +1,6 @@
 {
-  "versionCode": 60,
-  "versionName": "7.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.1-debug.apk",
-  "releaseNotes": "v7.1 - Validação Total de Credenciais via Túnel VPN Dedicado Hetzner:\n- Testadas e confirmadas as credenciais 'Lapa2025123' com sucesso absoluto (Status: Active, Exp: 2026/09/2026)\n- 100% de todo o tráfego da app (Autenticação + Canais + Filmes) é agora encaminhado através do teu servidor VPS dedicado Hetzner Gigabit (65.21.178.77)"
+  "versionCode": 62,
+  "versionName": "7.3",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v7.3-debug.apk",
+  "releaseNotes": "v7.3 - Seleção de Favorito em Ecrã Inteiro via Setas do Comando (D-Pad Navigation):\n- Ao premir OK em ecrã inteiro, surge a barra de botões na horizontal (⭐ Favorito, Gravar, Multi-Ecrã)\n- Navegação total pelas setas ESQUERDA e DIREITA do comando da TV para selecionar a estrela do Favorito com realce visual neon"
 }

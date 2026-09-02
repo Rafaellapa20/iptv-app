@@ -222,15 +222,16 @@ class PlayerActivity : AppCompatActivity() {
             .setBufferDurationsMs(
                 15000, // min buffer
                 60000,  // max buffer
-                1000,   // buffer for playback (TEMPO REAL SEM ATRASOS)
-                1500    // buffer for playback after rebuffer
+                1500,   // buffer for playback (1.5s - abertura estável de 100% dos canais)
+                2500    // buffer for playback after rebuffer
             )
-            .setBackBuffer(15000, true)
+            .setBackBuffer(20000, true)
             .build()
 
         val renderersFactory = androidx.media3.exoplayer.DefaultRenderersFactory(this)
             .setEnableDecoderFallback(true)
-            .setAllowedVideoJoiningTimeMs(2000)
+            .setExtensionRendererMode(androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
+            .setAllowedVideoJoiningTimeMs(5000)
 
         return ExoPlayer.Builder(this)
             .setRenderersFactory(renderersFactory)
@@ -276,9 +277,15 @@ class PlayerActivity : AppCompatActivity() {
                     exoPlayer.prepare()
                 } else {
                     if (currentStreamUrl.isNotEmpty()) {
+                        val retryUrl = if (currentStreamUrl.endsWith(".ts")) {
+                            currentStreamUrl.replace(".ts", ".m3u8")
+                        } else {
+                            currentStreamUrl
+                        }
+                        currentStreamUrl = retryUrl
                         val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
                         val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
-                            .createMediaSource(MediaItem.fromUri(Uri.parse(currentStreamUrl)))
+                            .createMediaSource(MediaItem.fromUri(Uri.parse(retryUrl)))
                         exoPlayer.setMediaSource(mediaSource)
                         exoPlayer.prepare()
                     }
@@ -636,6 +643,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun showOverlays() {
         epgContainer.visibility = View.VISIBLE
         llFloatingControls.visibility = View.VISIBLE
+        btnFavPlayer.requestFocus()
         
         epgContainer.removeCallbacks(hideOverlaysRunnable)
         epgContainer.postDelayed(hideOverlaysRunnable, 6000)
@@ -651,6 +659,18 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN) {
+            val isControlsVisible = llFloatingControls.visibility == View.VISIBLE || epgContainer.visibility == View.VISIBLE
+            val isFocusedOnControls = btnFavPlayer.hasFocus() || btnRec.hasFocus() || btnSplitScreen.hasFocus()
+
+            if (isControlsVisible && isFocusedOnControls) {
+                epgContainer.removeCallbacks(hideOverlaysRunnable)
+                epgContainer.postDelayed(hideOverlaysRunnable, 6000)
+
+                if (event.keyCode == KeyEvent.KEYCODE_DPAD_LEFT || event.keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    return super.dispatchKeyEvent(event)
+                }
+            }
+
             when (event.keyCode) {
                 KeyEvent.KEYCODE_DPAD_RIGHT -> {
                     if (isMultiScreen) {
@@ -662,6 +682,8 @@ class PlayerActivity : AppCompatActivity() {
                     } else if (isMovieOrEpisode) {
                         // Avançar 10s em VOD
                         getActivePlayer().seekTo(getActivePlayer().currentPosition + 10000)
+                    } else {
+                        showOverlays()
                     }
                     return true
                 }
@@ -675,16 +697,24 @@ class PlayerActivity : AppCompatActivity() {
                     } else if (isMovieOrEpisode) {
                         // Recuar 10s em VOD
                         getActivePlayer().seekTo(kotlin.math.max(0L, getActivePlayer().currentPosition - 10000))
+                    } else {
+                        showOverlays()
                     }
                     return true
                 }
                 KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN -> {
+                    if (isControlsVisible && isFocusedOnControls) {
+                        return super.dispatchKeyEvent(event)
+                    }
                     changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
                     return true
                 }
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
-                    showOverlays()
-                    return true
+                    if (!isControlsVisible) {
+                        showOverlays()
+                        return true
+                    }
+                    return super.dispatchKeyEvent(event)
                 }
             }
         }

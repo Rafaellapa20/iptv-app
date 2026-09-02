@@ -64,46 +64,51 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- Floating Control Buttons (REC & Split Screen) -->
+    <!-- Floating Control Buttons (Star, REC & Split Screen) -->
     <LinearLayout
         android:id="@+id/llFloatingControls"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="160dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
+        android:layout_marginBottom="140dp"
+        android:layout_marginEnd="24dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:visibility="gone">
 
         <ImageButton
             android:id="@+id/btnFavPlayer"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_button_neon"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/selector_button_login"
             android:src="@android:drawable/btn_star_big_on"
             app:tint="#FFCC00"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="12dp"
             android:focusable="true"
             android:clickable="true"
             android:contentDescription="Favorito" />
 
         <ImageButton
             android:id="@+id/btnRec"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_button_neon"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/selector_button_login"
             android:src="@android:drawable/presence_video_online"
             app:tint="#FF0000"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="12dp"
+            android:focusable="true"
+            android:clickable="true"
             android:contentDescription="Gravar Canal" />
 
         <ImageButton
             android:id="@+id/btnSplitScreen"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_button_neon"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/selector_button_login"
             android:src="@android:drawable/ic_menu_today"
             app:tint="#00E5FF"
+            android:focusable="true"
+            android:clickable="true"
             android:contentDescription="Multi Tela" />
     </LinearLayout>
 
