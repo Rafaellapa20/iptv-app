@@ -115,20 +115,36 @@ object OkHttpProvider {
 
     private val safeDns by lazy { TripleArmorDns(bootstrapClient) }
 
+    private var useProxy = true
+
+    fun buildClient(): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+            .connectTimeout(12, TimeUnit.SECONDS)
+            .readTimeout(12, TimeUnit.SECONDS)
+            .writeTimeout(12, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .connectionPool(connectionPool)
+            .addInterceptor(userAgentInterceptor)
+
+        if (useProxy) {
+            builder.proxy(vpsProxy)
+            builder.dns(safeDns)
+        }
+        return builder.build()
+    }
+
     // Cliente principal com VPN Dedicada Hetzner para 100% das chamadas (Login + Vídeos)
-    var client: OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(12, TimeUnit.SECONDS)
-        .readTimeout(12, TimeUnit.SECONDS)
-        .writeTimeout(12, TimeUnit.SECONDS)
-        .retryOnConnectionFailure(true)
-        .connectionPool(connectionPool)
-        .addInterceptor(userAgentInterceptor)
-        .proxy(vpsProxy)
-        .dns(safeDns)
-        .build()
+    var client: OkHttpClient = buildClient()
 
     var vpsClient: OkHttpClient = client
 
-    fun enableDoH() {}
-    fun disableDoH() {}
+    fun enableDoH() {
+        useProxy = true
+        client = buildClient()
+    }
+    
+    fun disableDoH() {
+        useProxy = false
+        client = buildClient()
+    }
 }
