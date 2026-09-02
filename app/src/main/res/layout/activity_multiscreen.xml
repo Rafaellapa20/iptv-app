@@ -72,14 +72,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#111111"
-            android:padding="2dp">
+            android:background="#000000">
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:resize_mode="fit"
+                app:resize_mode="fill"
                 app:surface_type="texture_view"
                 app:use_controller="false" />
 
@@ -128,14 +127,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#111111"
-            android:padding="2dp">
+            android:background="#000000">
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:resize_mode="fit"
+                app:resize_mode="fill"
                 app:surface_type="texture_view"
                 app:use_controller="false" />
 

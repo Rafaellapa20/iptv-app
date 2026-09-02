@@ -95,7 +95,9 @@ class SettingsActivity : AppCompatActivity() {
                         .url("https://speed.cloudflare.com/__down?bytes=50000000") // 50MB
                         .build()
 
-                    val response = OkHttpProvider.client.newCall(request).execute()
+                    // Bypass do proxy VPS para podermos medir a velocidade real da casa do utilizador
+                    val directClient = okhttp3.OkHttpClient.Builder().build()
+                    val response = directClient.newCall(request).execute()
                     if (response.isSuccessful) {
                         val inputStream = response.body?.byteStream()
                         val buffer = ByteArray(32768)

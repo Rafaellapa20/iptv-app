@@ -468,6 +468,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFeaturedMovies(movies: List<Stream>) {
+        val rvFeatured = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvFeaturedMovies) ?: return
+        rvFeatured.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        val adapter = VodAdapter(movies) { stream ->
+            val intent = android.content.Intent(this, PlayerActivity::class.java)
+            intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/movie/${getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE).getString("USERNAME", "")}/${getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE).getString("PASSWORD", "")}/${stream.stream_id}.${stream.container_extension}")
+            intent.putExtra("STREAM_NAME", stream.name)
+            intent.putExtra("TYPE", "movie")
+            startActivity(intent)
+        }
+        rvFeatured.adapter = adapter
     }
 
     override fun onPause() {

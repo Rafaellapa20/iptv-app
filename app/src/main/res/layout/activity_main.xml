@@ -261,7 +261,7 @@
                     android:layout_height="match_parent"
                     android:layout_above="@id/tvTitleFilmes"
                     android:layout_marginBottom="4dp"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/logo" />
 
                 <TextView
@@ -318,7 +318,7 @@
                     android:layout_height="match_parent"
                     android:layout_above="@id/tvTitleSeries"
                     android:layout_marginBottom="4dp"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/logo" />
 
                 <TextView
@@ -471,6 +471,27 @@
         android:id="@+id/rvContinueWatching"
         android:layout_width="match_parent"
         android:layout_height="65dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- FILMES EM DESTAQUE -->
+    <TextView
+        android:id="@+id/tvFeaturedTitleHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🎬 FILMES EM DESTAQUE"
+        android:textColor="#00E5FF"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="2dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFeaturedMovies"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
         android:layout_marginBottom="2dp" />
