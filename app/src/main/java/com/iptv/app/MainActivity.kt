@@ -2,6 +2,7 @@ package com.iptv.app
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private var clockJob: kotlinx.coroutines.Job? = null
     private var moviesCardJob: kotlinx.coroutines.Job? = null
     private var seriesCardJob: kotlinx.coroutines.Job? = null
+
+    private var miniPlayer: ExoPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("PASSWORD", password)
             startActivity(intent)
         }
-        findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+        findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SpeedTestActivity::class.java)) }
         findViewById<View>(R.id.btnQuickMultiScreen)?.setOnClickListener {
             val intent = Intent(this, MultiScreenActivity::class.java)
             intent.putExtra("USERNAME", username)
@@ -146,14 +152,12 @@ class MainActivity : AppCompatActivity() {
         loadLastWatchedLiveChannel(username, password)
     }
 
-    // CARREGAR ÚLTIMO CANAL VISTO E EPG NO CARTÃO LIVE TV
+    // CARREGAR ÚLTIMO CANAL VISTO COM MINI-PLAYER EM DIRETO NO CARTÃO LIVE TV
     private fun loadLastWatchedLiveChannel(username: String, password: String) {
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-        var lastChannelName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
-        var lastChannelIcon = prefs.getString("LAST_STREAM_ICON", "") ?: ""
-        var lastChannelId = prefs.getString("LAST_STREAM_ID", "") ?: ""
+        val lastChannelName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
+        val lastChannelId = prefs.getString("LAST_STREAM_ID", "") ?: ""
 
-        val ivCardTvBg = findViewById<ImageView>(R.id.ivCardTvBg) ?: return
         val tvTitleTv = findViewById<TextView>(R.id.tvTitleTv) ?: return
         val tvSubTv = findViewById<TextView>(R.id.tvSubTv) ?: return
         val cardTv = findViewById<View>(R.id.cardTv)
@@ -161,10 +165,8 @@ class MainActivity : AppCompatActivity() {
         if (lastChannelName.isNotEmpty() && lastChannelId.isNotEmpty()) {
             tvTitleTv.text = lastChannelName
             tvSubTv.text = "🔴 A DAR: Programação TV"
-            if (lastChannelIcon.isNotEmpty()) {
-                Glide.with(this).load(lastChannelIcon).into(ivCardTvBg)
-            }
 
+            startMiniPlayer(username, password, lastChannelId)
             fetchChannelEpgTitle(username, password, lastChannelId, tvSubTv)
 
             cardTv?.setOnClickListener {
@@ -179,9 +181,23 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         } else {
-            fetchFirstChannelLogo(username, password)
-            cardTv?.setOnClickListener { openLiveTv(username, password) }
+            fetchFirstChannelAndPlay(username, password)
         }
+    }
+
+    private fun startMiniPlayer(user: String, pass: String, streamId: String) {
+        try {
+            miniPlayer?.release()
+            miniPlayer = ExoPlayer.Builder(this).build()
+            val playerView = findViewById<PlayerView>(R.id.miniPlayerView)
+            playerView?.player = miniPlayer
+
+            val streamUrl = "${Constants.SERVER_URL}/live/$user/$pass/$streamId.ts"
+            miniPlayer?.setMediaItem(MediaItem.fromUri(Uri.parse(streamUrl)))
+            miniPlayer?.volume = 0f  // Silencioso no menu principal
+            miniPlayer?.playWhenReady = true
+            miniPlayer?.prepare()
+        } catch (e: Exception) {}
     }
 
     private fun fetchChannelEpgTitle(user: String, pass: String, streamId: String, tvSub: TextView) {
@@ -212,7 +228,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchFirstChannelLogo(username: String, password: String) {
+    private fun fetchFirstChannelAndPlay(username: String, password: String) {
         if (username.isEmpty() || password.isEmpty()) return
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -226,17 +242,14 @@ class MainActivity : AppCompatActivity() {
                     if (array.length() > 0) {
                         val firstObj = array.getJSONObject(0)
                         val name = firstObj.getString("name")
-                        val icon = firstObj.optString("stream_icon", "")
                         val sId = firstObj.getString("stream_id")
 
                         withContext(Dispatchers.Main) {
                             findViewById<TextView>(R.id.tvTitleTv)?.text = name
                             findViewById<TextView>(R.id.tvSubTv)?.text = "🔴 A DAR: Programação TV"
-                            if (icon.isNotEmpty()) {
-                                findViewById<ImageView>(R.id.ivCardTvBg)?.let {
-                                    Glide.with(this@MainActivity).load(icon).into(it)
-                                }
-                            }
+
+                            startMiniPlayer(username, password, sId)
+                            fetchChannelEpgTitle(username, password, sId, findViewById(R.id.tvSubTv))
 
                             findViewById<View>(R.id.cardTv)?.setOnClickListener {
                                 val intent = Intent(this@MainActivity, PlayerActivity::class.java)
@@ -520,10 +533,17 @@ class MainActivity : AppCompatActivity() {
         override fun getItemCount() = list.size
     }
 
+    override fun onPause() {
+        super.onPause()
+        miniPlayer?.pause()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         clockJob?.cancel()
         moviesCardJob?.cancel()
         seriesCardJob?.cancel()
+        miniPlayer?.release()
+        miniPlayer = null
     }
 }

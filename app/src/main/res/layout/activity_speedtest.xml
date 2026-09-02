@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#050A14"
+    android:padding="24dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvSpeedTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚡ SPEEDTEST IPTV GLOBAL"
+        android:textColor="#00E5FF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/tvSpeedSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSpeedTitle"
+        android:text="Testar velocidade da ligação ao servidor IPTV"
+        android:textColor="#8A99AD"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginTop="4dp" />
+
+    <!-- Velocímetro Central -->
+    <FrameLayout
+        android:id="@+id/flGauge"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/tvSpeedSubtitle"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true">
+
+        <!-- Canvas do velocímetro (desenhado por código) -->
+        <com.iptv.app.SpeedGaugeView
+            android:id="@+id/speedGaugeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Velocidade actual ao centro -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvSpeedValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textColor="#FFFFFF"
+                android:textSize="48sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSpeedUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mbps"
+                android:textColor="#00E5FF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSpeedStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pronto para testar"
+                android:textColor="#8A99AD"
+                android:textSize="11sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Resultados Finais -->
+    <LinearLayout
+        android:id="@+id/llResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/flGauge"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="4">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PING"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-- ms"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⬇ DOWNLOAD"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDownload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-- Mbps"
+                android:textColor="#00E5FF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SERVIDOR"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvServer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUALIDADE"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvQuality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="#00FF88"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- VPN / LOCALIZAÇÃO -->
+    <LinearLayout
+        android:id="@+id/llVpnInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llResults"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌍 PAÍS / LOCALIZAÇÃO"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A verificar..."
+                android:textColor="#00E5FF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒 IP PÚBLICO"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPublicIp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🛡 VPN STATUS"
+                android:textColor="#8A99AD"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvVpnStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="#00FF88"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Botão Iniciar -->
+    <Button
+        android:id="@+id/btnStartTest"
+        android:layout_width="260dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/llVpnInfo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_smarters_sage"
+        android:text="▶ INICIAR SPEEDTEST"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:focusable="true" />
+
+</RelativeLayout>
