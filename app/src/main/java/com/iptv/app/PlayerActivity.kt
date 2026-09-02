@@ -116,6 +116,16 @@ class PlayerActivity : AppCompatActivity() {
         val type = intent.getStringExtra("TYPE")
         isMovieOrEpisode = type == "vod" || type == "series"
 
+        if (type == "live" && streamId != null) {
+            val title = intent.getStringExtra("TITLE") ?: ""
+            val icon = intent.getStringExtra("COVER") ?: ""
+            getSharedPreferences("IPTV_PREFS", MODE_PRIVATE).edit()
+                .putString("LAST_STREAM_ID", streamId)
+                .putString("LAST_STREAM_NAME", title)
+                .putString("LAST_STREAM_ICON", icon)
+                .apply()
+        }
+
         // Forçar Imersão com API moderna
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->

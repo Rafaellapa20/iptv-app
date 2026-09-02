@@ -1,6 +1,6 @@
 {
-  "versionCode": 73,
-  "versionName": "8.4",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.4-debug.apk",
-  "releaseNotes": "v8.4 Release Oficial:\n- Novo Design Futurista Next-Gen Smart TV idêntico à imagem de referência\n- 4 Cartões Neon Glowing com contornos em vidro iluminado (LIVE TV, MOVIES VOD, SERIES, TV GUIDE EPG)\n- Saudação personalizada 'Olá, Utilizador'\n- Seção inferior 'CONTINUAR A VER' com barra de progresso individual de reprodução"
+  "versionCode": 74,
+  "versionName": "8.5",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.5-debug.apk",
+  "releaseNotes": "v8.5 Release Oficial:\n- Cartão Live TV exibe o logótipo e nome do ÚLTIMO CANAL VISTO (em vez do logo da app)\n- Titulos explícitos no topo de cada cartão (LIVE TV, MOVIES VOD, SERIES, TV GUIDE EPG)\n- Seção 'CONTINUAR A VER' filtrada EXCLUSIVAMENTE para Filmes e Séries (sem canais em direto)"
 }

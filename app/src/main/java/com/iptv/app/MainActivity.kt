@@ -110,12 +110,79 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // Configurar Linha "CONTINUAR A VER"
+        // Configurar Cartão de TV Em Direto com o ÚLTIMO CANAL VISTO (e não o logótipo da app)
+        loadLastWatchedLiveChannel(username, password)
+
+        // Configurar Linha "CONTINUAR A VER" (Apenas Filmes e Séries, SEM canais em direto)
         setupContinueWatching()
 
         // Carregar capas de Filmes e Séries em rotação
         fetchMoviesPosters(username, password)
         fetchSeriesPosters(username, password)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupContinueWatching()
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val username = prefs.getString("USERNAME", "") ?: ""
+        val password = prefs.getString("PASSWORD", "") ?: ""
+        loadLastWatchedLiveChannel(username, password)
+    }
+
+    // CARREGAR ÚLTIMO CANAL VISTO NO CARTÃO LIVE TV (SEM USAR LOGO DA APP)
+    private fun loadLastWatchedLiveChannel(username: String, password: String) {
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val lastChannelName = prefs.getString("LAST_STREAM_NAME", "") ?: ""
+        val lastChannelIcon = prefs.getString("LAST_STREAM_ICON", "") ?: ""
+        val lastChannelId = prefs.getString("LAST_STREAM_ID", "") ?: ""
+
+        val ivCardTvBg = findViewById<ImageView>(R.id.ivCardTvBg) ?: return
+        val tvTitleTv = findViewById<TextView>(R.id.tvTitleTv) ?: return
+        val tvSubTv = findViewById<TextView>(R.id.tvSubTv) ?: return
+
+        if (lastChannelName.isNotEmpty()) {
+            tvTitleTv.text = lastChannelName
+            tvSubTv.text = "Último Canal Assistido"
+            if (lastChannelIcon.isNotEmpty()) {
+                Glide.with(this).load(lastChannelIcon).into(ivCardTvBg)
+            } else {
+                fetchFirstChannelLogo(username, password)
+            }
+        } else {
+            fetchFirstChannelLogo(username, password)
+        }
+    }
+
+    private fun fetchFirstChannelLogo(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
+                val request = Request.Builder().url(url).build()
+                val response = OkHttpProvider.client.newCall(request).execute()
+
+                if (response.isSuccessful) {
+                    val body = response.body?.string() ?: "[]"
+                    val array = JSONArray(body)
+                    if (array.length() > 0) {
+                        val firstObj = array.getJSONObject(0)
+                        val name = firstObj.getString("name")
+                        val icon = firstObj.optString("stream_icon", "")
+
+                        withContext(Dispatchers.Main) {
+                            findViewById<TextView>(R.id.tvTitleTv)?.text = name
+                            findViewById<TextView>(R.id.tvSubTv)?.text = "335 Canais em Direto"
+                            if (icon.isNotEmpty()) {
+                                findViewById<ImageView>(R.id.ivCardTvBg)?.let {
+                                    Glide.with(this@MainActivity).load(icon).into(it)
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {}
+        }
     }
 
     private fun openLiveTv(user: String, pass: String) {
@@ -135,12 +202,25 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    // LINHA INFERIOR "CONTINUAR A VER"
+    // LINHA INFERIOR "CONTINUAR A VER" (FILTRADA: APENAS FILMES E SÉRIES, SEM CANAIS EM DIRETO)
     private fun setupContinueWatching() {
         val rv = findViewById<RecyclerView>(R.id.rvContinueWatching) ?: return
         rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        val recents = RecentManager.getRecent(this)
-        rv.adapter = ContinueWatchingAdapter(recents)
+        
+        val allRecents = RecentManager.getRecent(this)
+        // Filtra para manter EXCLUSIVAMENTE Filmes e Séries VOD
+        val vodOnlyRecents = allRecents.filter { item ->
+            item.stream_type == "movie" || item.stream_type == "series" || item.stream_type == "vod"
+        }
+
+        if (vodOnlyRecents.isEmpty()) {
+            findViewById<View>(R.id.tvContinueTitleHeader)?.visibility = View.GONE
+            rv.visibility = View.GONE
+        } else {
+            findViewById<View>(R.id.tvContinueTitleHeader)?.visibility = View.VISIBLE
+            rv.visibility = View.VISIBLE
+            rv.adapter = ContinueWatchingAdapter(vodOnlyRecents)
+        }
     }
 
     // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES
@@ -291,10 +371,23 @@ class MainActivity : AppCompatActivity() {
             holder.pb.progress = (30..80).random()
 
             holder.itemView.setOnClickListener {
+                val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+                val user = prefs.getString("USERNAME", "") ?: ""
+                val pass = prefs.getString("PASSWORD", "") ?: ""
+
                 val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-                intent.putExtra("VIDEO_URL", "${Constants.SERVER_URL}/live/${intent.getStringExtra("USERNAME")}/${intent.getStringExtra("PASSWORD")}/${item.stream_id}.ts")
+                val url = if (item.stream_type == "movie" || item.stream_type == "vod") {
+                    "${Constants.SERVER_URL}/movie/$user/$pass/${item.stream_id}.${item.extension}"
+                } else if (item.stream_type == "series") {
+                    "${Constants.SERVER_URL}/series/$user/$pass/${item.stream_id}.${item.extension}"
+                } else {
+                    "${Constants.SERVER_URL}/live/$user/$pass/${item.stream_id}.ts"
+                }
+
+                intent.putExtra("VIDEO_URL", url)
                 intent.putExtra("STREAM_ID", item.stream_id)
                 intent.putExtra("TITLE", item.name)
+                intent.putExtra("TYPE", item.stream_type)
                 startActivity(intent)
             }
         }
