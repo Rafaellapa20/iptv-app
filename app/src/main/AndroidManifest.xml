@@ -96,6 +96,11 @@
             android:exported="false"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".UsersActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

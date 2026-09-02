@@ -30,11 +30,11 @@ class SplashActivity : AppCompatActivity() {
         
         logo.animate().scaleX(1.1f).scaleY(1.1f).setDuration(2000).start()
 
-        // Aguarda 2.5 segundos e vai para a tela de Login
         CoroutineScope(Dispatchers.Main).launch {
             delay(2500)
-            val intent = Intent(this@SplashActivity, LoginActivity::class.java)
-            // Impede que o usuário volte para a Splash Screen apertando "Voltar"
+            val accounts = AccountsManager.getAccounts(this@SplashActivity)
+            val targetClass = if (accounts.size >= 2) UsersActivity::class.java else LoginActivity::class.java
+            val intent = Intent(this@SplashActivity, targetClass)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()

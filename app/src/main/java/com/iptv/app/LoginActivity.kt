@@ -90,9 +90,6 @@ class LoginActivity : AppCompatActivity() {
                             Toast.makeText(this@LoginActivity, "Login Aprovado!", Toast.LENGTH_LONG).show()
                         }
                         
-                        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-                        prefs.edit().putString("USERNAME", username).putString("PASSWORD", password).apply()
-                        
                         var expDateFormated = "Indefinido"
                         try {
                             val jsonObject = org.json.JSONObject(responseBody)
@@ -101,9 +98,16 @@ class LoginActivity : AppCompatActivity() {
                             val timestamp = expDateString.toLong() * 1000
                             val sdf = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
                             expDateFormated = sdf.format(java.util.Date(timestamp))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                        } catch (e: Exception) {}
+
+                        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+                        prefs.edit().putString("USERNAME", username).putString("PASSWORD", password).apply()
+
+                        // Guardar a conta na Lista Multi-Utilizador
+                        AccountsManager.saveAccount(
+                            this@LoginActivity,
+                            SavedAccount(username, password, expDateFormated, System.currentTimeMillis())
+                        )
 
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.putExtra("VENCIMENTO", expDateFormated)

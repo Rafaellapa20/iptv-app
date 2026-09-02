@@ -91,6 +91,19 @@
                 android:textStyle="bold"
                 android:layout_marginEnd="24dp" />
 
+            <!-- Botão Mudar de Utilizador (Estilo Smarters) -->
+            <ImageButton
+                android:id="@+id/btnSwitchUser"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_button_neon"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:tint="#00E5FF"
+                android:focusable="true"
+                android:clickable="true"
+                android:contentDescription="Mudar de Utilizador"
+                android:layout_marginEnd="10dp" />
+
             <!-- Botão Pesquisa -->
             <ImageButton
                 android:id="@+id/btnSearch"

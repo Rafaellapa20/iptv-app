@@ -120,6 +120,11 @@ class MainActivity : AppCompatActivity() {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
 
+        findViewById<View>(R.id.btnSwitchUser)?.setOnClickListener {
+            val intent = Intent(this, UsersActivity::class.java)
+            startActivity(intent)
+        }
+
         findViewById<View>(R.id.btnSearch).setOnClickListener {
             val intent = Intent(this, GlobalSearchActivity::class.java)
             intent.putExtra("USERNAME", username)

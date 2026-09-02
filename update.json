@@ -1,6 +1,6 @@
 {
-  "versionCode": 70,
-  "versionName": "8.1",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.1-debug.apk",
-  "releaseNotes": "v8.1 Release Oficial:\n- Novo Layout 1:1 Idêntico ao IPTV Smarters Pro Oficial da Imagem enviado pelo Utilizador\n- Card LIVE TV Alto na Esquerda em Turquesa (#00E676 -> #2979FF)\n- Cards MOVIES e SERIES na Esfera Superior Direita (Coral e Roxo)\n- 3 Tiles no Fundo (GUIA TV, MULTI-ECRÃ, DEFINIÇÕES em Verde Muted)\n- Fundo de Raios Azuis Radial Smarters Pro com Selo Neon de VPN Protegida 10 Gbps no Footer"
+  "versionCode": 71,
+  "versionName": "8.2",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v8.2-debug.apk",
+  "releaseNotes": "v8.2 Release Oficial:\n- Sistema de Gestão Multi-Utilizador completo estilo IPTV Smarters Pro\n- Permite guardar múltiplas contas e alternar de utilizador com 1 clique\n- Ecrã dedicado 'Mudar de Utilizador' com cartões de conta e validade\n- Ícone de perfil rápido no cabeçalho e botão 'Adicionar Novo Utilizador'"
 }
