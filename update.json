@@ -1,6 +1,6 @@
 {
-  "versionCode": 110,
-  "versionName": "10.21",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.21-debug.apk",
-  "releaseNotes": "v10.21 Release Oficial:\n- Diagnóstico Inteligente de Falhas: Se um canal encravar ou falhar, a app analisa a sua Internet e diz-lhe exatamente qual é o problema (se é da sua rede Wi-Fi ou se é problema no fornecedor IPTV)!"
+  "versionCode": 111,
+  "versionName": "10.22",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.22-debug.apk",
+  "releaseNotes": "v10.22 Release Oficial:\n- Arranque Direto (Modo Box): A aplicação agora arranca automaticamente mal liga a box à corrente, ignorando o menu principal do Android!"
 }
