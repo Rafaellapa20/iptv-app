@@ -105,23 +105,8 @@ class MainActivity : AppCompatActivity() {
         val cardFilmes = findViewById<View>(R.id.cardFilmes)
         val cardSeries = findViewById<View>(R.id.cardSeries)
 
-        val forceQuickAccessFocus = View.OnKeyListener { view, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                val targetId = when (view.id) {
-                    R.id.cardTv -> R.id.btnQuickFavorites
-                    R.id.cardFilmes -> R.id.btnQuickEpg
-                    R.id.cardSeries -> R.id.btnQuickMultiScreen
-                    else -> R.id.btnQuickFavorites
-                }
-                findViewById<View>(targetId)?.requestFocus()
-                true
-            } else {
-                false
-            }
-        }
-        cardTv?.setOnKeyListener(forceQuickAccessFocus)
-        cardFilmes?.setOnKeyListener(forceQuickAccessFocus)
-        cardSeries?.setOnKeyListener(forceQuickAccessFocus)
+        // O foco já está definido via XML com nextFocusDown nos cartões.
+        // Se a navegação não estiver a funcionar, é devido ao RecyclerView em baixo "puxar" o foco.
 
         findViewById<View>(R.id.btnRefresh)?.setOnClickListener {
             fetchMoviesPosters(username, password)
