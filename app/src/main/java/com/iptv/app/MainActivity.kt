@@ -97,11 +97,31 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<View>(R.id.btnQuickCatchup)?.setOnClickListener {
-            val intent = Intent(this, EpgGridActivity::class.java)
-            intent.putExtra("USERNAME", username)
-            intent.putExtra("PASSWORD", password)
-            startActivity(intent)
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
+
+        // FORÇAR D-PAD: quando o utilizador carrega para BAIXO nos cards, forçar foco na Quick Access Bar
+        val cardTv = findViewById<View>(R.id.cardTv)
+        val cardFilmes = findViewById<View>(R.id.cardFilmes)
+        val cardSeries = findViewById<View>(R.id.cardSeries)
+
+        val forceQuickAccessFocus = View.OnKeyListener { view, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                val targetId = when (view.id) {
+                    R.id.cardTv -> R.id.btnQuickFavorites
+                    R.id.cardFilmes -> R.id.btnQuickEpg
+                    R.id.cardSeries -> R.id.btnQuickMultiScreen
+                    else -> R.id.btnQuickFavorites
+                }
+                findViewById<View>(targetId)?.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+        cardTv?.setOnKeyListener(forceQuickAccessFocus)
+        cardFilmes?.setOnKeyListener(forceQuickAccessFocus)
+        cardSeries?.setOnKeyListener(forceQuickAccessFocus)
 
         findViewById<View>(R.id.btnRefresh)?.setOnClickListener {
             fetchMoviesPosters(username, password)

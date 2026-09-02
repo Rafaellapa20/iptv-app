@@ -151,6 +151,7 @@
             app:cardElevation="6dp"
             android:focusable="true"
             android:clickable="true"
+            android:descendantFocusability="blocksDescendants"
             android:nextFocusDown="@+id/btnQuickFavorites"
             android:foreground="?attr/selectableItemBackground"
             android:stateListAnimator="@animator/selector_item_scale">
@@ -244,6 +245,7 @@
             app:cardElevation="6dp"
             android:focusable="true"
             android:clickable="true"
+            android:descendantFocusability="blocksDescendants"
             android:nextFocusDown="@+id/btnQuickEpg"
             android:foreground="?attr/selectableItemBackground"
             android:stateListAnimator="@animator/selector_item_scale">
@@ -300,6 +302,7 @@
             app:cardElevation="6dp"
             android:focusable="true"
             android:clickable="true"
+            android:descendantFocusability="blocksDescendants"
             android:nextFocusDown="@+id/btnQuickMultiScreen"
             android:foreground="?attr/selectableItemBackground"
             android:stateListAnimator="@animator/selector_item_scale">
@@ -439,7 +442,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/bg_smarters_sage"
-            android:text="⏱ Catch-up 7d"
+            android:text="⚙ Definições"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
