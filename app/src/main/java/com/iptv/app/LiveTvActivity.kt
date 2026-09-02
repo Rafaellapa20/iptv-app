@@ -435,17 +435,20 @@ class LiveTvActivity : AppCompatActivity() {
                         val urlsList = ArrayList<String>()
                         val idsList = ArrayList<String>()
                         val namesList = ArrayList<String>()
+                        val coversList = ArrayList<String>()
                         var currentIndex = -1
                         for ((index, item) in list.withIndex()) {
                             urlsList.add("${Constants.SERVER_URL}/live/$username/$password/${item.stream_id}.ts")
                             idsList.add(item.stream_id)
                             namesList.add(item.name)
+                            coversList.add(item.stream_icon)
                             if (item.stream_id == s.stream_id) currentIndex = index
                         }
                         
                         intent.putStringArrayListExtra("CHANNEL_URLS", urlsList)
                         intent.putStringArrayListExtra("CHANNEL_IDS", idsList)
                         intent.putStringArrayListExtra("CHANNEL_NAMES", namesList)
+                        intent.putStringArrayListExtra("CHANNEL_COVERS", coversList)
                         intent.putExtra("CURRENT_INDEX", currentIndex)
                         intent.putExtra("VIDEO_URL", streamUrl)
                         intent.putExtra("STREAM_ID", s.stream_id)

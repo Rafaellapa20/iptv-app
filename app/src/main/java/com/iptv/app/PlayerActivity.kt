@@ -77,6 +77,9 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var tvLoadingTitle: android.widget.TextView
         private lateinit var tvDiagnostics: android.widget.TextView
     private lateinit var tvChannelNumber: android.widget.TextView
+    private lateinit var llMiniGuia: View
+    private lateinit var rvMiniGuia: androidx.recyclerview.widget.RecyclerView
+    private var isMiniGuiaVisible = false
     private var channelNumberBuffer = ""
     private var channelNumberJob: kotlinx.coroutines.Job? = null
 
@@ -105,6 +108,8 @@ class PlayerActivity : AppCompatActivity() {
         tvLoadingTitle = findViewById(R.id.tvLoadingTitle)
                 tvDiagnostics = findViewById(R.id.tvDiagnostics)
         tvChannelNumber = findViewById(R.id.tvChannelNumber)
+        llMiniGuia = findViewById(R.id.llMiniGuia)
+        rvMiniGuia = findViewById(R.id.rvMiniGuia)
 
         val initialTitle = intent.getStringExtra("TITLE") ?: "A carregar canal..."
         val initialCover = intent.getStringExtra("COVER") ?: ""
@@ -411,6 +416,73 @@ class PlayerActivity : AppCompatActivity() {
                 delay(1000)
             }
         }
+    }
+
+    
+    private fun showMiniGuia() {
+        val urls = intent.getStringArrayListExtra("CHANNEL_URLS") ?: return
+        val names = intent.getStringArrayListExtra("CHANNEL_NAMES") ?: return
+        val covers = intent.getStringArrayListExtra("CHANNEL_COVERS")
+        val currentIndex = intent.getIntExtra("CURRENT_INDEX", -1)
+
+        isMiniGuiaVisible = true
+        llMiniGuia.visibility = View.VISIBLE
+        hideOverlays()
+
+        rvMiniGuia.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.RecyclerView.HORIZONTAL, false)
+        rvMiniGuia.adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<MiniGuiaViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MiniGuiaViewHolder {
+                val view = layoutInflater.inflate(R.layout.item_mini_guia, parent, false)
+                return MiniGuiaViewHolder(view)
+            }
+            override fun onBindViewHolder(holder: MiniGuiaViewHolder, position: Int) {
+                holder.tvName.text = names[position]
+                val cover = covers?.getOrNull(position)
+                if (!cover.isNullOrEmpty()) {
+                    com.bumptech.glide.Glide.with(this@PlayerActivity).load(cover).into(holder.ivLogo)
+                } else {
+                    holder.ivLogo.setImageResource(R.drawable.logo)
+                }
+
+                holder.itemView.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        holder.itemView.setBackgroundColor(android.graphics.Color.parseColor("#00E5FF"))
+                        holder.tvName.setTextColor(android.graphics.Color.BLACK)
+                    } else {
+                        holder.itemView.setBackgroundColor(android.graphics.Color.parseColor("#333333"))
+                        holder.tvName.setTextColor(android.graphics.Color.WHITE)
+                    }
+                }
+
+                holder.itemView.setOnClickListener {
+                    intent.putExtra("CURRENT_INDEX", position)
+                    currentStreamUrl = urls[position]
+                    intent.putExtra("TITLE", names[position])
+                    tvLoadingTitle.text = names[position]
+                    
+                    hideMiniGuia()
+                    playUrlInPlayer(getActivePlayer(), currentStreamUrl)
+                }
+            }
+            override fun getItemCount() = urls.size
+        }
+
+        if (currentIndex >= 0) {
+            rvMiniGuia.scrollToPosition(currentIndex)
+            rvMiniGuia.postDelayed({
+                rvMiniGuia.findViewHolderForAdapterPosition(currentIndex)?.itemView?.requestFocus()
+            }, 100)
+        }
+    }
+
+    private fun hideMiniGuia() {
+        isMiniGuiaVisible = false
+        llMiniGuia.visibility = View.GONE
+    }
+
+    class MiniGuiaViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+        val ivLogo: android.widget.ImageView = view.findViewById(R.id.ivMiniLogo)
+        val tvName: android.widget.TextView = view.findViewById(R.id.tvMiniName)
     }
 
     private fun changeChannel(isNext: Boolean) {
@@ -851,7 +923,15 @@ class PlayerActivity : AppCompatActivity() {
                     if (isControlsVisible && isFocusedOnControls) {
                         return super.dispatchKeyEvent(event)
                     }
-                    changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                    if (intent.getStringExtra("TYPE") == "live") {
+                        if (!isMiniGuiaVisible) {
+                            showMiniGuia()
+                        } else {
+                            hideMiniGuia()
+                        }
+                    } else {
+                        changeChannel(event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                    }
                     return true
                 }
                 KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> {
