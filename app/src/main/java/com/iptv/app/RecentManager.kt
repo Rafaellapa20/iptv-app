@@ -57,8 +57,11 @@ object RecentManager {
             }
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             prefs.edit().putString(KEY_RECENT, array.toString()).apply()
+			SyncManager.syncToCloud(context)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 }
+

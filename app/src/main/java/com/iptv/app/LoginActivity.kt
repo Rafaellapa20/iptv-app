@@ -133,8 +133,11 @@ class LoginActivity : AppCompatActivity() {
                         intent.putExtra("VENCIMENTO", expDateFormated)
                         intent.putExtra("USERNAME", username)
                         intent.putExtra("PASSWORD", password)
-                        startActivity(intent)
-                        finish()
+                        
+                        SyncManager.syncFromCloud(this@LoginActivity) {
+                            startActivity(intent)
+                            finish()
+                        }
                     } else {
                         btnLogin.isEnabled = true
                         btnLogin.text = "ENTRAR"

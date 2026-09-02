@@ -103,6 +103,8 @@ object ProgressManager {
         }
 
         prefs.edit().putString(RECENT_LIST_KEY, newArray.toString()).apply()
+			SyncManager.syncToCloud(context)
+
     }
 
     private fun removeProgress(context: Context, streamId: String) {
@@ -118,6 +120,8 @@ object ProgressManager {
                 }
             }
             prefs.edit().putString(RECENT_LIST_KEY, newArray.toString()).apply()
+			SyncManager.syncToCloud(context)
+
         } catch (e: Exception) {}
     }
 
@@ -161,3 +165,4 @@ object ProgressManager {
         if (position <= 0) removeProgress(context, streamId)
     }
 }
+

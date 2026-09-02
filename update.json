@@ -1,6 +1,6 @@
 {
-  "versionCode": 103,
-  "versionName": "10.14",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.14-debug.apk",
-  "releaseNotes": "v10.14 Release Oficial:\n- Speedtest Desbloqueado: O teste de velocidade principal agora usa a medição direta da box (tal como o antigo teste das definições que dava 'mais megas'), medindo o verdadeiro poder da sua internet em vez do afunilamento que as operadoras aplicam sobre ligações remotas em horas de ponta!"
+  "versionCode": 104,
+  "versionName": "10.15",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.15-debug.apk",
+  "releaseNotes": "v10.15 Release Oficial:\n- CLOUD SYNC PREMIUM: A app agora guarda os seus Favoritos, Histórico de Visualização e Filmes deixados a meio numa base de dados na Nuvem (no seu servidor PTisp). Sempre que um cliente faz login numa TV nova ou no telemóvel, tem a sua conta exatamente como a deixou!"
 }

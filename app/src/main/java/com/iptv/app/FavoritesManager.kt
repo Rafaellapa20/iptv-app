@@ -91,5 +91,6 @@ object FavoritesManager {
             newArray.put(obj)
         }
         getPrefs(context).edit().putString(FAVORITES_KEY, newArray.toString()).apply()
+        SyncManager.syncToCloud(context)
     }
 }
