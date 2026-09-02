@@ -83,11 +83,12 @@ class SpeedTestActivity : AppCompatActivity() {
                     // Converter countryCode em emoji de bandeira
                     val flag = countryCodeToFlag(countryCode)
 
-                    // Verificar se é VPN: se o IP é do Hetzner VPS (65.21.178.77) ou ISP contém "Hetzner"
-                    val isVpn = ip == "65.21.178.77" ||
+                    // Verificar se é VPN: PTisp, Hetzner, ou fora de PT
+                    val isVpn = ip == "176.111.109.14" || ip == "65.21.178.77" ||
+                        isp.contains("PTisp", ignoreCase = true) ||
                         isp.contains("Hetzner", ignoreCase = true) ||
                         org.contains("Hetzner", ignoreCase = true) ||
-                        country != "Portugal"  // Se não está em PT, provavelmente está via VPN
+                        country != "Portugal"
 
                     withContext(Dispatchers.Main) {
                         tvPublicIp.text = ip
@@ -199,18 +200,9 @@ class SpeedTestActivity : AppCompatActivity() {
             var totalTimeMs = 0L
 
             try {
-                val urlLiveStreams = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_live_streams"
-                val respStreams = OkHttpProvider.client.newCall(Request.Builder().url(urlLiveStreams).build()).execute()
-                var streamId = "1"
-                if (respStreams.isSuccessful) {
-                    val body = respStreams.body?.string() ?: "[]"
-                    val arr = org.json.JSONArray(body)
-                    if (arr.length() > 0) {
-                        streamId = arr.getJSONObject(0).getString("stream_id")
-                    }
-                }
-
-                val streamUrl = "${Constants.SERVER_URL}/live/$username/$password/$streamId.ts"
+                // Em vez de baixar um Live Stream (que o servidor IPTV limita a ~5Mbps para bater certo com a emissão real),
+                // usamos um ficheiro puro da Cloudflare para esgotar o túnel ao máximo.
+                val streamUrl = "https://speed.cloudflare.com/__down?bytes=50000000"
                 val testDurationMs = 8000L
                 val startTime = System.currentTimeMillis()
 

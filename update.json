@@ -1,6 +1,6 @@
 {
-  "versionCode": 97,
-  "versionName": "10.8",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.8-debug.apk",
-  "releaseNotes": "v10.8 Release Oficial:\n- Auto-VPN Inteligente: A app agora desliga a VPN no milissegundo em que faz o login (para enganar o servidor IPTV e passar o bloqueio) e volta a ligar automaticamente no momento em que entra com sucesso! Já não precisa de ir às definições."
+  "versionCode": 98,
+  "versionName": "10.9",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.9-debug.apk",
+  "releaseNotes": "v10.9 Release Oficial:\n- SpeedTest Corrigido: O teste de velocidade agora avalia a largura de banda pura (em vez de descarregar um canal ao vivo que limitava o mostrador a 5 Mbps). E o IP de Lisboa (PTisp) já é reconhecido oficialmente com o selo verde de 'VPN ATIVA'."
 }
