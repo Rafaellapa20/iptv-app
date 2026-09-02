@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         // Se a navegação não estiver a funcionar, é devido ao RecyclerView em baixo "puxar" o foco.
 
         findViewById<View>(R.id.btnRefresh)?.setOnClickListener {
-            fetchMoviesPosters(username, password)
             fetchSeriesPosters(username, password)
             Toast.makeText(this, "Listas e Conteúdos Atualizados!", Toast.LENGTH_SHORT).show()
         }
@@ -144,7 +143,7 @@ class MainActivity : AppCompatActivity() {
         setupContinueWatching()
 
         // Carregar capas de Filmes e Séries em rotação
-        fetchMoviesPosters(username, password)
+        // fetchMoviesPosters(username, password) - Removed as per user request
         fetchSeriesPosters(username, password)
     }
 
@@ -466,56 +465,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupFeaturedMovies(movies: List<Stream>) {
-        val rv = findViewById<RecyclerView>(R.id.rvFeaturedMovies) ?: return
-        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        if (movies.isEmpty()) {
-            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.GONE
-            rv.visibility = View.GONE
-        } else {
-            findViewById<View>(R.id.tvFeaturedTitleHeader)?.visibility = View.VISIBLE
-            rv.visibility = View.VISIBLE
-            rv.adapter = FeaturedMoviesAdapter(movies)
-        }
-    }
-
-    inner class FeaturedMoviesAdapter(private val list: List<Stream>) : RecyclerView.Adapter<FeaturedMoviesAdapter.VH>() {
-        inner class VH(v: View) : RecyclerView.ViewHolder(v) {
-            val poster: ImageView = v.findViewById(R.id.ivMoviePosterCard)
-            val title: TextView = v.findViewById(R.id.tvMoviePosterTitle)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_poster_card, parent, false)
-            return VH(view)
-        }
-
-        override fun onBindViewHolder(holder: VH, position: Int) {
-            val item = list[position]
-            holder.title.text = item.name
-            if (item.stream_icon.isNotEmpty()) {
-                Glide.with(holder.itemView.context).load(item.stream_icon).into(holder.poster)
-            } else {
-                holder.poster.setImageResource(R.drawable.logo)
-            }
-
-            holder.itemView.setOnClickListener {
-                val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
-                val user = prefs.getString("USERNAME", "") ?: ""
-                val pass = prefs.getString("PASSWORD", "") ?: ""
-
-                val intent = Intent(this@MainActivity, MovieInfoActivity::class.java)
-                val videoUrl = "${Constants.SERVER_URL}/movie/$user/$pass/${item.stream_id}.${item.extension}"
-                intent.putExtra("STREAM_ID", item.stream_id)
-                intent.putExtra("TITLE", item.name)
-                intent.putExtra("COVER", item.stream_icon)
-                intent.putExtra("VIDEO_URL", videoUrl)
-                intent.putExtra("USERNAME", user)
-                intent.putExtra("PASSWORD", pass)
-                startActivity(intent)
-            }
-        }
-
-        override fun getItemCount() = list.size
     }
 
     override fun onPause() {

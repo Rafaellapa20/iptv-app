@@ -376,7 +376,7 @@
             android:focusable="true"
             android:clickable="true"
             android:nextFocusUp="@id/cardTv"
-            android:nextFocusDown="@id/rvFeaturedMovies"
+            android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusRight="@id/btnQuickEpg" />
 
         <Button
@@ -394,7 +394,7 @@
             android:focusable="true"
             android:clickable="true"
             android:nextFocusUp="@id/cardFilmes"
-            android:nextFocusDown="@id/rvFeaturedMovies"
+            android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickFavorites"
             android:nextFocusRight="@id/btnQuickSettings" />
 
@@ -413,7 +413,7 @@
             android:focusable="true"
             android:clickable="true"
             android:nextFocusUp="@id/cardFilmes"
-            android:nextFocusDown="@id/rvFeaturedMovies"
+            android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickEpg"
             android:nextFocusRight="@id/btnQuickMultiScreen" />
 
@@ -432,7 +432,7 @@
             android:focusable="true"
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
-            android:nextFocusDown="@id/rvFeaturedMovies"
+            android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickSettings"
             android:nextFocusRight="@id/btnQuickCatchup" />
 
@@ -450,31 +450,11 @@
             android:focusable="true"
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
-            android:nextFocusDown="@id/rvFeaturedMovies"
+            android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickMultiScreen" />
     </LinearLayout>
 
-    <!-- FILMES EM DESTAQUE -->
-    <TextView
-        android:id="@+id/tvFeaturedTitleHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🎬 FILMES EM DESTAQUE &amp; LANÇAMENTOS"
-        android:textColor="#00E5FF"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.05"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="2dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFeaturedMovies"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
-        android:layout_marginBottom="4dp" />
-
+    <!-- FILMES EM DESTAQUE REMOVIDOS -->
     <!-- CONTINUAR A VER -->
     <TextView
         android:id="@+id/tvContinueTitleHeader"
