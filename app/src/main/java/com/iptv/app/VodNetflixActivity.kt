@@ -223,6 +223,7 @@ class VodNetflixActivity : AppCompatActivity() {
                         streamsByCategory["favorites"] = sList
                     }
 
+
                     // Grupos de categorias
                     val genreToCatIds = mutableMapOf<String, MutableList<String>>()
                     for (serverCat in serverCategories) {

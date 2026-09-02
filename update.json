@@ -1,6 +1,6 @@
 {
-  "versionCode": 111,
-  "versionName": "10.22",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.22-debug.apk",
-  "releaseNotes": "v10.22 Release Oficial:\n- Arranque Direto (Modo Box): A aplicação agora arranca automaticamente mal liga a box à corrente, ignorando o menu principal do Android!"
+  "versionCode": 112,
+  "versionName": "10.23",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.23-debug.apk",
+  "releaseNotes": "v10.23 Release Oficial:\n- Algoritmo de Recomendações: A app agora sugere filmes e séries novos com base no que não viu!\n- Protetor de Ecrã OLED: Se a box ficar parada 5 minutos, aparece um relógio animado para não queimar a TV."
 }

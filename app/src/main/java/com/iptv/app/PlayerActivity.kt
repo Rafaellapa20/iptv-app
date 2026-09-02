@@ -590,6 +590,21 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     
+    
+    private var screensaverJob: kotlinx.coroutines.Job? = null
+
+    private fun startScreensaverTimer() {
+        screensaverJob?.cancel()
+        screensaverJob = CoroutineScope(Dispatchers.Main).launch {
+            delay(300000) // 5 minutes
+            startActivity(Intent(this@PlayerActivity, ScreensaverActivity::class.java))
+        }
+    }
+
+    private fun cancelScreensaverTimer() {
+        screensaverJob?.cancel()
+    }
+
     private var diagnosticJob: kotlinx.coroutines.Job? = null
 
     private fun startDiagnostics() {
@@ -727,6 +742,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        cancelScreensaverTimer()
+        if (!getActivePlayer().isPlaying) startScreensaverTimer()
         if (event.action == KeyEvent.ACTION_DOWN) {
             val isControlsVisible = llFloatingControls.visibility == View.VISIBLE || epgContainer.visibility == View.VISIBLE
             val isFocusedOnControls = btnFavPlayer.hasFocus() || btnRec.hasFocus() || btnSplitScreen.hasFocus()
