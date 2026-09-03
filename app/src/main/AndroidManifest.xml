@@ -89,6 +89,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".SeriesInfoActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".GlobalSearchActivity"
             android:exported="false"
             android:screenOrientation="landscape"

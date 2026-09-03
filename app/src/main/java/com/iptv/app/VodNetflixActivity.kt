@@ -410,11 +410,7 @@ class VodNetflixActivity : AppCompatActivity() {
                         intent.putExtra("COVER", s.stream_icon)
                         
                         // Hollywood Transition
-                        ViewCompat.setTransitionName(ivPoster, "poster_transition")
-                        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            this@VodNetflixActivity, ivPoster, "poster_transition"
-                        )
-                        startActivity(intent, options.toBundle())
+                        startActivity(intent)
                     }
                 }
             }

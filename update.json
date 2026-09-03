@@ -1,6 +1,6 @@
 {
-  "versionCode": 120,
-  "versionName": "10.31",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.31-debug.apk",
-  "releaseNotes": "v10.31:\n- Limpeza aprofundada: O botão de Rádios foi permanentemente removido da interface principal."
+  "versionCode": 121,
+  "versionName": "10.32",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.32-debug.apk",
+  "releaseNotes": "v10.32:\n- Novo Ecrã de Séries! Agora já abrem os episódios.\n- Correção de crashes ao abrir Filmes (transições gráficas removidas).\n- Adicionadas Iniciais nas fotos do Elenco/Atores.\n- Nova barra de navegação no topo do Menu Principal."
 }
