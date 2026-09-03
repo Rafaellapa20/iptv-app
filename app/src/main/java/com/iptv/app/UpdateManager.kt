@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 object UpdateManager {
 
-    private const val UPDATE_JSON_URL = "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/update.json"
+    private const val UPDATE_JSON_URL = "http://176.111.109.14/iptv_app/update.json"
 
     // Standard client to avoid DNS loop/issues when checking GitHub raw
     private val simpleClient by lazy {

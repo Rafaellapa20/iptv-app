@@ -12,7 +12,21 @@ Examples:
 """
 
 import sys
+import re
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a CLI path under the current workspace."""
+    if base_dir != ".":
+        raise ValueError("Custom base directories are not supported for CLI paths")
+    base_path = Path.cwd().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 
 
 SKILL_TEMPLATE = """---
@@ -191,6 +205,16 @@ def title_case_skill_name(skill_name):
     return ' '.join(word.capitalize() for word in skill_name.split('-'))
 
 
+SKILL_NAME_RE = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+
+
+def validate_skill_name(skill_name):
+    """Accept only one portable directory component."""
+    if not SKILL_NAME_RE.fullmatch(skill_name) or len(skill_name) > 64:
+        raise ValueError("skill name must be 1-64 lowercase letters, digits, or hyphen-separated words")
+    return skill_name
+
+
 def init_skill(skill_name, path):
     """
     Initialize a new skill directory with template SKILL.md.
@@ -202,8 +226,13 @@ def init_skill(skill_name, path):
     Returns:
         Path to created skill directory, or None if error
     """
-    # Determine skill directory path
-    skill_dir = Path(path).resolve() / skill_name
+    # Determine skill directory path. Validation prevents absolute paths,
+    # separators, dot segments, and traversal from becoming filesystem names.
+    skill_name = validate_skill_name(skill_name)
+    parent_dir = safe_user_path(path).resolve()
+    if parent_dir.is_symlink():
+        raise ValueError("skill parent must not be a symbolic link")
+    skill_dir = parent_dir / skill_name
 
     # Check if directory already exists
     if skill_dir.exists():
@@ -274,9 +303,9 @@ def main():
     if len(sys.argv) < 4 or sys.argv[2] != '--path':
         print("Usage: init_skill.py <skill-name> --path <path>")
         print("\nSkill name requirements:")
-        print("  - Kebab-case identifier (e.g., 'my-data-analyzer')")
+        print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
         print("  - Lowercase letters, digits, and hyphens only")
-        print("  - Max 64 characters")
+        print("  - Max 40 characters")
         print("  - Must match directory name exactly")
         print("\nExamples:")
         print("  init_skill.py my-new-skill --path skills/public")
@@ -285,7 +314,7 @@ def main():
         sys.exit(1)
 
     skill_name = sys.argv[1]
-    path = sys.argv[3]
+    path = safe_user_path(sys.argv[3])
 
     print(f"🚀 Initializing skill: {skill_name}")
     print(f"   Location: {path}")

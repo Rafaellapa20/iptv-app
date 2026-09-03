@@ -18,12 +18,13 @@
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:banner="@drawable/logo"
-        android:roundIcon="@drawable/logo"
         android:label="IPTV Global"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true">
+        
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.iptv.app.CastOptionsProvider" />
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -139,6 +140,12 @@
 
         <activity android:name=".RadiosActivity" android:exported="false" android:screenOrientation="landscape" />
         <activity android:name=".ScreensaverActivity" android:theme="@style/Theme.AppCompat.NoActionBar" android:exported="false" android:screenOrientation="landscape" />
-    </application>
+        <activity
+            android:name=".MobileMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+            <activity android:name=".SeniorMainActivity" android:exported="false" android:screenOrientation="landscape" />
+</application>
 
 </manifest>

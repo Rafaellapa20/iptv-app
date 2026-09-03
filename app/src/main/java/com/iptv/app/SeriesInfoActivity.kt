@@ -1,4 +1,4 @@
-﻿package com.iptv.app
+package com.iptv.app
 
 import android.content.Context
 import android.content.Intent
@@ -66,7 +66,7 @@ class SeriesInfoActivity : AppCompatActivity() {
         pbLoading.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "/player_api.php?username=\&password=\&action=get_series_info&series_id=\"
+                val url = "/player_api.php?username=&password=&action=get_series_info&series_id="
                 val response = OkHttpProvider.client.newCall(Request.Builder().url(url).build()).execute()
 
                 if (response.isSuccessful) {
@@ -87,9 +87,9 @@ class SeriesInfoActivity : AppCompatActivity() {
                                     val epObj = eps.getJSONObject(i)
                                     val id = epObj.optString("id")
                                     val num = epObj.optString("episode_num", (i+1).toString())
-                                    val title = epObj.optString("title", "Episódio \")
+                                    val title = epObj.optString("title", "Episódio ")
                                     val ext = epObj.optString("container_extension", "mp4")
-                                    epList.add(EpisodeInfo(id, "S\E\", title, ext))
+                                    epList.add(EpisodeInfo(id, "SE", title, ext))
                                 }
                             }
                         }
@@ -114,31 +114,21 @@ class SeriesInfoActivity : AppCompatActivity() {
             init {
                 v.setOnClickListener {
                     val ep = list[adapterPosition]
-                    val url = "/series/\/\/\.\"
-                    val intent = Intent(this@SeriesInfoActivity, PlayerActivity::class.java)
-                    intent.putExtra("VIDEO_URL", url)
-                    intent.putExtra("TYPE", "series")
-                    intent.putExtra("STREAM_ID", ep.id)
-                    intent.putExtra("USERNAME", username)
-                    intent.putExtra("PASSWORD", password)
-                    intent.putExtra("TITLE", "\ - \")
-                    intent.putExtra("COVER", coverUrl)
-                    
-                    // Add full episode URLs array to allow "Next Episode" functionality
-                    val urls = arrayListOf<String>()
-                    val ids = arrayListOf<String>()
-                    val names = arrayListOf<String>()
-                    for (e in list) {
-                        urls.add("/series/\/\/\.\")
-                        ids.add(e.id)
-                        names.add("\ - \")
+                    val url = "/series///."
+                    val epTitle = " - "
+                    if (RemoteManager.connectedTvIp != null) {
+                        RemoteManager.sendPlayCommand(this@SeriesInfoActivity, "series", url, epTitle, ep.id)
+                    } else {
+                        val intent = Intent(this@SeriesInfoActivity, PlayerActivity::class.java)
+                        intent.putExtra("VIDEO_URL", url)
+                        intent.putExtra("TYPE", "series")
+                        intent.putExtra("STREAM_ID", ep.id)
+                        intent.putExtra("USERNAME", username)
+                        intent.putExtra("PASSWORD", password)
+                        intent.putExtra("TITLE", epTitle)
+                        intent.putExtra("COVER", coverUrl)
+                        startActivity(intent)
                     }
-                    intent.putStringArrayListExtra("EPISODE_URLS", urls)
-                    intent.putStringArrayListExtra("EPISODE_IDS", ids)
-                    intent.putStringArrayListExtra("EPISODE_NAMES", names)
-                    intent.putExtra("CURRENT_INDEX", adapterPosition)
-                    
-                    startActivity(intent)
                 }
             }
         }

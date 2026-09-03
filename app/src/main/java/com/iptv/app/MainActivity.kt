@@ -104,9 +104,18 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("PASSWORD", password)
             startActivity(intent)
         }
-        findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SpeedTestActivity::class.java)) }
+        findViewById<View>(R.id.btnQuickSettings)?.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+        findViewById<View>(R.id.btnQuickRadios)?.setOnClickListener { showQrDialog() }
                 findViewById<View>(R.id.btnQuickCatchup)?.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+            val p = getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
+            p.edit().putBoolean("is_senior_mode", true).apply()
+            val intent = android.content.Intent(this, SeniorMainActivity::class.java)
+            val username = intent.getStringExtra("USERNAME") ?: p.getString("USERNAME", "") ?: ""
+            val password = intent.getStringExtra("PASSWORD") ?: p.getString("PASSWORD", "") ?: ""
+            intent.putExtra("USERNAME", username)
+            intent.putExtra("PASSWORD", password)
+            startActivity(intent)
+            finish()
         }
 
         // FORÇAR D-PAD: quando o utilizador carrega para BAIXO nos cards, forçar foco na Quick Access Bar
@@ -306,35 +315,67 @@ class MainActivity : AppCompatActivity() {
     // SLIDESHOW DE CAPAS DE FILMES DENTRO DO CARD DE FILMES
     private fun fetchMoviesPosters(username: String, password: String) {
         if (username.isEmpty() || password.isEmpty()) return
-        CoroutineScope(Dispatchers.IO).launch {
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             try {
                 val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_vod_streams"
-                val request = Request.Builder().url(url).build()
+                val request = okhttp3.Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
                 if (response.isSuccessful) {
-                    val body = response.body?.string() ?: "[]"
-                    val array = JSONArray(body)
+                    val inputStream = response.body?.byteStream() ?: return@launch
+                    val reader = android.util.JsonReader(java.io.InputStreamReader(inputStream, "UTF-8"))
                     recentMovies.clear()
-
+                    
                     val list = mutableListOf<Pair<Stream, Long>>()
-                    for (i in 0 until array.length()) {
-                        val obj = array.getJSONObject(i)
-                        val icon = obj.optString("stream_icon", "")
-                        val added = obj.optString("added", "0").toLongOrNull() ?: 0L
-                        if (icon.isNotEmpty()) {
-                            list.add(Stream(obj.getString("stream_id"), obj.getString("name"), icon, "movie", "mp4") to added)
+                    
+                    try {
+                        // Sometimes the API might return an object with error or no data. Check token.
+                        if (reader.peek() == android.util.JsonToken.BEGIN_ARRAY) {
+                            reader.beginArray()
+                            while (reader.hasNext()) {
+                                reader.beginObject()
+                                var streamId = ""
+                                var name = ""
+                                var icon = ""
+                                var added = 0L
+                                while (reader.hasNext()) {
+                                    val key = reader.nextName()
+                                    if (reader.peek() == android.util.JsonToken.NULL) {
+                                        reader.skipValue()
+                                        continue
+                                    }
+                                    when (key) {
+                                        "stream_id" -> streamId = reader.nextString()
+                                        "name" -> name = reader.nextString()
+                                        "stream_icon" -> icon = reader.nextString()
+                                        "added" -> added = reader.nextString().toLongOrNull() ?: 0L
+                                        else -> reader.skipValue()
+                                    }
+                                }
+                                reader.endObject()
+                                if (icon.isNotEmpty()) {
+                                    list.add(Stream(streamId, name, icon, "movie", "mp4") to added)
+                                }
+                            }
+                            reader.endArray()
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        try { reader.close() } catch(e:Exception){}
                     }
-                    list.sortByDescending { it.second }
-                    recentMovies.addAll(list.map { it.first }.take(20))
 
-                    withContext(Dispatchers.Main) {
+                    list.sortByDescending { it.second }
+                    recentMovies.addAll(list.map { it.first }.take(30))
+
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                         startMoviesCardSlideshow()
                         setupFeaturedMovies(recentMovies)
                     }
                 }
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -376,30 +417,58 @@ class MainActivity : AppCompatActivity() {
     // SLIDESHOW DE CAPAS DE SÉRIES DENTRO DO CARD DE SÉRIES
     private fun fetchSeriesPosters(username: String, password: String) {
         if (username.isEmpty() || password.isEmpty()) return
-        CoroutineScope(Dispatchers.IO).launch {
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             try {
                 val url = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password&action=get_series"
-                val request = Request.Builder().url(url).build()
+                val request = okhttp3.Request.Builder().url(url).build()
                 val response = OkHttpProvider.client.newCall(request).execute()
 
                 if (response.isSuccessful) {
-                    val body = response.body?.string() ?: "[]"
-                    val array = JSONArray(body)
+                    val inputStream = response.body?.byteStream() ?: return@launch
+                    val reader = android.util.JsonReader(java.io.InputStreamReader(inputStream, "UTF-8"))
                     recentSeries.clear()
-
-                    for (i in 0 until Math.min(array.length(), 20)) {
-                        val obj = array.getJSONObject(i)
-                        val icon = obj.optString("cover", "")
-                        if (icon.isNotEmpty()) {
-                            recentSeries.add(Stream(obj.getString("series_id"), obj.getString("name"), icon, "series", "mp4"))
+                    
+                    try {
+                        if (reader.peek() == android.util.JsonToken.BEGIN_ARRAY) {
+                            reader.beginArray()
+                            while (reader.hasNext()) {
+                                reader.beginObject()
+                                var seriesId = ""
+                                var name = ""
+                                var icon = ""
+                                while (reader.hasNext()) {
+                                    val key = reader.nextName()
+                                    if (reader.peek() == android.util.JsonToken.NULL) {
+                                        reader.skipValue()
+                                        continue
+                                    }
+                                    when (key) {
+                                        "series_id" -> seriesId = reader.nextString()
+                                        "name" -> name = reader.nextString()
+                                        "cover" -> icon = reader.nextString()
+                                        else -> reader.skipValue()
+                                    }
+                                }
+                                reader.endObject()
+                                if (icon.isNotEmpty()) {
+                                    recentSeries.add(Stream(seriesId, name, icon, "series", ""))
+                                }
+                                if (recentSeries.size > 200) break // Limit to save memory
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        try { reader.close() } catch(e:Exception){}
                     }
 
-                    withContext(Dispatchers.Main) {
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                         startSeriesCardSlideshow()
                     }
                 }
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -534,6 +603,18 @@ class MainActivity : AppCompatActivity() {
         miniPlayer?.pause()
     }
 
+    
+    override fun onBackPressed() {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Sair")
+            .setMessage("Tem a certeza que deseja sair da aplicação?")
+            .setPositiveButton("Sim") { _, _ ->
+                finishAffinity() // Closes all activities
+            }
+            .setNegativeButton("Não", null)
+            .show()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         clockJob?.cancel()
@@ -541,5 +622,18 @@ class MainActivity : AppCompatActivity() {
         seriesCardJob?.cancel()
         miniPlayer?.release()
         miniPlayer = null
+    }
+
+    private fun showQrDialog() {
+        val dialog = android.app.Dialog(this@MainActivity)
+        dialog.setContentView(R.layout.dialog_qr)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        
+        val ivQr = dialog.findViewById<android.widget.ImageView>(R.id.ivQrCode)
+        val apkUrl = "https://tinyurl.com/2985xryp"
+        val qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" + android.net.Uri.encode(apkUrl)
+        
+        com.bumptech.glide.Glide.with(this@MainActivity).load(qrUrl).into(ivQr)
+        dialog.show()
     }
 }

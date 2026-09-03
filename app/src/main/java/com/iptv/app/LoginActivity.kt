@@ -118,6 +118,7 @@ class LoginActivity : AppCompatActivity() {
                         prefs.edit()
                             .putString("USERNAME", username)
                             .putString("PASSWORD", password)
+                            .putString("EXP_DATE", expDateFormated)
                             .putBoolean("VPN_ENABLED", true) // ATIVAR AUTOMATICAMENTE PARA OS CLIENTES
                             .apply()
                         
@@ -129,7 +130,8 @@ class LoginActivity : AppCompatActivity() {
                             SavedAccount(username, password, expDateFormated, System.currentTimeMillis())
                         )
 
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        val target = if (DeviceUtils.isTv(this@LoginActivity)) MainActivity::class.java else MobileMainActivity::class.java
+                    val intent = Intent(this@LoginActivity, target)
                         intent.putExtra("VENCIMENTO", expDateFormated)
                         intent.putExtra("USERNAME", username)
                         intent.putExtra("PASSWORD", password)

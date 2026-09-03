@@ -1,10 +1,20 @@
 ﻿# -*- coding: utf-8 -*-
-files = ['app/src/main/res/layout/item_mini_guia.xml']
-for f_path in files:
-    with open(f_path, 'rb') as f:
-        content = f.read()
-    if content.startswith(b'\xef\xbb\xbf'):
-        content = content[3:]
-    with open(f_path, 'wb') as f:
-        f.write(content)
-print("BOM removed")
+import os
+
+files = [
+    'app/src/main/res/layout/activity_senior_main.xml'
+]
+
+for f in files:
+    try:
+        with open(f, 'rb') as file:
+            content = file.read()
+        if content.startswith(b'\xef\xbb\xbf'):
+            content = content[3:]
+            with open(f, 'wb') as file:
+                file.write(content)
+            print(f"Removed BOM from {f}")
+    except Exception as e:
+        print(f"Error {f}: {e}")
+
+print("Done")

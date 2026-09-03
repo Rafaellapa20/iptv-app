@@ -22,6 +22,12 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        
+        val prefsExp = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+        val expDate = prefsExp.getString("EXP_DATE", "Ilimitado") ?: "Ilimitado"
+        val tvValidade = findViewById<TextView>(R.id.tvValidade)
+        tvValidade.text = "Validade da Conta: " + expDate
+
         val tvAppVersion = findViewById<TextView>(R.id.tvAppVersion)
         try {
             val pInfo = packageManager.getPackageInfo(packageName, 0)
@@ -51,25 +57,11 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        val switchVpn = findViewById<Switch>(R.id.switchVpn)
+        
+
+
+        
         val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
-        
-        // Anti-Bloqueio vem desativado por padrão
-        val isVpnEnabled = prefs.getBoolean("VPN_ENABLED", false)
-        switchVpn.isChecked = isVpnEnabled
-
-        switchVpn.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("VPN_ENABLED", isChecked).apply()
-            VpnHelper.setEnabled(this, isChecked)
-            if (isChecked) {
-                Toast.makeText(this, "Anti-Bloqueio ATIVADO (DNS Seguro)", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Anti-Bloqueio DESATIVADO", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-
-        
         val btnLogout = findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
             prefs.edit().clear().apply()

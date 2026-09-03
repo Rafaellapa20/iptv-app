@@ -426,7 +426,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
             android:background="@drawable/bg_smarters_sage"
-            android:text="📻 Rádios"
+            android:text="📱 Emparelhar"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -513,6 +513,7 @@
 
         <TextView
             android:id="@+id/tvVencimento"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -544,7 +545,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="v9.1"
+                android:text="v10.50"
                 android:textColor="#8A99AD"
                 android:textSize="9sp" />
         </LinearLayout>
