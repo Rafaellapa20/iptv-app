@@ -1,0 +1,59 @@
+name: Backend Health Check
+
+# Inspirado no workflow api-health.yml do repositório cinecli
+# (github.com/eyeblech/cinecli): verificação periódica automática de que os
+# serviços de backend estão no ar, para detetar quedas antes de os
+# utilizadores se queixarem. Adaptado aos 3 endpoints reais desta app:
+# servidor de sync, servidor de emparelhamento e servidor de origem IPTV.
+#
+# Cada serviço corre como um job separado para que a falha de um não
+# esconda o estado dos outros dois no resumo da execução.
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-server:
+    name: Servidor de Sync
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar /sync/_healthcheck
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "http://176.111.109.14:5000/sync/_healthcheck")
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Servidor de sync não respondeu 200 (recebido: $code)"
+            exit 1
+          fi
+
+  pairing-server:
+    name: Servidor de Emparelhamento
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar /pair/create
+        run: |
+          set +e
+          body=$(curl -sS --max-time 10 -X POST "https://rafaiptv2026.duckdns.org:9443/pair/create" 2>&1)
+          exit_code=$?
+          set -e
+          echo "curl exit code: $exit_code"
+          echo "resposta: $body"
+          if [ "$exit_code" -ne 0 ] || [ -z "$body" ]; then
+            echo "::error::Servidor de emparelhamento inacessível (falha de DNS/ligação ou resposta vazia)"
+            exit 1
+          fi
+
+  origin-server:
+    name: Servidor de Origem IPTV
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar /player_api.php
+        run: |
+          body=$(curl -s --max-time 10 "http://nelitoplay.top:80/player_api.php")
+          echo "resposta: $body"
+          if ! echo "$body" | grep -q "user_info"; then
+            echo "::error::Servidor de origem não devolveu a resposta esperada (campo user_info em falta)"
+            exit 1
+          fi
