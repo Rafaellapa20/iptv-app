@@ -26,14 +26,26 @@ import java.net.InetAddress
 object RemoteManager {
     const val TCP_PORT = 9999
     const val UDP_PORT = 8888
-    
+
     var connectedTvIp: String? = null
     private var isServerRunning = false
 
+    // PIN de emparelhamento: gerado de novo sempre que a TV arranca o servidor.
+    // Sem isto, qualquer dispositivo na mesma rede Wi-Fi conseguia pedir
+    // SYNC_LOGIN e receber o username/password da conta IPTV sem qualquer
+    // autenticacao — bastava conhecer o protocolo (que está no código-fonte
+    // público). Agora a TV só responde com as credenciais se o pedido incluir
+    // o PIN correto, mostrado no ecrã da TV para o utilizador copiar para o
+    // telemóvel.
+    private var pairingPin: String = ""
+
     // =============== TV SIDE (RECEIVER) ===============
-    fun startTvServer(context: Context, username: String, password: String) {
+    fun startTvServer(context: Context, username: String, password: String, onPinReady: (String) -> Unit = {}) {
         if (isServerRunning) return
         isServerRunning = true
+
+        pairingPin = (100000..999999).random().toString()
+        onPinReady(pairingPin)
 
         // 1. Start UDP Listener (for discovery)
         CoroutineScope(Dispatchers.IO).launch {
@@ -67,10 +79,19 @@ object RemoteManager {
                     if (line != null) {
                         val json = JSONObject(line)
                         if (json.optString("action") == "SYNC_LOGIN") {
-                            val resp = JSONObject()
-                            resp.put("username", username)
-                            resp.put("password", password)
-                            out.println(resp.toString())
+                            // Só devolve as credenciais se o pedido souber o PIN
+                            // mostrado no ecrã da TV — impede que qualquer
+                            // dispositivo na rede local peça e receba a conta.
+                            if (json.optString("pin") == pairingPin && pairingPin.isNotEmpty()) {
+                                val resp = JSONObject()
+                                resp.put("username", username)
+                                resp.put("password", password)
+                                out.println(resp.toString())
+                            } else {
+                                val resp = JSONObject()
+                                resp.put("error", "invalid_pin")
+                                out.println(resp.toString())
+                            }
                         } else {
                             handleCommand(context, line, username, password)
                         }
@@ -183,8 +204,10 @@ object RemoteManager {
         }
     }
 
-    fun fetchLoginFromTv(context: Context, onSuccess: (String, String) -> Unit, onError: () -> Unit) {
-        discoverTv(context, 
+    // O 'pin' tem de corresponder ao código mostrado no ecrã da TV (ver
+    // startTvServer/onPinReady) — sem ele, a TV recusa devolver as credenciais.
+    fun fetchLoginFromTv(context: Context, pin: String, onSuccess: (String, String) -> Unit, onError: () -> Unit) {
+        discoverTv(context,
             onFound = { ip ->
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
@@ -192,16 +215,21 @@ object RemoteManager {
                         socket.connect(InetSocketAddress(ip, TCP_PORT), 3000)
                         val out = PrintWriter(socket.getOutputStream(), true)
                         val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
-                        
+
                         val json = JSONObject()
                         json.put("action", "SYNC_LOGIN")
+                        json.put("pin", pin)
                         out.println(json.toString())
-                        
+
                         val responseLine = reader.readLine()
                         socket.close()
-                        
+
                         if (responseLine != null) {
                             val respJson = JSONObject(responseLine)
+                            if (respJson.has("error")) {
+                                withContext(Dispatchers.Main) { onError() }
+                                return@launch
+                            }
                             val user = respJson.optString("username")
                             val pass = respJson.optString("password")
                             withContext(Dispatchers.Main) { onSuccess(user, pass) }
