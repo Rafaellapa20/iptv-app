@@ -15,18 +15,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync-server:
-    name: Servidor de Sync
-    runs-on: ubuntu-latest
-    steps:
-      - name: Verificar /sync/_healthcheck
-        run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "http://176.111.109.14:5000/sync/_healthcheck")
-          echo "HTTP $code"
-          if [ "$code" != "200" ]; then
-            echo "::error::Servidor de sync não respondeu 200 (recebido: $code)"
-            exit 1
-          fi
+  # O job "sync-server" foi removido em 2026-09-04: apontava para a VPS
+  # 176.111.109.14, que deixou de estar sob o nosso controlo (o servidor de
+  # sync foi desativado em SyncManager.kt pelo mesmo motivo). Monitorizar um
+  # IP que já não é nosso não faz sentido.
 
   pairing-server:
     name: Servidor de Emparelhamento
