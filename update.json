@@ -1,6 +1,6 @@
 {
-  "versionCode": 155,
-  "versionName": "10.67",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.67-debug.apk",
-  "releaseNotes": "v10.67:\n- Corrigida sincronizacao entre dispositivos (URL invalida impedia favoritos/progresso de sincronizar), padronizada a paleta de cores do ecra principal e eliminados todos os avisos de compilacao"
+  "versionCode": 156,
+  "versionName": "10.68",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.68-debug.apk",
+  "releaseNotes": "v10.68:\n- Padronizadas as cores em todos os ecras (mesmos valores, agora via tokens do design system)"
 }
