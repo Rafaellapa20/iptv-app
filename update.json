@@ -1,6 +1,6 @@
 {
-  "versionCode": 158,
-  "versionName": "10.70",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.70-debug.apk",
-  "releaseNotes": "v10.70:\n- Modo Facil: emparelhar telemovel agora usa o codigo/QR ja existente em vez de um PIN tecnico confuso no ecra"
+  "versionCode": 159,
+  "versionName": "10.71",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.71-debug.apk",
+  "releaseNotes": "v10.71:\n- Correcao de privacidade: SyncManager deixa de enviar dados para servidor perdido (VPS ja nao pertence ao dono da app)"
 }
