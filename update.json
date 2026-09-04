@@ -1,6 +1,6 @@
 {
-  "versionCode": 157,
-  "versionName": "10.69",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.69-debug.apk",
-  "releaseNotes": "v10.69:\n- Corrigida falha de seguranca: a TV entregava a password da conta a qualquer dispositivo na rede Wi-Fi sem autenticacao. Agora exige um PIN mostrado no ecra da TV."
+  "versionCode": 158,
+  "versionName": "10.70",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.70-debug.apk",
+  "releaseNotes": "v10.70:\n- Modo Facil: emparelhar telemovel agora usa o codigo/QR ja existente em vez de um PIN tecnico confuso no ecra"
 }
