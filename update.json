@@ -1,6 +1,6 @@
 {
-  "versionCode": 154,
-  "versionName": "10.66",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.66-debug.apk",
-  "releaseNotes": "v10.66:\n- Corrigida a versao no rodape do menu principal, que ficava sempre desatualizada (agora mostra sempre a versao real instalada)"
+  "versionCode": 155,
+  "versionName": "10.67",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.67-debug.apk",
+  "releaseNotes": "v10.67:\n- Corrigida sincronizacao entre dispositivos (URL invalida impedia favoritos/progresso de sincronizar), padronizada a paleta de cores do ecra principal e eliminados todos os avisos de compilacao"
 }
