@@ -356,6 +356,8 @@ class MainActivity : AppCompatActivity() {
                                 if (icon.isNotEmpty()) {
                                     list.add(Stream(streamId, name, icon, "movie", "mp4") to added)
                                 }
+                                if (list.size > 2000) break // Speed up parsing by limiting to 2000 covers
+
                             }
                             reader.endArray()
                         }
@@ -453,6 +455,8 @@ class MainActivity : AppCompatActivity() {
                                 if (icon.isNotEmpty()) {
                                     recentSeries.add(Stream(seriesId, name, icon, "series", ""))
                                 }
+                                if (recentSeries.size > 2000) break // Speed up parsing by limiting to 2000 covers
+
                                 if (recentSeries.size > 200) break // Limit to save memory
                             }
                         }
