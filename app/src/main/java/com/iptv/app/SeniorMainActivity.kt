@@ -69,8 +69,15 @@ class SeniorMainActivity : AppCompatActivity() {
         val username = intent.getStringExtra("USERNAME") ?: prefs.getString("USERNAME", "") ?: ""
         val password = intent.getStringExtra("PASSWORD") ?: prefs.getString("PASSWORD", "") ?: ""
 
-        RemoteManager.startTvServer(this, username, password) { pin ->
-            findViewById<TextView>(R.id.tvPairingPin)?.text = "Código de emparelhamento: $pin"
+        // O PIN continua a proteger o servidor TCP local (RemoteManager) contra
+        // pedidos não autorizados na rede, mas deixou de ser mostrado no ecrã:
+        // o emparelhamento real com o telemóvel usa o código/QR do
+        // PairingManager (ver btnSeniorPair abaixo), que já funciona hoje
+        // através do botão "Tenho um Código" no ecrã de login.
+        RemoteManager.startTvServer(this, username, password)
+
+        findViewById<View>(R.id.btnSeniorPair)?.setOnClickListener {
+            showPairDialog(username, password)
         }
 
         val openTv = View.OnClickListener {
@@ -169,6 +176,38 @@ class SeniorMainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         clockJob?.cancel()
+    }
+
+    // Mesmo mecanismo do MainActivity.showQrDialog: gera um código de 6
+    // dígitos no servidor de emparelhamento (PairingManager). No telemóvel,
+    // o familiar introduz esse código no botão "Tenho um Código" do ecrã de
+    // login e entra automaticamente, sem escrever a senha da conta.
+    private fun showPairDialog(username: String, password: String) {
+        if (username.isEmpty() || password.isEmpty()) return
+
+        val dialog = android.app.Dialog(this)
+        dialog.setContentView(R.layout.dialog_qr)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val ivQr = dialog.findViewById<android.widget.ImageView>(R.id.ivQrCode)
+        val apkUrl = "https://tinyurl.com/2985xryp"
+        val qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" + android.net.Uri.encode(apkUrl)
+        com.bumptech.glide.Glide.with(this).load(qrUrl).into(ivQr)
+        dialog.show()
+
+        val tvCode = dialog.findViewById<TextView>(R.id.tvPairCode)
+        val tvStatus = dialog.findViewById<TextView>(R.id.tvPairCodeStatus)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val code = PairingManager.generateSelfCode(username, password)
+            if (!dialog.isShowing) return@launch
+            if (code != null) {
+                tvCode.text = code
+            } else {
+                tvCode.text = "Erro"
+                tvStatus.text = "Não foi possível ligar ao servidor de emparelhamento."
+            }
+        }
     }
 
     inner class RecentChannelAdapter(

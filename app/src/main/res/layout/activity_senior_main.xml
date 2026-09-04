@@ -83,14 +83,18 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tvPairingPin"
+            android:id="@+id/btnSeniorPair"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
+            android:background="@drawable/bg_senior_menu_item"
+            android:textColor="@color/color_senior_menu_text"
+            android:text="🔗 Emparelhar Telemóvel"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:focusable="true"
+            android:clickable="true" />
 
         <TextView
             android:id="@+id/btnSairSenior"
