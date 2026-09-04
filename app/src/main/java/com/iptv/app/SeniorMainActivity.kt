@@ -69,7 +69,9 @@ class SeniorMainActivity : AppCompatActivity() {
         val username = intent.getStringExtra("USERNAME") ?: prefs.getString("USERNAME", "") ?: ""
         val password = intent.getStringExtra("PASSWORD") ?: prefs.getString("PASSWORD", "") ?: ""
 
-        RemoteManager.startTvServer(this, username, password)
+        RemoteManager.startTvServer(this, username, password) { pin ->
+            findViewById<TextView>(R.id.tvPairingPin)?.text = "Código de emparelhamento: $pin"
+        }
 
         val openTv = View.OnClickListener {
             val intent = Intent(this@SeniorMainActivity, LiveTvActivity::class.java)
