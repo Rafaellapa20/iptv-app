@@ -404,7 +404,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
             android:background="@drawable/bg_smarters_sage"
-            android:text="⚡ SpeedTest"
+            android:text="⚙️ Definições"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -414,7 +414,7 @@
             android:nextFocusUp="@id/cardFilmes"
             android:nextFocusDown="@id/rvContinueWatching"
             android:nextFocusLeft="@id/btnQuickEpg"
-            android:nextFocusRight="@id/btnQuickCatchup" />
+            android:nextFocusRight="@id/btnQuickRadios" />
 
         
 
@@ -443,8 +443,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_smarters_sage"
-            android:text="⚙ Definições"
+            android:background="#2E7D32"
+            android:text="👴 Modo Fácil"
             android:textColor="#FFFFFF"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -453,7 +453,7 @@
             android:clickable="true"
             android:nextFocusUp="@id/cardSeries"
             android:nextFocusDown="@id/rvContinueWatching"
-            android:nextFocusLeft="@id/btnQuickSettings" />
+            android:nextFocusLeft="@id/btnQuickRadios" />
     </LinearLayout>
 
     <!-- FILMES EM DESTAQUE REMOVIDOS -->
@@ -545,7 +545,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="v10.50"
+                android:text="v10.62"
                 android:textColor="#8A99AD"
                 android:textSize="9sp" />
         </LinearLayout>
