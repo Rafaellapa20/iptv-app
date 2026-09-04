@@ -59,7 +59,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:text="A carregar canal..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
         <TextView
@@ -162,7 +162,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:lineSpacingExtra="4dp"
@@ -235,7 +235,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Próximo episódio em 10s..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="14sp" />
 
         <Button
@@ -259,7 +259,7 @@
         android:layout_gravity="top|end"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="48dp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="50sp"
         android:textStyle="bold"
         android:shadowColor="#000000"

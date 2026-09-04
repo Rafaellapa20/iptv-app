@@ -69,7 +69,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="👤 Informação da Conta"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -114,7 +114,7 @@ Validade: --"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🗑 Limpar Cache"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="16dp"/>
@@ -125,7 +125,7 @@ Validade: --"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_smarters_sage"
                                 android:text="LIMPAR AGORA"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true"/>
                         </LinearLayout>
@@ -152,7 +152,7 @@ Validade: --"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🔄 Atualizações"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="16dp"/>
@@ -163,7 +163,7 @@ Validade: --"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_smarters_sage"
                                 android:text="PROCURAR"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true"/>
                         </LinearLayout>
@@ -199,7 +199,7 @@ Validade: --"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="⚡ Otimizar TV Box"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="8dp"/>
@@ -219,7 +219,7 @@ Validade: --"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_smarters_sage"
                                 android:text="OTIMIZAR"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true"/>
                         </LinearLayout>
@@ -257,7 +257,7 @@ Validade: --"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_button_exit"
                                 android:text="SAIR DA CONTA"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true"/>
                         </LinearLayout>
@@ -289,7 +289,7 @@ Validade: --"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🔗 Gerar Código de Acesso"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="8dp"/>
@@ -310,7 +310,7 @@ Validade: --"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_smarters_sage"
                                 android:text="GERAR CÓDIGO"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true"/>
                         </LinearLayout>
@@ -348,7 +348,7 @@ Validade: --"
         android:layout_marginBottom="24dp"
         android:background="@drawable/bg_smarters_sage"
         android:text="⬅ VOLTAR"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textStyle="bold"
         android:focusable="true" />
 

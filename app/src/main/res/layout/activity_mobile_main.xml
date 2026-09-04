@@ -36,7 +36,7 @@
         android:layout_height="60dp"
         android:background="@drawable/bg_button_neon"
         android:text="Ligar à TV (Modo Comando)"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
@@ -47,7 +47,7 @@
         android:layout_height="60dp"
         android:background="@drawable/bg_smarters_sage"
         android:text="Ver Canais"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
@@ -58,7 +58,7 @@
         android:layout_height="60dp"
         android:background="@drawable/bg_smarters_sage"
         android:text="Filmes e Séries"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold" />
 

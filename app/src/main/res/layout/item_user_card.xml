@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:text="Lapa2025123"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -70,7 +70,7 @@
                 android:layout_marginEnd="6dp"
                 android:background="@drawable/bg_button_neon"
                 android:text="ENTRAR"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 

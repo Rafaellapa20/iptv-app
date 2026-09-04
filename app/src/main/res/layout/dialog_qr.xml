@@ -29,7 +29,7 @@
         android:id="@+id/ivQrCode"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:background="#FFFFFF"
+        android:background="@color/text_primary"
         android:padding="8dp" />
 
     <TextView

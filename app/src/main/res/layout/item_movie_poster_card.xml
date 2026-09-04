@@ -36,7 +36,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="4dp"
             android:text="Filme"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="10sp"
             android:textStyle="bold"
             android:maxLines="1"

@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.0"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="48sp"
                 android:textStyle="bold" />
 
@@ -113,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-- ms"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -165,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -191,7 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="#00FF88"
+                android:textColor="@color/status_online"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -255,7 +255,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -281,7 +281,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="--"
-                android:textColor="#00FF88"
+                android:textColor="@color/status_online"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -297,7 +297,7 @@
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_smarters_sage"
         android:text="▶ INICIAR SPEEDTEST"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="15sp"
         android:textStyle="bold"
         android:textAllCaps="false"

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Actor"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="10sp"
         android:textStyle="bold"
         android:gravity="center"
