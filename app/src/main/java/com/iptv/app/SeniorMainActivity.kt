@@ -153,6 +153,7 @@ class SeniorMainActivity : AppCompatActivity() {
     
     // Não chama super.onBackPressed() de propósito: queremos sempre confirmar
     // antes de sair, em vez do comportamento por omissão (sair imediatamente).
+    @Deprecated("Deprecated in Java", ReplaceWith("super.onBackPressed()"))
     @Suppress("MissingSuperCall", "DEPRECATION")
     override fun onBackPressed() {
         val builder = android.app.AlertDialog.Builder(this)
@@ -176,7 +177,7 @@ class SeniorMainActivity : AppCompatActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvName)
             init {
-                view.setOnClickListener { onClick(list[adapterPosition]) }
+                view.setOnClickListener { onClick(list[bindingAdapterPosition]) }
             }
         }
 

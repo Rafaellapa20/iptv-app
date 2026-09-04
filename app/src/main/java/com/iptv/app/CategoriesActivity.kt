@@ -116,7 +116,7 @@ class CategoriesActivity : AppCompatActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvName)
             init {
-                view.setOnClickListener { onClick(list[adapterPosition]) }
+                view.setOnClickListener { onClick(list[bindingAdapterPosition]) }
             }
         }
 

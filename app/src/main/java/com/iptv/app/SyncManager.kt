@@ -1,6 +1,7 @@
 package com.iptv.app
 
 import android.content.Context
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -10,8 +11,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 
+@OptIn(DelicateCoroutinesApi::class)
 object SyncManager {
-    
+    // GlobalScope é usado deliberadamente aqui: o sync deve continuar mesmo que
+    // a Activity que o disparou (ex: LoginActivity) seja destruída logo a seguir.
+
     private const val SYNC_URL = "http://176.111.109.14:5000/sync/"
 
     fun syncToCloud(context: Context) {
@@ -38,7 +42,7 @@ object SyncManager {
 
                 val body = json.toString().toRequestBody("application/json".toMediaType())
                 val request = Request.Builder()
-                    .url("\\")
+                    .url("$SYNC_URL$username")
                     .post(body)
                     .build()
                 
@@ -61,7 +65,7 @@ object SyncManager {
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 val request = Request.Builder()
-                    .url("\\")
+                    .url("$SYNC_URL$username")
                     .get()
                     .build()
 

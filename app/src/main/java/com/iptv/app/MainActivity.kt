@@ -281,6 +281,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // overridePendingTransition está deprecated a partir da API 34 (substituída por
+    // overrideActivityTransition), mas continua a funcionar em todas as versões
+    // suportadas (minSdk 24). Mantido por agora para não arriscar mudar o
+    // comportamento de transições sem poder testar em dispositivo real.
+    @Suppress("DEPRECATION")
     private fun openLiveTv(user: String, pass: String) {
         val intent = Intent(this, LiveTvActivity::class.java)
         intent.putExtra("USERNAME", user)
@@ -289,6 +294,7 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
+    @Suppress("DEPRECATION")
     private fun openCategories(user: String, pass: String, type: String) {
         val intent = Intent(this, VodNetflixActivity::class.java)
         intent.putExtra("USERNAME", user)
@@ -617,6 +623,7 @@ class MainActivity : AppCompatActivity() {
     
     // Não chama super.onBackPressed() de propósito: queremos sempre confirmar
     // antes de sair, em vez do comportamento por omissão (sair imediatamente).
+    @Deprecated("Deprecated in Java", ReplaceWith("super.onBackPressed()"))
     @Suppress("MissingSuperCall", "DEPRECATION")
     override fun onBackPressed() {
         android.app.AlertDialog.Builder(this)

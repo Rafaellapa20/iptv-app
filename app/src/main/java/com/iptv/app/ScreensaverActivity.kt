@@ -14,12 +14,16 @@ class ScreensaverActivity : AppCompatActivity() {
     private lateinit var tvClock: TextView
     private var updateJob: Job? = null
 
+    // Nota: systemUiVisibility está deprecated desde a API 30 (substituído por
+    // WindowInsetsController), mas continua a funcionar em todas as versões
+    // suportadas (minSdk 24). Migrar exigiria testar imersão em TV boxes reais.
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_screensaver)
 
         tvClock = findViewById(R.id.tvClock)
-        
+
         // Hide UI completely
         window.decorView.systemUiVisibility = (
             android.view.View.SYSTEM_UI_FLAG_FULLSCREEN

@@ -15,4 +15,10 @@
     <color name="accent_muted">#2C4A7A</color>
 
     <color name="divider">#2A2A2D</color>
+
+    <!-- Cores de estado semânticas (deliberadamente separadas do accent):
+         usadas só para indicar "ao vivo" / "ligado", nunca como cor decorativa
+         ou de interação, para não voltar a espalhar cores por todo o lado. -->
+    <color name="status_live">#FF1744</color>
+    <color name="status_online">#00FF88</color>
 </resources>

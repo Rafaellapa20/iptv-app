@@ -1192,6 +1192,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     
+    @Deprecated("Deprecated in Java", ReplaceWith("super.onBackPressed()"))
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         val type = intent.getStringExtra("TYPE")

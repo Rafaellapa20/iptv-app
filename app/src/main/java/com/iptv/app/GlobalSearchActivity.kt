@@ -167,7 +167,7 @@ class GlobalSearchActivity : AppCompatActivity() {
             
             init {
                 view.setOnClickListener {
-                    val s = list[adapterPosition]
+                    val s = list[bindingAdapterPosition]
                     when (s.stream_type) {
                         "live" -> {
                             val intent = Intent(this@GlobalSearchActivity, PlayerActivity::class.java)

@@ -344,14 +344,14 @@ class VodNetflixActivity : AppCompatActivity() {
                     if (hasFocus) {
                         tvName.setTextColor(android.graphics.Color.parseColor("#FFCC00"))
                         tvCount.setTextColor(android.graphics.Color.parseColor("#FFCC00"))
-                        onCategorySelected(catList[adapterPosition])
+                        onCategorySelected(catList[bindingAdapterPosition])
                     } else {
                         tvName.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
                         tvCount.setTextColor(android.graphics.Color.parseColor("#AAAAAA"))
                     }
                 }
                 v.setOnClickListener {
-                    onCategorySelected(catList[adapterPosition])
+                    onCategorySelected(catList[bindingAdapterPosition])
                     rvMovieGrid.requestFocus()
                 }
             }
@@ -383,14 +383,14 @@ class VodNetflixActivity : AppCompatActivity() {
                 v.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         tvFallback.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
-                        updateHeroBanner(movies[adapterPosition])
+                        updateHeroBanner(movies[bindingAdapterPosition])
                     } else {
                         tvFallback.setTextColor(android.graphics.Color.parseColor("#DDDDDD"))
                     }
                 }
                 
                 v.setOnClickListener {
-                    val s = movies[adapterPosition]
+                    val s = movies[bindingAdapterPosition]
                     if (s.stream_type == "series") {
                         val intent = Intent(this@VodNetflixActivity, EpisodesActivity::class.java)
                         intent.putExtra("SERIES_ID", s.stream_id)

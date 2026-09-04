@@ -263,7 +263,7 @@ class EpisodesActivity : AppCompatActivity() {
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val tvName: TextView = view.findViewById(R.id.tvName)
             init {
-                view.setOnClickListener { onClick(list[adapterPosition]) }
+                view.setOnClickListener { onClick(list[bindingAdapterPosition]) }
             }
         }
 
@@ -291,10 +291,10 @@ class EpisodesActivity : AppCompatActivity() {
             init {
                 view.setOnClickListener { 
                     val oldPos = selectedPosition
-                    selectedPosition = adapterPosition
+                    selectedPosition = bindingAdapterPosition
                     notifyItemChanged(oldPos)
                     notifyItemChanged(selectedPosition)
-                    onClick(list[adapterPosition]) 
+                    onClick(list[bindingAdapterPosition]) 
                 }
             }
         }

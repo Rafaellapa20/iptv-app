@@ -336,7 +336,7 @@ class LiveTvActivity : AppCompatActivity() {
             val count: TextView = v.findViewById(R.id.tvCategoryCount)
             init { 
                 v.setOnClickListener { 
-                    val cat = list[adapterPosition]
+                    val cat = list[bindingAdapterPosition]
                     onClick(cat)
                     val prefs = v.context.getSharedPreferences("IPTV_PREFS", android.content.Context.MODE_PRIVATE)
                     prefs.edit().putString("LAST_CATEGORY_ID", cat.category_id).apply()
@@ -381,7 +381,7 @@ class LiveTvActivity : AppCompatActivity() {
                         if (event.action == android.view.KeyEvent.ACTION_DOWN) {
                             if (event.repeatCount >= 4 && !isLongPressHandled) {
                                 isLongPressHandled = true
-                                val pos = adapterPosition
+                                val pos = bindingAdapterPosition
                                 if (pos != RecyclerView.NO_POSITION) {
                                     val s = list[pos]
                                     val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
@@ -410,7 +410,7 @@ class LiveTvActivity : AppCompatActivity() {
                         isLongPressHandled = false
                         return@setOnClickListener
                     }
-                    val pos = adapterPosition
+                    val pos = bindingAdapterPosition
                     if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                     val s = list[pos]
 
@@ -461,7 +461,7 @@ class LiveTvActivity : AppCompatActivity() {
                 }
 
                 favIcon.setOnClickListener {
-                    val pos = adapterPosition
+                    val pos = bindingAdapterPosition
                     if (pos != RecyclerView.NO_POSITION) {
                         val s = list[pos]
                         val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
@@ -475,7 +475,7 @@ class LiveTvActivity : AppCompatActivity() {
                 }
 
                 view.setOnLongClickListener {
-                    val pos = adapterPosition
+                    val pos = bindingAdapterPosition
                     if (pos != RecyclerView.NO_POSITION) {
                         val s = list[pos]
                         val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
@@ -490,8 +490,8 @@ class LiveTvActivity : AppCompatActivity() {
                 }
 
                 view.setOnFocusChangeListener { _, hasFocus ->
-                    if (hasFocus && adapterPosition != RecyclerView.NO_POSITION) {
-                        val s = list[adapterPosition]
+                    if (hasFocus && bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                        val s = list[bindingAdapterPosition]
                         tvPreviewName.text = s.name
                         fetchShortEpg(s.stream_id)
                     }

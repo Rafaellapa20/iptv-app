@@ -141,6 +141,11 @@ object RemoteManager {
         }
     }
 
+    // Nota: WifiManager.dhcpInfo está deprecated desde a API 26, mas continua a
+    // funcionar em todas as versões suportadas (minSdk 24). A alternativa
+    // (LinkProperties via ConnectivityManager) exigiria testar descoberta de
+    // TV na rede em dispositivos reais antes de trocar.
+    @Suppress("DEPRECATION")
     private fun getBroadcastAddress(context: Context): InetAddress {
         val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val dhcp = wifi.dhcpInfo

@@ -19,10 +19,10 @@ class RecentMoviesAdapter(
         val ivFavorite: ImageView = view.findViewById(R.id.ivFavorite)
 
         init {
-            view.setOnClickListener { onClick(list[adapterPosition]) }
+            view.setOnClickListener { onClick(list[bindingAdapterPosition]) }
             
             ivFavorite.setOnClickListener {
-                val stream = list[adapterPosition]
+                val stream = list[bindingAdapterPosition]
                 val context = it.context
                 val isNowFavorite = FavoritesManager.toggleFavorite(context, stream)
                 updateFavoriteIcon(ivFavorite, isNowFavorite)

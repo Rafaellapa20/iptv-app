@@ -42,6 +42,11 @@ class StreamsActivity : AppCompatActivity() {
     private var type = "live"
     private lateinit var adapter: StreamAdapter
 
+    // Nota: startActivityForResult está deprecated desde a introdução da
+    // Activity Result API, mas continua a funcionar. Migrar para
+    // registerForActivityResult exigiria testar a pesquisa por voz em
+    // dispositivo real antes de trocar.
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_streams)
@@ -223,7 +228,7 @@ class StreamsActivity : AppCompatActivity() {
                         if (event.action == android.view.KeyEvent.ACTION_DOWN) {
                             if (event.repeatCount >= 4 && !isLongPressHandled) {
                                 isLongPressHandled = true
-                                val position = adapterPosition
+                                val position = bindingAdapterPosition
                                 if (position != RecyclerView.NO_POSITION) {
                                     val stream = list[position]
                                     val isFav = FavoritesManager.toggleFavorite(v.context, stream)
@@ -246,12 +251,12 @@ class StreamsActivity : AppCompatActivity() {
                         isLongPressHandled = false
                         return@setOnClickListener
                     }
-                    onClick(list[adapterPosition])
+                    onClick(list[bindingAdapterPosition])
                 }
                 
                 view.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
-                        val position = adapterPosition
+                        val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {
                             val stream = list[position]
                             val ivBackgroundBlur = this@StreamsActivity.findViewById<ImageView>(R.id.ivBackgroundBlur)
@@ -269,7 +274,7 @@ class StreamsActivity : AppCompatActivity() {
                 
                 // Adicionar aos favoritos ao manter pressionado (Long Click)
                 view.setOnLongClickListener {
-                    val position = adapterPosition
+                    val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val stream = list[position]
                         val isFav = FavoritesManager.toggleFavorite(it.context, stream)
@@ -280,7 +285,7 @@ class StreamsActivity : AppCompatActivity() {
                 }
                 
                 ivFavorite.setOnClickListener {
-                    val position = adapterPosition
+                    val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val stream = list[position]
                         val isFav = FavoritesManager.toggleFavorite(it.context, stream)
@@ -304,6 +309,10 @@ class StreamsActivity : AppCompatActivity() {
             return ViewHolder(view)
         }
 
+        // thumbnail(Float) do Glide está deprecated a favor de thumbnail(RequestBuilder),
+        // mas o comportamento é equivalente; mantido para não arriscar mudanças
+        // visuais no carregamento de imagens sem poder testar em dispositivo.
+        @Suppress("DEPRECATION")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val stream = list[position]
             holder.tvName.text = stream.name

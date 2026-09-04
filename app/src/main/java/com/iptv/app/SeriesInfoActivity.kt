@@ -113,7 +113,7 @@ class SeriesInfoActivity : AppCompatActivity() {
             val title: TextView = v.findViewById(R.id.tvEpTitle)
             init {
                 v.setOnClickListener {
-                    val ep = list[adapterPosition]
+                    val ep = list[bindingAdapterPosition]
                     val url = "/series///."
                     val epTitle = " - "
                     if (RemoteManager.connectedTvIp != null) {

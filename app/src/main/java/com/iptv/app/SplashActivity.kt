@@ -11,6 +11,10 @@ import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
+    // Nota: systemUiVisibility está deprecated desde a API 30 (substituído por
+    // WindowInsetsController), mas continua a funcionar em todas as versões
+    // suportadas (minSdk 24). Migrar exigiria testar imersão em TV boxes reais.
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
