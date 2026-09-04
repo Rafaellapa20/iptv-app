@@ -16,9 +16,18 @@ object SyncManager {
     // GlobalScope é usado deliberadamente aqui: o sync deve continuar mesmo que
     // a Activity que o disparou (ex: LoginActivity) seja destruída logo a seguir.
 
+    // DESATIVADO (2026-09-04): este servidor corria na VPS 176.111.109.14, que
+    // deixou de estar sob o nosso controlo. Continuar a chamar este endpoint
+    // enviaria username + favoritos + progresso + histórico de visualização de
+    // utilizadores reais para um servidor de terceiros desconhecido. As funções
+    // abaixo ficam como no-ops (favoritos/progresso/histórico continuam a
+    // funcionar normalmente, só deixam de sincronizar entre dispositivos) até
+    // existir um servidor de sync próprio e de confiança para apontar aqui.
+    private const val SYNC_ENABLED = false
     private const val SYNC_URL = "http://176.111.109.14:5000/sync/"
 
     fun syncToCloud(context: Context) {
+        if (!SYNC_ENABLED) return
         val prefs = context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val username = prefs.getString("USERNAME", "") ?: ""
         if (username.isEmpty()) return
@@ -55,6 +64,10 @@ object SyncManager {
     }
 
     fun syncFromCloud(context: Context, onComplete: () -> Unit = {}) {
+        if (!SYNC_ENABLED) {
+            onComplete()
+            return
+        }
         val prefs = context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val username = prefs.getString("USERNAME", "") ?: ""
         if (username.isEmpty()) {
