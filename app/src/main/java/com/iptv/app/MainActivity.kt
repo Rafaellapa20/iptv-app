@@ -47,6 +47,13 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
 
+        // Versão real instalada no rodapé (antes era texto fixo no XML,
+        // ficava sempre desatualizado a cada release)
+        try {
+            val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+            findViewById<TextView>(R.id.tvAppVersion)?.text = "v$versionName"
+        } catch (e: Exception) {}
+
         // Carregar proxy customizada do utilizador
         val proxyHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
         val proxyPort = prefs.getInt("PROXY_PORT", 443)

@@ -1,6 +1,6 @@
 {
-  "versionCode": 153,
-  "versionName": "10.65",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.65-debug.apk",
-  "releaseNotes": "v10.65:\n- Novo sistema de emparelhamento por codigo (download + login automatico com o mesmo codigo)\n- Corrigido crash de Picture-in-Picture em TV boxes antigas\n- Varias correcoes internas de estabilidade"
+  "versionCode": 154,
+  "versionName": "10.66",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.66-debug.apk",
+  "releaseNotes": "v10.66:\n- Corrigida a versao no rodape do menu principal, que ficava sempre desatualizada (agora mostra sempre a versao real instalada)"
 }
