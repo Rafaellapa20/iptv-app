@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="LISTA DE UTILIZADORES / CONTAS"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
@@ -63,7 +63,7 @@
             android:background="@drawable/bg_button_neon"
             android:paddingHorizontal="20dp"
             android:text="➕ ADICIONAR NOVO UTILIZADOR"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="12sp"
             android:textStyle="bold"
             android:focusable="true"

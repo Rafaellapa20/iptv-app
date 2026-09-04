@@ -21,7 +21,7 @@
         android:id="@+id/tvEpTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textSize="14sp"
         android:layout_marginStart="8dp"
         android:ellipsize="end"

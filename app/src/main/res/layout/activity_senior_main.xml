@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Início"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="28sp"
             android:textStyle="bold"
             android:layout_alignParentStart="true"
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20:15"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="22sp"
             android:textStyle="bold"
             android:layout_alignParentEnd="true"
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Aceder à Televisão"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp" />
@@ -188,7 +188,7 @@
             android:layout_below="@id/btnSeniorTvBig"
             android:layout_marginTop="24dp"
             android:text="Canais Recentes"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -213,7 +213,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="▲ ▼ ◀ ▶"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:textSize="14sp" />
             <TextView
@@ -229,7 +229,7 @@
                 android:text="OK"
                 android:background="#333"
                 android:paddingHorizontal="6dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:textSize="14sp" />
             <TextView
@@ -245,7 +245,7 @@
                 android:text="VOLTAR"
                 android:background="#333"
                 android:paddingHorizontal="6dp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 android:textSize="14sp" />
             <TextView
