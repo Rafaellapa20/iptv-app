@@ -101,6 +101,13 @@ echo ""
 read -p "Fazer commit e push agora? (SIM/nao): " CONFIRM
 
 if [ "$CONFIRM" = "SIM" ]; then
+    # Importante: adiciona TODAS as alteracoes a ficheiros ja trackeados
+    # (codigo-fonte, layouts, etc.), nao so os ficheiros de release
+    # (build.gradle/update.json/APK). O APK e sempre compilado a partir do
+    # working tree completo, por isso o commit tem de refletir exatamente
+    # o que foi para dentro do APK publicado — caso contrario o source no
+    # GitHub fica dessincronizado do binario distribuido.
+    git add -u -- ':!.claude'
     git add "$GRADLE_FILE" "$UPDATE_JSON" "$NEW_APK" archive/apks/ 2>/dev/null || true
     git commit -m "Release v${NEW_VERSION_NAME}: ${RELEASE_NOTES}"
     git push origin main
