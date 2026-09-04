@@ -1,6 +1,6 @@
 {
-  "versionCode": 156,
-  "versionName": "10.68",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.68-debug.apk",
-  "releaseNotes": "v10.68:\n- Padronizadas as cores em todos os ecras (mesmos valores, agora via tokens do design system)"
+  "versionCode": 157,
+  "versionName": "10.69",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.69-debug.apk",
+  "releaseNotes": "v10.69:\n- Corrigida falha de seguranca: a TV entregava a password da conta a qualquer dispositivo na rede Wi-Fi sem autenticacao. Agora exige um PIN mostrado no ecra da TV."
 }
