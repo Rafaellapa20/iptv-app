@@ -608,6 +608,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     
+    // Não chama super.onBackPressed() de propósito: queremos sempre confirmar
+    // antes de sair, em vez do comportamento por omissão (sair imediatamente).
+    @Suppress("MissingSuperCall", "DEPRECATION")
     override fun onBackPressed() {
         android.app.AlertDialog.Builder(this)
             .setTitle("Sair")
@@ -632,12 +635,32 @@ class MainActivity : AppCompatActivity() {
         val dialog = android.app.Dialog(this@MainActivity)
         dialog.setContentView(R.layout.dialog_qr)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        
+
         val ivQr = dialog.findViewById<android.widget.ImageView>(R.id.ivQrCode)
         val apkUrl = "https://tinyurl.com/2985xryp"
         val qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" + android.net.Uri.encode(apkUrl)
-        
+
         com.bumptech.glide.Glide.with(this@MainActivity).load(qrUrl).into(ivQr)
         dialog.show()
+
+        val tvCode = dialog.findViewById<TextView>(R.id.tvPairCode)
+        val tvStatus = dialog.findViewById<TextView>(R.id.tvPairCodeStatus)
+        val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val username = prefs.getString("USERNAME", "") ?: ""
+        val password = prefs.getString("PASSWORD", "") ?: ""
+        if (username.isEmpty() || password.isEmpty()) {
+            tvStatus.text = "Sem sessão iniciada."
+            return
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            val code = PairingManager.generateSelfCode(username, password)
+            if (!dialog.isShowing) return@launch
+            if (code != null) {
+                tvCode.text = code
+            } else {
+                tvCode.text = "Erro"
+                tvStatus.text = "Não foi possível ligar ao servidor de emparelhamento."
+            }
+        }
     }
 }

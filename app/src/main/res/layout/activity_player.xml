@@ -88,6 +88,15 @@
         android:gravity="center_vertical"
         android:visibility="gone">
 
+        <androidx.mediarouter.app.MediaRouteButton
+            android:id="@+id/media_route_button_player"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginEnd="12dp"
+            android:mediaRouteTypes="user"
+            android:focusable="true"
+            android:contentDescription="Cast" />
+
         <ImageButton
             android:id="@+id/btnFavPlayer"
             android:layout_width="54dp"

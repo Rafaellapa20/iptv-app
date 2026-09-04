@@ -81,6 +81,11 @@ class SettingsActivity : AppCompatActivity() {
             UpdateManager.checkForUpdates(this, showNoUpdateToast = true)
         }
 
+        val btnPairing = findViewById<Button>(R.id.btnPairing)
+        btnPairing.setOnClickListener {
+            showGenerateCodeDialog()
+        }
+
         val btnOptimize = findViewById<Button>(R.id.btnOptimize)
         val tvOptimizeResult = findViewById<TextView>(R.id.tvOptimizeResult)
 
@@ -127,10 +132,57 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Gera um código que serve duas finalidades: um novo dispositivo pode
+     * usá-lo para descarregar a app (link/QR) e, ao introduzi-lo no ecrã de
+     * login, entrar automaticamente nesta conta sem escrever a senha.
+     */
+    private fun showGenerateCodeDialog() {
+        val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
+        val username = prefs.getString("USERNAME", "") ?: ""
+        val password = prefs.getString("PASSWORD", "") ?: ""
+        if (username.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Sem sessão iniciada.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val layout = android.widget.LinearLayout(this)
+        layout.orientation = android.widget.LinearLayout.VERTICAL
+        layout.gravity = android.view.Gravity.CENTER
+        layout.setPadding(50, 30, 50, 10)
+
+        val apkLink = android.widget.TextView(this)
+        apkLink.text = "Download: https://tinyurl.com/2985xryp"
+        apkLink.textSize = 12f
+        apkLink.setTextColor(android.graphics.Color.parseColor("#8A99AD"))
+        apkLink.gravity = android.view.Gravity.CENTER
+        apkLink.setPadding(0, 0, 0, 20)
+        layout.addView(apkLink)
+
+        val tvCode = android.widget.TextView(this)
+        tvCode.text = "A gerar..."
+        tvCode.textSize = 36f
+        tvCode.setTextColor(android.graphics.Color.parseColor("#00E5FF"))
+        tvCode.gravity = android.view.Gravity.CENTER
+        layout.addView(tvCode)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Gerar Código de Acesso")
+            .setMessage("Instale a app no novo dispositivo e, no ecrã de login, escolha \"Tenho um código\" e introduza este número (válido 30 min):")
+            .setView(layout)
+            .setPositiveButton("Fechar", null)
+            .show()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val code = PairingManager.generateSelfCode(username, password)
+            tvCode.text = code ?: "Erro"
+        }
+    }
+
     private fun showCustomProxyDialog() {
         val prefs = getSharedPreferences("IPTV_PREFS", MODE_PRIVATE)
-        val currentHost = prefs.getString("PROXY_HOST", "176.111.109.14") ?: "176.111.109.14"
-        val currentPort = prefs.getInt("PROXY_PORT", 443)
+        val currentHost = prefs.getString("PROXY_HOST", Constants.DEFAULT_TUNNEL_HOST) ?: Constants.DEFAULT_TUNNEL_HOST
+        val currentPort = prefs.getInt("PROXY_PORT", Constants.DEFAULT_TUNNEL_PORT)
 
         val layout = android.widget.LinearLayout(this)
         layout.orientation = android.widget.LinearLayout.VERTICAL
@@ -148,8 +200,8 @@ class SettingsActivity : AppCompatActivity() {
         layout.addView(portInput)
 
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Configuração de Proxy/VPN Customizada")
-            .setMessage("Introduza os dados do seu novo servidor privado:")
+            .setTitle("Configuração do Túnel TLS (Servidor Privado)")
+            .setMessage("Introduza o domínio/IP e porta HTTPS do seu servidor (precisa de certificado TLS válido a reencaminhar para o servidor de conteúdo):")
             .setView(layout)
             .setPositiveButton("Guardar") { _, _ ->
                 val newIp = ipInput.text.toString().trim()
@@ -166,10 +218,10 @@ class SettingsActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null)
             .setNeutralButton("Repor Padrão") { _, _ ->
                 prefs.edit()
-                    .putString("PROXY_HOST", "176.111.109.14")
-                    .putInt("PROXY_PORT", 8443)
+                    .putString("PROXY_HOST", Constants.DEFAULT_TUNNEL_HOST)
+                    .putInt("PROXY_PORT", Constants.DEFAULT_TUNNEL_PORT)
                     .apply()
-                OkHttpProvider.updateProxy("176.111.109.14", 8443)
+                OkHttpProvider.updateProxy(Constants.DEFAULT_TUNNEL_HOST, Constants.DEFAULT_TUNNEL_PORT)
                 Toast.makeText(this, "Servidor original restaurado!", Toast.LENGTH_SHORT).show()
             }
             .show()

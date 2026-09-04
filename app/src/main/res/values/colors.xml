@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta "dark minimalista" (estilo Netflix/Apple TV): fundo quase preto,
+         superfícies discretamente mais claras, texto em dois tons de cinza/branco,
+         e um único acento usado com moderação (nada de neon espalhado). -->
+    <color name="bg_primary">#0B0B0D</color>
+    <color name="bg_elevated">#1A1A1C</color>
+    <color name="bg_elevated_2">#242426</color>
+
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#9B9BA1</color>
+    <color name="text_disabled">#5A5A5E</color>
+
+    <color name="accent">#3D8BFF</color>
+    <color name="accent_muted">#2C4A7A</color>
+
+    <color name="divider">#2A2A2D</color>
+</resources>

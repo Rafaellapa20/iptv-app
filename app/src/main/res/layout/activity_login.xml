@@ -88,19 +88,18 @@
             android:focusable="true"
             android:nextFocusUp="@id/etPassword"/>
 
+        <Button
+            android:id="@+id/btnSyncTv"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_smarters_sage"
+            android:text="🔗 Tenho um Código"
+            android:textColor="#00E5FF"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
-    
-            <Button
-                android:id="@+id/btnSyncTv"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_smarters_sage"
-                android:text="📡 Puxar Login da TV (Automático)"
-                android:textColor="#00E5FF"
-                android:textStyle="bold" />
-            
             <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="64dp"

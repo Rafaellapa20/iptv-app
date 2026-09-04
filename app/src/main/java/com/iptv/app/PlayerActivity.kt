@@ -1,3 +1,5 @@
+@file:androidx.annotation.OptIn(markerClass = [androidx.media3.common.util.UnstableApi::class])
+
 package com.iptv.app
 
 import android.content.Intent
@@ -22,6 +24,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 import androidx.media3.extractor.DefaultExtractorsFactory
+import androidx.mediarouter.app.MediaRouteButton
+import com.google.android.gms.cast.MediaInfo
+import com.google.android.gms.cast.MediaLoadRequestData
+import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.framework.CastButtonFactory
+import com.google.android.gms.cast.framework.CastContext
+import com.google.android.gms.cast.framework.CastSession
+import com.google.android.gms.cast.framework.SessionManagerListener
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
@@ -72,6 +82,13 @@ class PlayerActivity : AppCompatActivity() {
     private var currentStreamUrl = ""
     private var isNextEpisodeOverlayVisible = false
 
+    // Reconexão automática do canal ao vivo: tenta várias vezes com atraso
+    // crescente antes de desistir, em vez de reprepara-lo sem controlo (que
+    // podia entrar num ciclo silencioso sem o utilizador perceber o que se passa).
+    private var playerErrorRetryCount = 0
+    private val maxPlayerErrorRetries = 5
+    private val retryHandler = android.os.Handler(android.os.Looper.getMainLooper())
+
     private lateinit var rlBufferingOverlay: View
     private lateinit var ivLoadingCover: android.widget.ImageView
     private lateinit var tvLoadingTitle: android.widget.TextView
@@ -82,6 +99,22 @@ class PlayerActivity : AppCompatActivity() {
     private var isMiniGuiaVisible = false
     private var channelNumberBuffer = ""
     private var channelNumberJob: kotlinx.coroutines.Job? = null
+
+    // Chromecast
+    private var castContext: CastContext? = null
+    private var castSession: CastSession? = null
+    private var wasPlayingBeforeCast = false
+    private val sessionManagerListener = object : SessionManagerListener<CastSession> {
+        override fun onSessionStarted(session: CastSession, sessionId: String) = onCastSessionActive(session)
+        override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) = onCastSessionActive(session)
+        override fun onSessionEnded(session: CastSession, error: Int) = onCastSessionInactive()
+        override fun onSessionSuspended(session: CastSession, reason: Int) = onCastSessionInactive()
+        override fun onSessionStarting(session: CastSession) {}
+        override fun onSessionStartFailed(session: CastSession, error: Int) {}
+        override fun onSessionEnding(session: CastSession) {}
+        override fun onSessionResuming(session: CastSession, sessionId: String) {}
+        override fun onSessionResumeFailed(session: CastSession, error: Int) {}
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -193,6 +226,70 @@ class PlayerActivity : AppCompatActivity() {
         setupButtons()
         setupSwipeGestures()
         startProgressMonitor()
+        setupCast()
+    }
+
+    private fun setupCast() {
+        try {
+            castContext = CastContext.getSharedInstance(this)
+            val mediaRouteButton = findViewById<MediaRouteButton>(R.id.media_route_button_player)
+            CastButtonFactory.setUpMediaRouteButton(applicationContext, mediaRouteButton)
+
+            castContext?.sessionManager?.addSessionManagerListener(sessionManagerListener, CastSession::class.java)
+            castSession = castContext?.sessionManager?.currentCastSession
+            if (castSession?.isConnected == true) {
+                onCastSessionActive(castSession!!)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun onCastSessionActive(session: CastSession) {
+        castSession = session
+        wasPlayingBeforeCast = getActivePlayer().isPlaying
+        getActivePlayer().pause()
+        Toast.makeText(this, "A transmitir para: ${session.castDevice?.friendlyName ?: "TV"}", Toast.LENGTH_SHORT).show()
+        loadRemoteMedia()
+    }
+
+    private fun onCastSessionInactive() {
+        castSession = null
+        if (wasPlayingBeforeCast) {
+            getActivePlayer().play()
+        }
+    }
+
+    private fun loadRemoteMedia() {
+        val session = castSession ?: return
+        val remoteMediaClient = session.remoteMediaClient ?: return
+        if (currentStreamUrl.isEmpty()) return
+
+        val title = intent.getStringExtra("TITLE") ?: "IPTV"
+        val cover = intent.getStringExtra("COVER") ?: ""
+        val contentType = when {
+            currentStreamUrl.endsWith(".m3u8") -> "application/x-mpegURL"
+            currentStreamUrl.endsWith(".ts") -> "video/mp2t"
+            else -> "video/mp4"
+        }
+
+        val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE).apply {
+            putString(MediaMetadata.KEY_TITLE, title)
+            if (cover.isNotEmpty()) addImage(com.google.android.gms.common.images.WebImage(Uri.parse(cover)))
+        }
+
+        val mediaInfo = MediaInfo.Builder(currentStreamUrl)
+            .setStreamType(if (isMovieOrEpisode) MediaInfo.STREAM_TYPE_BUFFERED else MediaInfo.STREAM_TYPE_LIVE)
+            .setContentType(contentType)
+            .setMetadata(movieMetadata)
+            .build()
+
+        val loadRequest = MediaLoadRequestData.Builder()
+            .setMediaInfo(mediaInfo)
+            .setAutoplay(true)
+            .build()
+
+        remoteMediaClient.load(loadRequest)
     }
 
     private fun setupButtons() {
@@ -251,10 +348,13 @@ class PlayerActivity : AppCompatActivity() {
         val type = intent.getStringExtra("TYPE") ?: "live"
         val isLive = type == "live"
         
-        val minBuffer = if (isLive) 1500 else 30000
-        val maxBuffer = if (isLive) 5000 else 120000
-        val bufferForPlayback = if (isLive) 500 else 3500
-        val bufferForPlaybackAfterRebuffer = if (isLive) 1000 else 5000
+        // Meio-termo entre "zero delay" (500ms, muito frágil a oscilações de rede)
+        // e um buffer normal: dá uma margem real sem deixar o arranque do canal
+        // lento. Reduz bastante os cortes/falhas sem se notar quase atraso.
+        val minBuffer = if (isLive) 2500 else 30000
+        val maxBuffer = if (isLive) 8000 else 120000
+        val bufferForPlayback = if (isLive) 1200 else 3500
+        val bufferForPlaybackAfterRebuffer = if (isLive) 2200 else 5000
         
         val loadControl = androidx.media3.exoplayer.DefaultLoadControl.Builder()
             .setBufferDurationsMs(minBuffer, maxBuffer, bufferForPlayback, bufferForPlaybackAfterRebuffer)
@@ -293,12 +393,14 @@ class PlayerActivity : AppCompatActivity() {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying && exoPlayer == getActivePlayer()) {
                     runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                    playerErrorRetryCount = 0
                 }
             }
 
             override fun onRenderedFirstFrame() {
                 if (exoPlayer == getActivePlayer()) {
                     runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                    playerErrorRetryCount = 0
                 }
             }
 
@@ -310,31 +412,76 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
             }
-            
+
             override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
                 android.util.Log.e("PlayerActivity", "Playback error: ${error.message}")
                 if (error.errorCode == androidx.media3.common.PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                     exoPlayer.seekToDefaultPosition()
                     exoPlayer.prepare()
-                } else {
-                    if (currentStreamUrl.isNotEmpty()) {
-                        val retryUrl = if (currentStreamUrl.endsWith(".ts")) {
-                            currentStreamUrl.replace(".ts", ".m3u8")
-                        } else {
-                            currentStreamUrl
-                        }
-                        currentStreamUrl = retryUrl
-                        val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
-                        val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(1 or 16)
-                        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
-                            .createMediaSource(MediaItem.fromUri(Uri.parse(retryUrl)))
-                        exoPlayer.setMediaSource(mediaSource)
-                        exoPlayer.prepare()
-                    }
+                    exoPlayer.playWhenReady = true
+                    return
                 }
-                exoPlayer.playWhenReady = true
+
+                if (currentStreamUrl.isEmpty()) return
+
+                playerErrorRetryCount++
+                if (playerErrorRetryCount > maxPlayerErrorRetries) {
+                    android.util.Log.e("PlayerActivity", "Desisti de reconectar após $maxPlayerErrorRetries tentativas")
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@PlayerActivity,
+                            "Sinal instável neste canal. A tentar novamente em segundo plano...",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    // Não desiste de vez — só abranda bastante para não martelar o
+                    // servidor/rede indefinidamente, mantendo a hipótese de recuperar
+                    // sozinho se a instabilidade for passageira.
+                    retryHandler.postDelayed({
+                        if (exoPlayer == getActivePlayer()) reconnectToCurrentUrl(exoPlayer)
+                    }, 15000)
+                    return
+                }
+
+                if (exoPlayer == getActivePlayer()) {
+                    runOnUiThread { rlBufferingOverlay.visibility = View.VISIBLE }
+                }
+
+                // Backoff crescente (0.5s, 1s, 1.5s...) em vez de martelar
+                // imediatamente — dá tempo a falhas de rede transitórias passarem.
+                val delayMs = 500L * playerErrorRetryCount
+                retryHandler.postDelayed({
+                    reconnectToCurrentUrl(exoPlayer)
+                }, delayMs)
             }
         })
+    }
+
+    /** Reconstrói a media source do URL atual e volta a preparar o player.
+     *  Na primeira tentativa troca .ts por .m3u8 (fallback histórico), depois
+     *  mantém-se no mesmo formato para não alternar às cegas para sempre. */
+    private fun reconnectToCurrentUrl(exoPlayer: ExoPlayer) {
+        if (currentStreamUrl.isEmpty()) return
+        try {
+            val retryUrl = if (playerErrorRetryCount == 1 && currentStreamUrl.endsWith(".ts")) {
+                currentStreamUrl.replace(".ts", ".m3u8")
+            } else {
+                currentStreamUrl
+            }
+            currentStreamUrl = retryUrl
+            val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
+            val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(
+                androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES or
+                    androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_IGNORE_SPLICE_INFO_STREAM
+            )
+            val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
+                .createMediaSource(MediaItem.fromUri(Uri.parse(retryUrl)))
+            exoPlayer.setMediaSource(mediaSource)
+            exoPlayer.prepare()
+            exoPlayer.playWhenReady = true
+        } catch (e: Exception) {
+            android.util.Log.e("PlayerActivity", "Erro ao reconectar: ${e.message}")
+        }
     }
 
     private fun getActivePlayer(): ExoPlayer = if (activePlayerNum == 1) player1!! else player2!!
@@ -344,32 +491,58 @@ class PlayerActivity : AppCompatActivity() {
     private fun getInactivePlayerView(): PlayerView = if (activePlayerNum == 1) playerView2 else playerView1
 
     private fun playUrlInPlayer(exoPlayer: ExoPlayer, url: String, showLoadingOverlay: Boolean = false) {
+        // Novo canal/URL a pedido do utilizador: cancela qualquer reconexão
+        // automática pendente do canal anterior e reinicia o contador de retries.
+        retryHandler.removeCallbacksAndMessages(null)
+        playerErrorRetryCount = 0
+
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            Toast.makeText(this, "URL de stream inválido", Toast.LENGTH_SHORT).show()
+            rlBufferingOverlay.visibility = View.GONE
+            return
+        }
+
+        if (castSession?.isConnected == true) {
+            rlBufferingOverlay.visibility = View.GONE
+            loadRemoteMedia()
+            return
+        }
+
         if (showLoadingOverlay && exoPlayer == getActivePlayer() && exoPlayer.playbackState != androidx.media3.common.Player.STATE_READY) {
             rlBufferingOverlay.visibility = View.VISIBLE
         } else {
             rlBufferingOverlay.visibility = View.GONE
         }
 
-        val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
-        val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(1 or 16)
-        val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
-            .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-        
-        exoPlayer.setMediaSource(mediaSource)
-        exoPlayer.prepare()
-        
-        // Se for VOD, restaura progresso apenas no player ativo principal
-        if (isMovieOrEpisode && streamId != null && exoPlayer == getActivePlayer()) {
-            val savedProgress = ProgressManager.getProgress(this, streamId!!)
-            if (savedProgress > 0) exoPlayer.seekTo(savedProgress)
+        try {
+            val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
+            val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(
+                androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES or
+                    androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_IGNORE_SPLICE_INFO_STREAM
+            )
+            val mediaSource = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
+                .createMediaSource(MediaItem.fromUri(Uri.parse(url)))
+
+            exoPlayer.setMediaSource(mediaSource)
+            exoPlayer.prepare()
+
+            // Se for VOD, restaura progresso apenas no player ativo principal
+            if (isMovieOrEpisode && streamId != null && exoPlayer == getActivePlayer()) {
+                val savedProgress = ProgressManager.getProgress(this, streamId!!)
+                if (savedProgress > 0) exoPlayer.seekTo(savedProgress)
+            }
+
+            exoPlayer.playWhenReady = true
+
+            if (!isMovieOrEpisode && streamId != null) fetchEPG()
+
+            isNextEpisodeOverlayVisible = false
+            llNextEpisode.visibility = View.GONE
+        } catch (e: Exception) {
+            android.util.Log.e("PlayerActivity", "Failed to start playback: ${e.message}")
+            Toast.makeText(this, "Não foi possível reproduzir este canal", Toast.LENGTH_SHORT).show()
+            rlBufferingOverlay.visibility = View.GONE
         }
-        
-        exoPlayer.playWhenReady = true
-        
-        if (!isMovieOrEpisode && streamId != null) fetchEPG()
-        
-        isNextEpisodeOverlayVisible = false
-        llNextEpisode.visibility = View.GONE
     }
     
     private fun playNextEpisode() {
@@ -1006,6 +1179,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        retryHandler.removeCallbacksAndMessages(null)
         progressJob?.cancel()
         if (player1 != PlayerManager.sharedPlayer) {
             player1?.release()
@@ -1013,6 +1187,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         player2?.release()
         stopRecording()
+        castContext?.sessionManager?.removeSessionManagerListener(sessionManagerListener, CastSession::class.java)
         System.gc()
     }
 
@@ -1020,7 +1195,14 @@ class PlayerActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         val type = intent.getStringExtra("TYPE")
-        if (type == "live" && packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+        // PictureInPictureParams só existe a partir da API 26; em Android TV boxes
+        // com API 24/25 (comuns neste tipo de aparelho) isto rebentava com
+        // NoClassDefFoundError ao entrar aqui, porque hasSystemFeature(PIP) já
+        // pode ser true no Android TV desde a API 24.
+        if (type == "live" &&
+            android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O &&
+            packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_PICTURE_IN_PICTURE)
+        ) {
             val params = android.app.PictureInPictureParams.Builder()
                 .setAspectRatio(android.util.Rational(16, 9))
                 .build()

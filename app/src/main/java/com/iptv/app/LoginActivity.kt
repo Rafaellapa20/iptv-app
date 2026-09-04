@@ -24,6 +24,10 @@ class LoginActivity : AppCompatActivity() {
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnPair = findViewById<Button>(R.id.btnSyncTv)
+        btnPair.visibility = android.view.View.VISIBLE
+        btnPair.text = "🔗 Tenho um Código"
+        btnPair.setOnClickListener { showEnterCodeDialog() }
 
         // Verificar atualizações OTA mesmo no ecrã de login
         UpdateManager.checkForUpdates(this)
@@ -58,6 +62,81 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        pairingJob?.cancel()
+    }
+
+    private var pairingJob: kotlinx.coroutines.Job? = null
+
+    /**
+     * Ecrã inicial (sem sessão) para introduzir o código gerado noutro
+     * dispositivo já com a conta ligada (ver MainActivity.showQrDialog /
+     * SettingsActivity "Gerar Código"). Ao confirmar, busca as credenciais
+     * associadas ao código e faz login automaticamente, sem o utilizador
+     * escrever nada.
+     */
+    private fun showEnterCodeDialog() {
+        val codeInput = EditText(this)
+        codeInput.hint = "Código de 6 dígitos"
+        codeInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+        codeInput.gravity = android.view.Gravity.CENTER
+        codeInput.textSize = 26f
+
+        val layout = android.widget.LinearLayout(this)
+        layout.orientation = android.widget.LinearLayout.VERTICAL
+        layout.setPadding(60, 20, 60, 10)
+        layout.addView(codeInput)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Entrar com Código")
+            .setMessage("Introduza o código gerado noutro dispositivo (ecrã inicial > ícone de partilha/QR, ou Definições > Gerar Código):")
+            .setView(layout)
+            .setPositiveButton("Entrar", null)
+            .setNegativeButton("Cancelar") { _, _ -> pairingJob?.cancel() }
+            .setCancelable(true)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val code = codeInput.text.toString().trim()
+                if (code.length != 6) {
+                    Toast.makeText(this, "Código inválido.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                codeInput.isEnabled = false
+                dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+                pairingJob = CoroutineScope(Dispatchers.Main).launch {
+                    var attempts = 0
+                    val maxAttempts = 5
+                    while (attempts < maxAttempts) {
+                        val result = PairingManager.pollOnce(code)
+                        if (result.expired) {
+                            Toast.makeText(this@LoginActivity, "Código inválido ou expirado.", Toast.LENGTH_LONG).show()
+                            codeInput.isEnabled = true
+                            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).isEnabled = true
+                            return@launch
+                        }
+                        if (result.credentials != null) {
+                            dialog.dismiss()
+                            findViewById<EditText>(R.id.etUsername).setText(result.credentials.username)
+                            findViewById<EditText>(R.id.etPassword).setText(result.credentials.password)
+                            performLogin(result.credentials.username, result.credentials.password, isAutoLogin = true)
+                            return@launch
+                        }
+                        attempts++
+                        kotlinx.coroutines.delay(1000)
+                    }
+                    Toast.makeText(this@LoginActivity, "Código ainda não confirmado. Tente novamente.", Toast.LENGTH_LONG).show()
+                    codeInput.isEnabled = true
+                    dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).isEnabled = true
+                }
+            }
+        }
+        dialog.show()
+    }
+
     private fun performLogin(usernameInput: String, passwordInput: String, isAutoLogin: Boolean) {
         val username = usernameInput.trim()
         val password = passwordInput.trim()
@@ -70,10 +149,11 @@ class LoginActivity : AppCompatActivity() {
         
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // DESLIGAR VPN TEMPORARIAMENTE PARA O LOGIN PASSAR O IP LOCK
+                // Login vai sempre direto à origem (não pelo túnel/relay) para passar o IP lock
+                // do fornecedor, que costuma bloquear pedidos vindos de IPs de datacenter/VPS
                 OkHttpProvider.disableDoH()
 
-                val apiUrl = "${Constants.SERVER_URL}/player_api.php?username=$username&password=$password"
+                val apiUrl = "${Constants.ORIGIN_URL}/player_api.php?username=$username&password=$password"
                 val request = Request.Builder().url(apiUrl).build()
                 var responseBody = ""
                 
@@ -115,14 +195,17 @@ class LoginActivity : AppCompatActivity() {
                         } catch (e: Exception) {}
 
                         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+                        // Nota: Túnel TLS fica desligado por padrão — o relay privado está
+                        // atualmente a ser bloqueado pela Cloudflare do fornecedor de origem
+                        // (IP de datacenter). Reativar manualmente nas Definições assim que
+                        // o IP do relay for autorizado junto do fornecedor.
                         prefs.edit()
                             .putString("USERNAME", username)
                             .putString("PASSWORD", password)
                             .putString("EXP_DATE", expDateFormated)
-                            .putBoolean("VPN_ENABLED", true) // ATIVAR AUTOMATICAMENTE PARA OS CLIENTES
                             .apply()
-                        
-                        OkHttpProvider.enableDoH() // Ligar túnel
+
+                        OkHttpProvider.disableDoH()
 
                         // Guardar a conta na Lista Multi-Utilizador
                         AccountsManager.saveAccount(
@@ -131,7 +214,7 @@ class LoginActivity : AppCompatActivity() {
                         )
 
                         val target = if (DeviceUtils.isTv(this@LoginActivity)) MainActivity::class.java else MobileMainActivity::class.java
-                    val intent = Intent(this@LoginActivity, target)
+                        val intent = Intent(this@LoginActivity, target)
                         intent.putExtra("VENCIMENTO", expDateFormated)
                         intent.putExtra("USERNAME", username)
                         intent.putExtra("PASSWORD", password)

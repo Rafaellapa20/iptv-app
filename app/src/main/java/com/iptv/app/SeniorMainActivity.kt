@@ -151,6 +151,9 @@ class SeniorMainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnSeniorTvBig).requestFocus()
     }
     
+    // Não chama super.onBackPressed() de propósito: queremos sempre confirmar
+    // antes de sair, em vez do comportamento por omissão (sair imediatamente).
+    @Suppress("MissingSuperCall", "DEPRECATION")
     override fun onBackPressed() {
         val builder = android.app.AlertDialog.Builder(this)
         builder.setTitle("Sair")

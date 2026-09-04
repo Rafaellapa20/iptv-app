@@ -264,6 +264,59 @@ Validade: --"
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
 
+                <!-- ROW: PAIRING -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="24dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="#131B2A"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="24dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🔗 Gerar Código de Acesso"
+                                android:textColor="#FFFFFF"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="8dp"/>
+
+                            <TextView
+                                android:id="@+id/tvPairingHint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Descarregue a app noutro aparelho e entre sem escrever a senha"
+                                android:textColor="#8A99AD"
+                                android:textSize="12sp"
+                                android:textAlignment="center"
+                                android:layout_marginBottom="16dp"/>
+
+                            <Button
+                                android:id="@+id/btnPairing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_smarters_sage"
+                                android:text="GERAR CÓDIGO"
+                                android:textColor="#FFFFFF"
+                                android:paddingHorizontal="24dp"
+                                android:focusable="true"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/tvValidade"
                     android:layout_width="match_parent"

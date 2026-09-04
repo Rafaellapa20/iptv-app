@@ -101,7 +101,7 @@ class UsersActivity : AppCompatActivity() {
                         )
 
                         val target = if (DeviceUtils.isTv(this@UsersActivity)) MainActivity::class.java else MobileMainActivity::class.java
-                    val intent = Intent(this@UsersActivity, target)
+                        val intent = Intent(this@UsersActivity, target)
                         intent.putExtra("VENCIMENTO", expDateFormated)
                         intent.putExtra("USERNAME", account.username)
                         intent.putExtra("PASSWORD", account.password)

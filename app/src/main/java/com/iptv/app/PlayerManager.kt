@@ -1,3 +1,5 @@
+@file:androidx.annotation.OptIn(markerClass = [androidx.media3.common.util.UnstableApi::class])
+
 package com.iptv.app
 
 import android.content.Context
@@ -22,9 +24,10 @@ object PlayerManager {
                 )
             }
 
-            // Modo ZERO DELAY (Desporto) para Live TV
+            // Meio-termo entre "zero delay" e buffer normal — ver PlayerActivity
+            // para o mesmo ajuste e explicação (reduz falhas sem atraso notável).
             val loadControl = DefaultLoadControl.Builder()
-                .setBufferDurationsMs(1500, 5000, 500, 1000)
+                .setBufferDurationsMs(2500, 8000, 1200, 2200)
                 .setPrioritizeTimeOverSizeThresholds(true)
                 .setBackBuffer(5000, true)
                 .build()

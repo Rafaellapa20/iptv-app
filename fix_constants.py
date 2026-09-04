@@ -1,4 +1,6 @@
-package com.iptv.app
+﻿import re
+
+code = '''package com.iptv.app
 
 import android.content.Context
 
@@ -9,10 +11,13 @@ object Constants {
     const val DEFAULT_TUNNEL_HOST = "rafaiptv2026.duckdns.org"
     const val DEFAULT_TUNNEL_PORT = 443
 
-    // Servidor de emparelhamento TV <-> telemóvel (independente do relay de conteúdo)
-    const val PAIR_API_URL = "https://rafaiptv2026.duckdns.org:9443"
-
     // Forçar a ligação direta (sem VPN) porque o servidor foi desligado.
     val SERVER_URL: String
         get() = ORIGIN_URL
 }
+'''
+
+with open('app/src/main/java/com/iptv/app/Constants.kt', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("Fixed Constants.kt")
