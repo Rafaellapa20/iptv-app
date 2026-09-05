@@ -10,8 +10,11 @@ object Constants {
     const val DEFAULT_TUNNEL_PORT = 443
 
     // Backend StreamVPN (VPS PTisp) — gestão de VPN, quota, servidores.
+    // HTTPS via Nginx + Let's Encrypt na porta 8444 (a 443 está ocupada por
+    // outro serviço no VPS; o backend Node em si só fala HTTP na 3000,
+    // que já não está exposta ao exterior).
     // Alterável em runtime no ecrã StreamVPN ("Servidor API").
-    const val STREAMVPN_BASE_URL = "https://streamvpn.faktio.ch:3000/api"
+    const val STREAMVPN_BASE_URL = "https://streamvpn.faktio.ch:8444/api"
 
     // Nota: o emparelhamento TV <-> telemóvel (PairingManager) usava aqui um
     // servidor próprio (rafaiptv2026.duckdns.org:9443) que deixou de existir
