@@ -393,11 +393,16 @@ class LiveTvActivity : AppCompatActivity() {
             val favIcon: ImageView = view.findViewById(R.id.ivFavIcon)
 
             init {
-                var isLongPressHandled = false
-
+                // Nota: o toggle de favorito ao segurar o OK/Enter é tratado só pelo
+                // setOnLongClickListener nativo do Android mais abaixo (dispara sozinho ao
+                // fim de ~500ms de tecla premida, tanto por toque como por comando de TV).
+                // Havia aqui também uma deteção manual por repeatCount>=4 no setOnKeyListener
+                // que fazia exatamente a mesma coisa e disparava a poucos instantes de
+                // diferença do listener nativo — resultado: dois toggles seguidos (adicionava
+                // e logo a seguir removia dos favoritos). Removida para ficar só um mecanismo.
                 view.setOnKeyListener { _, keyCode, event ->
                     // Botão colorido (amarelo/Y) do comando: um único toque já alterna o
-                    // favorito, sem precisar de segurar — mais fácil do que o long-press no OK.
+                    // favorito, sem precisar de segurar.
                     if (keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
                         if (event.action == android.view.KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
                             val pos = bindingAdapterPosition
@@ -414,40 +419,12 @@ class LiveTvActivity : AppCompatActivity() {
                         }
                         return@setOnKeyListener true
                     }
-                    // OK/Enter mantém o long-press como alternativa (não interfere com o clique normal).
-                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
-                        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
-                            if (event.repeatCount >= 4 && !isLongPressHandled) {
-                                isLongPressHandled = true
-                                val pos = bindingAdapterPosition
-                                if (pos != RecyclerView.NO_POSITION) {
-                                    val s = list[pos]
-                                    val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
-                                    notifyItemChanged(pos)
-                                    val statusText = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
-                                    android.widget.Toast.makeText(this@LiveTvActivity, "${s.name}\n$statusText", android.widget.Toast.LENGTH_SHORT).show()
-                                    if (selectedCategoryId == "fav") {
-                                        fetchChannels("fav")
-                                    }
-                                }
-                                return@setOnKeyListener true
-                            }
-                        } else if (event.action == android.view.KeyEvent.ACTION_UP) {
-                            if (isLongPressHandled) {
-                                return@setOnKeyListener true
-                            }
-                        }
-                    }
                     false
                 }
 
                 var lastPreviewStreamId: String? = null
 
                 view.setOnClickListener { v ->
-                    if (isLongPressHandled) {
-                        isLongPressHandled = false
-                        return@setOnClickListener
-                    }
                     val pos = bindingAdapterPosition
                     if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
                     val s = list[pos]
