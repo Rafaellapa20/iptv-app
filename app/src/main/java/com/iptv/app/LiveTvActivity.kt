@@ -32,8 +32,12 @@ class LiveTvActivity : AppCompatActivity() {
     private lateinit var rvCategories: RecyclerView
     private lateinit var rvChannels: RecyclerView
     private lateinit var tvPreviewName: TextView
-    private lateinit var tvEpgCurrent: TextView
+    private lateinit var tvEpgTime: TextView
+    private lateinit var tvEpgTitle: TextView
+    private lateinit var tvEpgDesc: TextView
     private lateinit var pbEpgProgress: ProgressBar
+    private lateinit var llEpgNext: View
+    private lateinit var tvEpgNextTitle: TextView
     private lateinit var miniPlayerView: PlayerView
     private lateinit var progressBar: ProgressBar
 
@@ -56,8 +60,12 @@ class LiveTvActivity : AppCompatActivity() {
         rvCategories = findViewById(R.id.rvCategories)
         rvChannels = findViewById(R.id.rvChannels)
         tvPreviewName = findViewById(R.id.tvPreviewName)
-        tvEpgCurrent = findViewById(R.id.tvEpgCurrent)
+        tvEpgTime = findViewById(R.id.tvEpgTime)
+        tvEpgTitle = findViewById(R.id.tvEpgTitle)
+        tvEpgDesc = findViewById(R.id.tvEpgDesc)
         pbEpgProgress = findViewById(R.id.pbEpgProgress)
+        llEpgNext = findViewById(R.id.llEpgNext)
+        tvEpgNextTitle = findViewById(R.id.tvEpgNextTitle)
         miniPlayerView = findViewById(R.id.mini_player_view)
         progressBar = findViewById(R.id.progressBar)
 
@@ -297,18 +305,20 @@ class LiveTvActivity : AppCompatActivity() {
                         val startTime = sdf.format(java.util.Date(startTimestamp * 1000))
                         val stopTime = sdf.format(java.util.Date(stopTimestamp * 1000))
                         
-                        var nextText = ""
+                        var nextTitleText: String? = null
                         if (epgList.length() > 1) {
                             val nextProg = epgList.getJSONObject(1)
                             val nextTitle = android.util.Base64.decode(nextProg.getString("title"), android.util.Base64.DEFAULT).decodeToString()
                             val nextStart = sdf.format(java.util.Date(nextProg.getLong("start_timestamp") * 1000))
-                            nextText = "\n\nA seguir ($nextStart):\n$nextTitle"
+                            nextTitleText = "$nextStart · $nextTitle"
                         }
-                        
+
                         val now = System.currentTimeMillis() / 1000
 
                         withContext(Dispatchers.Main) {
-                            tvEpgCurrent.text = "$startTime - $stopTime\n$title\n$decodedDesc$nextText"
+                            tvEpgTime.text = "$startTime - $stopTime"
+                            tvEpgTitle.text = title
+                            tvEpgDesc.text = decodedDesc
                             pbEpgProgress.visibility = View.VISIBLE
                             val total = stopTimestamp - startTimestamp
                             val progress = now - startTimestamp
@@ -316,11 +326,20 @@ class LiveTvActivity : AppCompatActivity() {
                                 pbEpgProgress.max = total.toInt()
                                 pbEpgProgress.progress = progress.toInt()
                             }
+                            if (nextTitleText != null) {
+                                llEpgNext.visibility = View.VISIBLE
+                                tvEpgNextTitle.text = nextTitleText
+                            } else {
+                                llEpgNext.visibility = View.GONE
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            tvEpgCurrent.text = "Sem informação de guia"
+                            tvEpgTime.text = ""
+                            tvEpgTitle.text = "Sem informação de guia"
+                            tvEpgDesc.text = ""
                             pbEpgProgress.visibility = View.GONE
+                            llEpgNext.visibility = View.GONE
                         }
                     }
                 }
@@ -377,7 +396,26 @@ class LiveTvActivity : AppCompatActivity() {
                 var isLongPressHandled = false
 
                 view.setOnKeyListener { _, keyCode, event ->
-                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER || keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
+                    // Botão colorido (amarelo/Y) do comando: um único toque já alterna o
+                    // favorito, sem precisar de segurar — mais fácil do que o long-press no OK.
+                    if (keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
+                        if (event.action == android.view.KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                            val pos = bindingAdapterPosition
+                            if (pos != RecyclerView.NO_POSITION) {
+                                val s = list[pos]
+                                val isFav = FavoritesManager.toggleFavorite(this@LiveTvActivity, s)
+                                notifyItemChanged(pos)
+                                val statusText = if (isFav) "⭐ Adicionado aos Favoritos!" else "❌ Removido dos Favoritos"
+                                android.widget.Toast.makeText(this@LiveTvActivity, "${s.name}\n$statusText", android.widget.Toast.LENGTH_SHORT).show()
+                                if (selectedCategoryId == "fav") {
+                                    fetchChannels("fav")
+                                }
+                            }
+                        }
+                        return@setOnKeyListener true
+                    }
+                    // OK/Enter mantém o long-press como alternativa (não interfere com o clique normal).
+                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
                         if (event.action == android.view.KeyEvent.ACTION_DOWN) {
                             if (event.repeatCount >= 4 && !isLongPressHandled) {
                                 isLongPressHandled = true
