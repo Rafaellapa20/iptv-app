@@ -15,18 +15,12 @@ object SyncManager {
     // GlobalScope é usado deliberadamente aqui: o sync deve continuar mesmo que
     // a Activity que o disparou (ex: LoginActivity) seja destruída logo a seguir.
 
-    // ATIVAR SÓ DEPOIS DE:
-    // 1. Criar o projeto em https://console.firebase.google.com
-    // 2. Adicionar uma app Android com o package "com.iptv.app"
-    // 3. Colocar o google-services.json descarregado em app/google-services.json
-    // 4. Descomentar "apply plugin: 'com.google.gms.google-services'" no fim
-    //    de app/build.gradle
-    // 5. Ativar o Firestore Database no projeto (modo produção)
-    // 6. Aplicar as regras de segurança em firestore.rules (ver esse ficheiro)
-    // Sem isto, FirebaseFirestore.getInstance() rebenta com
-    // "Default FirebaseApp is not initialized" — por isso o try/catch abaixo
-    // e esta flag continuam a proteger a app até o setup estar completo.
-    private const val FIREBASE_READY = false
+    // Projeto Firebase "iptv-app-sync" configurado (app/google-services.json
+    // presente, plugin ativo em app/build.gradle). Falta só confirmar que o
+    // Firestore Database e as regras de firestore.rules estão aplicadas no
+    // Firebase Console antes de confiar em produção — o try/catch abaixo
+    // continua a proteger a app mesmo que isso ainda não esteja feito.
+    private const val FIREBASE_READY = true
 
     // Não há um sistema de contas próprio (a "conta" é o username/password do
     // Xtream, que vem do fornecedor de IPTV, não é nosso). Sem um backend de

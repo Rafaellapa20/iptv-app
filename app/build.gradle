@@ -82,8 +82,5 @@ dependencies {
 }
 
 // Tem de vir depois do bloco "dependencies": lê google-services.json e gera
-// a configuração de ligação ao projeto Firebase.
-// FICA COMENTADO DE PROPÓSITO até o ficheiro app/google-services.json existir
-// — sem ele, este plugin falha o build imediatamente. Descomentar assim que
-// o ficheiro for adicionado (ver instruções em SyncManager.kt).
-// apply plugin: 'com.google.gms.google-services'
+// a configuração de ligação ao projeto Firebase (iptv-app-sync).
+apply plugin: 'com.google.gms.google-services'
