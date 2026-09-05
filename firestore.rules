@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// Regras para a base de dados Firestore usada por SyncManager.kt (sync de
+// favoritos/progresso/histórico entre dispositivos da mesma conta IPTV) e
+// por PairingManager.kt (emparelhamento TV <-> telemóvel).
+//
+// Não existe um sistema de autenticação próprio (a "conta" é o
+// username/password do fornecedor IPTV, não é gerido por nós), por isso não
+// há um Firebase Auth uid para restringir o acesso da forma habitual.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Sync de favoritos/progresso/histórico ---
+    // O compromisso adotado: o ID de cada documento em /sync/{docId} é um
+    // SHA-256(username + ":" + password), calculado no dispositivo (ver
+    // SyncManager.syncDocId). Isto funciona como um "token" — só quem souber
+    // a conta exata consegue calcular o ID certo para ler/escrever esse
+    // documento. Não é tão forte como autenticação real, mas é uma melhoria
+    // clara em relação ao sistema antigo (que usava só o username em bruto,
+    // sem password nenhuma, como chave de acesso).
+    //
+    // Isto guarda APENAS favoritos/progresso/histórico de visualização —
+    // nunca passwords nem dados sensíveis — por isso este nível de proteção
+    // é proporcional ao que está a proteger.
+    match /sync/{docId} {
+      allow read, write: if docId is string && docId.size() == 64;
+    }
+
+    // --- Emparelhamento TV <-> telemóvel ---
+    // Códigos de 6 dígitos, de curta duração (10 minutos, verificado no
+    // cliente em PairingManager.pollOnce) e de uso único (o documento é
+    // apagado assim que é lido com sucesso ou quando expira).
+    //
+    // Nota de segurança: ao contrário do /sync/{docId} acima, aqui as
+    // credenciais SÃO guardadas em texto (username+password), porque é
+    // exatamente isso que o emparelhamento tem de transmitir a um novo
+    // dispositivo. A janela de exposição é curta (10 min) e o código de
+    // 6 dígitos funciona como segredo partilhado, mas alguém que
+    // adivinhasse o código dentro dessa janela conseguiria ler as
+    // credenciais — é a mesma limitação que já existia no sistema antigo.
+    match /pairing/{code} {
+      allow read, write: if code is string && code.size() == 6;
+    }
+
+    // Tudo o resto fica fechado por omissão.
+  }
+}

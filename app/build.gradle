@@ -53,7 +53,9 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
-    
+    // Ponte .await() para Task<> do Firebase, usada em SyncManager.kt e PairingManager.kt
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
+
     // ExoPlayer (Video Player Integrado)
     implementation 'androidx.media3:media3-exoplayer:1.2.0'
     implementation 'androidx.media3:media3-ui:1.2.0'
@@ -71,4 +73,15 @@ dependencies {
     // UI Premium
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Firebase (sincronização de favoritos/continuar-a-ver E emparelhamento
+    // TV<->telemóvel entre dispositivos da mesma conta — substitui os
+    // servidores próprios antigos, que deixaram de existir). BOM garante
+    // versões compatíveis entre si.
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
 }
+
+// Tem de vir depois do bloco "dependencies": lê google-services.json e gera
+// a configuração de ligação ao projeto Firebase (iptv-app-sync).
+apply plugin: 'com.google.gms.google-services'

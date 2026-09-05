@@ -9,8 +9,10 @@ object Constants {
     const val DEFAULT_TUNNEL_HOST = "rafaiptv2026.duckdns.org"
     const val DEFAULT_TUNNEL_PORT = 443
 
-    // Servidor de emparelhamento TV <-> telemóvel (independente do relay de conteúdo)
-    const val PAIR_API_URL = "https://rafaiptv2026.duckdns.org:9443"
+    // Nota: o emparelhamento TV <-> telemóvel (PairingManager) usava aqui um
+    // servidor próprio (rafaiptv2026.duckdns.org:9443) que deixou de existir
+    // (domínio morto). Passou a usar o Firestore do mesmo projeto Firebase
+    // do sync — ver PairingManager.kt.
 
     // Forçar a ligação direta (sem VPN) porque o servidor foi desligado.
     val SERVER_URL: String
