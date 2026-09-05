@@ -53,6 +53,8 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1'
+    // Ponte .await() para Task<> do Firebase, usada em SyncManager.kt
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.1'
     
     // ExoPlayer (Video Player Integrado)
     implementation 'androidx.media3:media3-exoplayer:1.2.0'
@@ -71,4 +73,17 @@ dependencies {
     // UI Premium
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Firebase (sincronização de favoritos/continuar-a-ver entre dispositivos
+    // da mesma conta — substitui o SyncManager antigo, que apontava para uma
+    // VPS que deixou de existir). BOM garante versões compatíveis entre si.
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
 }
+
+// Tem de vir depois do bloco "dependencies": lê google-services.json e gera
+// a configuração de ligação ao projeto Firebase.
+// FICA COMENTADO DE PROPÓSITO até o ficheiro app/google-services.json existir
+// — sem ele, este plugin falha o build imediatamente. Descomentar assim que
+// o ficheiro for adicionado (ver instruções em SyncManager.kt).
+// apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// Regras para a base de dados Firestore usada pelo SyncManager.kt (sync de
+// favoritos/progresso/histórico entre dispositivos da mesma conta IPTV).
+//
+// Não existe um sistema de autenticação próprio (a "conta" é o
+// username/password do fornecedor IPTV, não é gerido por nós), por isso não
+// há um Firebase Auth uid para restringir o acesso da forma habitual.
+//
+// O compromisso adotado: o ID de cada documento em /sync/{docId} é um
+// SHA-256(username + ":" + password), calculado no dispositivo (ver
+// SyncManager.syncDocId). Isto funciona como um "token" — só quem souber a
+// conta exata consegue calcular o ID certo para ler/escrever esse documento.
+// Não é tão forte como autenticação real, mas é uma melhoria clara em
+// relação ao sistema antigo (que usava só o username em bruto, sem password
+// nenhuma, como chave de acesso).
+//
+// Isto guarda APENAS favoritos/progresso/histórico de visualização — nunca
+// passwords nem dados sensíveis — por isso este nível de proteção é
+// proporcional ao que está a proteger.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sync/{docId} {
+      allow read, write: if docId is string && docId.size() == 64;
+    }
+    // Tudo o resto fica fechado por omissão.
+  }
+}

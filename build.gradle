@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Plugin do Firebase: lê o google-services.json e gera a configuração
+        // usada por FirebaseApp.initializeApp() em tempo de execução.
+        classpath 'com.google.gms:google-services:4.4.2'
+    }
+}
+
 plugins {
     id 'com.android.application' version '9.2.1' apply false
 }
