@@ -71,7 +71,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Entrar na conta StreamVPN"
+                                android:text="Entrar na StreamVPN"
                                 android:textColor="#FFFFFF"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
@@ -81,8 +81,8 @@
                                 android:id="@+id/etVpnEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Email"
-                                android:inputType="textEmailAddress"
+                                android:hint="Utilizador (o mesmo da app IPTV)"
+                                android:inputType="text"
                                 android:textColor="#FFFFFF"
                                 android:textColorHint="#78909C"
                                 android:layout_marginBottom="8dp" />

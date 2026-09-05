@@ -68,13 +68,38 @@ object StreamVpnApi {
         val percentUsed: Int get() = if (monthlyGb <= 0) 0 else ((usedGb * 100) / monthlyGb).toInt().coerceIn(0, 100)
     }
 
-    suspend fun login(context: Context, email: String, password: String): Result<Unit> = call {
-        val body = JSONObject().put("email", email).put("password", password)
+    // ---------- Auth ----------
+
+    /** Login com o mesmo utilizador/password da app IPTV. */
+    suspend fun login(context: Context, username: String, password: String): Result<Unit> = call {
+        val body = JSONObject().put("username", username).put("password", password)
         val json = post(context, "/auth/login", body, auth = false)
         val token = json.optString("token")
         if (token.isBlank()) error("Resposta sem token")
         context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
             .edit().putString(PREF_TOKEN, token).apply()
+    }
+
+    /**
+     * Garante sessão StreamVPN sem pedir nada ao utilizador: se não há token,
+     * tenta entrar com as credenciais IPTV já guardadas em IPTV_PREFS.
+     * Falha silenciosamente (Result.failure) — a app IPTV nunca depende disto.
+     */
+    suspend fun ensureLoggedIn(context: Context): Result<Unit> {
+        if (isLoggedIn(context)) return Result.success(Unit)
+        val prefs = context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+        val user = prefs.getString("USERNAME", "") ?: ""
+        val pass = prefs.getString("PASSWORD", "") ?: ""
+        if (user.isBlank() || pass.isBlank()) return Result.failure(IllegalStateException("Sem login IPTV guardado"))
+        return login(context, user, pass)
+    }
+
+    /** Configuração WireGuard que o backend atribuiu a esta conta. */
+    data class VpnConfig(val id: String, val name: String, val endpoint: String?, val config: String)
+
+    suspend fun vpnConfig(context: Context): Result<VpnConfig> = call {
+        val j = get(context, "/vpn/config")
+        VpnConfig(j.optString("id"), j.optString("name"), j.optString("endpoint").ifBlank { null }, j.optString("config"))
     }
 
     suspend fun health(context: Context): Result<Boolean> = call {
