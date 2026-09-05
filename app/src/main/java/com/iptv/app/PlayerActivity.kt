@@ -145,6 +145,8 @@ class PlayerActivity : AppCompatActivity() {
         rvMiniGuia = findViewById(R.id.rvMiniGuia)
 
         val initialTitle = intent.getStringExtra("TITLE") ?: "A carregar canal..."
+
+        DeviceAgent.setPlaying(initialTitle)
         val initialCover = intent.getStringExtra("COVER") ?: ""
         tvLoadingTitle.text = initialTitle
         if (initialCover.isNotEmpty()) {
@@ -1188,6 +1190,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        DeviceAgent.setPlaying(null)
         super.onDestroy()
         retryHandler.removeCallbacksAndMessages(null)
         progressJob?.cancel()
