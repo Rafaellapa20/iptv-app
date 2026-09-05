@@ -1,6 +1,6 @@
 {
-  "versionCode": 162,
-  "versionName": "10.74",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.74-debug.apk",
-  "releaseNotes": "v10.74:\n- Corrige bug em que segurar OK para adicionar um canal aos favoritos ficava a remover logo a seguir (dois mecanismos de long-press duplicados)."
+  "versionCode": 163,
+  "versionName": "10.75",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.75-debug.apk",
+  "releaseNotes": "v10.75:\n- Favoritos de canais e de filmes/séries agora bem separados; barra de progresso estilo Netflix ('Continuar a Assistir') na grelha de filmes/séries, escondida quando já terminado."
 }
