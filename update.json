@@ -1,6 +1,6 @@
 {
-  "versionCode": 160,
-  "versionName": "10.72",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.72-debug.apk",
-  "releaseNotes": "v10.72:\n- Corrige flash preto ao abrir canal, preview lateral sem imagem, trailers agora tocam dentro da app (nao abrem YouTube), remove botao Favoritos do ecra principal, favoritos filtram so canais"
+  "versionCode": 161,
+  "versionName": "10.73",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.73-debug.apk",
+  "releaseNotes": "v10.73:\n- Favoritar canal mais fácil (botão amarelo do comando alterna com um único toque, estrela maior) e EPG do preview redesenhado com título, horário e descrição separados."
 }

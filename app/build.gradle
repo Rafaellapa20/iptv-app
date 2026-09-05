@@ -10,8 +10,8 @@ android {
         applicationId "com.iptv.app"
         minSdk 24
         targetSdk 34
-        versionCode 160
-        versionName "10.72"
+        versionCode 161
+        versionName "10.73"
     }
 
     buildTypes {
