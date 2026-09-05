@@ -1,6 +1,6 @@
 {
-  "versionCode": 159,
-  "versionName": "10.71",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.71-debug.apk",
-  "releaseNotes": "v10.71:\n- Correcao de privacidade: SyncManager deixa de enviar dados para servidor perdido (VPS ja nao pertence ao dono da app)"
+  "versionCode": 160,
+  "versionName": "10.72",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.72-debug.apk",
+  "releaseNotes": "v10.72:\n- Corrige flash preto ao abrir canal, preview lateral sem imagem, trailers agora tocam dentro da app (nao abrem YouTube), remove botao Favoritos do ecra principal, favoritos filtram so canais"
 }
