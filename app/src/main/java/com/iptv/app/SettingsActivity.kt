@@ -81,6 +81,10 @@ class SettingsActivity : AppCompatActivity() {
             UpdateManager.checkForUpdates(this, showNoUpdateToast = true)
         }
 
+        findViewById<Button>(R.id.btnStreamVpn).setOnClickListener {
+            startActivity(android.content.Intent(this, VpnStatusActivity::class.java))
+        }
+
         val btnPairing = findViewById<Button>(R.id.btnPairing)
         btnPairing.setOnClickListener {
             showGenerateCodeDialog()

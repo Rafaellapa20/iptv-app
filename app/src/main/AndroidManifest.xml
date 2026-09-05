@@ -113,6 +113,11 @@
             android:theme="@style/AppTheme" />
         
         <activity
+            android:name=".VpnStatusActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".SpeedTestActivity"
             android:exported="false"
             android:screenOrientation="landscape"
