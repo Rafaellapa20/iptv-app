@@ -94,12 +94,28 @@ object StreamVpnApi {
         return login(context, user, pass)
     }
 
-    /** Configuração WireGuard que o backend atribuiu a esta conta. */
-    data class VpnConfig(val id: String, val name: String, val endpoint: String?, val config: String)
+    /**
+     * O que o backend entrega a esta conta: a config WireGuard (rodada
+     * automaticamente entre as ativas do servidor), a lista de DNS IPTV por
+     * ordem de tentativa, e a validade.
+     */
+    data class VpnConfig(
+        val serverName: String, val wireguardName: String, val endpoint: String?,
+        val config: String, val dns: List<String>, val requireClientApp: Boolean, val expiresAt: String?
+    )
 
     suspend fun vpnConfig(context: Context): Result<VpnConfig> = call {
         val j = get(context, "/vpn/config")
-        VpnConfig(j.optString("id"), j.optString("name"), j.optString("endpoint").ifBlank { null }, j.optString("config"))
+        val dnsArr = j.optJSONArray("dns")
+        VpnConfig(
+            serverName = j.optJSONObject("server")?.optString("name") ?: "",
+            wireguardName = j.optJSONObject("wireguard")?.optString("name") ?: "",
+            endpoint = j.optJSONObject("wireguard")?.optString("endpoint")?.ifBlank { null },
+            config = j.optString("config"),
+            dns = if (dnsArr == null) emptyList() else (0 until dnsArr.length()).map { dnsArr.getString(it) },
+            requireClientApp = j.optBoolean("requireClientApp"),
+            expiresAt = j.optString("expiresAt").ifBlank { null }
+        )
     }
 
     suspend fun health(context: Context): Result<Boolean> = call {
