@@ -169,7 +169,7 @@ class VpnStatusActivity : AppCompatActivity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Servidor StreamVPN")
-            .setMessage("URL base da API (ex.: http://streamvpn.faktio.ch:3000/api)")
+            .setMessage("URL base da API (ex.: https://streamvpn.faktio.ch:3000/api)")
             .setView(input)
             .setPositiveButton("Guardar") { _, _ ->
                 StreamVpnApi.setBaseUrl(this, input.text.toString())
