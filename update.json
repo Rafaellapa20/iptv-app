@@ -1,6 +1,6 @@
 {
-  "versionCode": 163,
-  "versionName": "10.75",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.75-debug.apk",
-  "releaseNotes": "v10.75:\n- Favoritos de canais e de filmes/séries agora bem separados; barra de progresso estilo Netflix ('Continuar a Assistir') na grelha de filmes/séries, escondida quando já terminado."
+  "versionCode": 164,
+  "versionName": "10.76",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.76-debug.apk",
+  "releaseNotes": "v10.76:\n- Corrige emparelhamento TV<->telemóvel: já não dependia de um servidor morto, agora usa Firebase e volta a gerar o código."
 }
