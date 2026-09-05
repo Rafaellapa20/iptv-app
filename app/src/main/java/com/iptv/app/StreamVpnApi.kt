@@ -99,19 +99,31 @@ object StreamVpnApi {
      * automaticamente entre as ativas do servidor), a lista de DNS IPTV por
      * ordem de tentativa, e a validade.
      */
+    /** Um servidor + WireGuard concreto. `fallbacks` em VpnConfig são os de reserva, pela ordem do painel. */
+    data class VpnEntry(val serverName: String, val wireguardName: String, val endpoint: String?, val config: String)
+
     data class VpnConfig(
-        val serverName: String, val wireguardName: String, val endpoint: String?,
-        val config: String, val dns: List<String>, val requireClientApp: Boolean, val expiresAt: String?
+        val primary: VpnEntry, val fallbacks: List<VpnEntry>,
+        val dns: List<String>, val requireClientApp: Boolean, val expiresAt: String?
+    ) {
+        /** Todos por ordem de tentativa: principal primeiro. */
+        val all: List<VpnEntry> get() = listOf(primary) + fallbacks
+    }
+
+    private fun entry(j: JSONObject) = VpnEntry(
+        serverName = j.optJSONObject("server")?.optString("name") ?: "",
+        wireguardName = j.optJSONObject("wireguard")?.optString("name") ?: "",
+        endpoint = j.optJSONObject("wireguard")?.optString("endpoint")?.ifBlank { null },
+        config = j.optString("config")
     )
 
     suspend fun vpnConfig(context: Context): Result<VpnConfig> = call {
         val j = get(context, "/vpn/config")
         val dnsArr = j.optJSONArray("dns")
+        val fbArr = j.optJSONArray("fallbacks")
         VpnConfig(
-            serverName = j.optJSONObject("server")?.optString("name") ?: "",
-            wireguardName = j.optJSONObject("wireguard")?.optString("name") ?: "",
-            endpoint = j.optJSONObject("wireguard")?.optString("endpoint")?.ifBlank { null },
-            config = j.optString("config"),
+            primary = entry(j),
+            fallbacks = if (fbArr == null) emptyList() else (0 until fbArr.length()).map { entry(fbArr.getJSONObject(it)) },
             dns = if (dnsArr == null) emptyList() else (0 until dnsArr.length()).map { dnsArr.getString(it) },
             requireClientApp = j.optBoolean("requireClientApp"),
             expiresAt = j.optString("expiresAt").ifBlank { null }
