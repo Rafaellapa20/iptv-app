@@ -67,25 +67,16 @@ class VpnStatusActivity : AppCompatActivity() {
         llLogin.visibility = if (logged) View.GONE else View.VISIBLE
         llContent.visibility = if (logged) View.VISIBLE else View.GONE
         if (logged) { refreshAll(); return }
-        // Sem sessão: tenta entrar sozinho com o login IPTV já guardado
-        uiScope.launch {
-            StreamVpnApi.ensureLoggedIn(this@VpnStatusActivity).onSuccess {
-                llLogin.visibility = View.GONE; llContent.visibility = View.VISIBLE; refreshAll()
-            }
-        }
     }
 
     private fun doLogin() {
-        val email = findViewById<EditText>(R.id.etVpnEmail).text.toString().trim()
-        val pass = findViewById<EditText>(R.id.etVpnPassword).text.toString()
-        if (email.isEmpty() || pass.isEmpty()) {
-            toast("Preenche utilizador e password"); return
-        }
-        toast("A entrar...")
+        val code = findViewById<EditText>(R.id.etVpnEmail).text.toString().trim()
+        if (code.length < 8) { toast("Introduz o código de ativação"); return }
+        toast("A ativar...")
         uiScope.launch {
-            StreamVpnApi.login(this@VpnStatusActivity, email, pass)
-                .onSuccess { toast("Sessão iniciada"); showLoginOrContent() }
-                .onFailure { toast("Login falhou: ${it.message}") }
+            StreamVpnApi.activate(this@VpnStatusActivity, code)
+                .onSuccess { toast("StreamVPN ativada neste aparelho"); showLoginOrContent() }
+                .onFailure { toast("Ativação falhou: ${it.message}") }
         }
     }
 

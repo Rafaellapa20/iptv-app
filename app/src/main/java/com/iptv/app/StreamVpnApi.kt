@@ -81,18 +81,26 @@ object StreamVpnApi {
     }
 
     /**
-     * Garante sessão StreamVPN sem pedir nada ao utilizador: se não há token,
-     * tenta entrar com as credenciais IPTV já guardadas em IPTV_PREFS.
-     * Falha silenciosamente (Result.failure) — a app IPTV nunca depende disto.
+     * Ativação com o código dado pelo painel (ex.: SVPN-7K3M-9QX2). Faz-se uma
+     * vez; o token de longa duração fica guardado e a partir daí é automático.
      */
-    suspend fun ensureLoggedIn(context: Context): Result<Unit> {
-        if (isLoggedIn(context)) return Result.success(Unit)
-        val prefs = context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
-        val user = prefs.getString("USERNAME", "") ?: ""
-        val pass = prefs.getString("PASSWORD", "") ?: ""
-        if (user.isBlank() || pass.isBlank()) return Result.failure(IllegalStateException("Sem login IPTV guardado"))
-        return login(context, user, pass)
+    suspend fun activate(context: Context, code: String): Result<Unit> = call {
+        val body = JSONObject().put("code", code.trim())
+        val json = post(context, "/auth/activate", body, auth = false)
+        val token = json.optString("token")
+        if (token.isBlank()) error("Resposta sem token")
+        context.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
+            .edit().putString(PREF_TOKEN, token).apply()
     }
+
+    /**
+     * Há sessão StreamVPN? A conta StreamVPN é independente do login IPTV, por isso
+     * só existe sessão depois de o cliente ter metido o código uma vez. Falha
+     * silenciosamente — a app IPTV nunca depende disto.
+     */
+    suspend fun ensureLoggedIn(context: Context): Result<Unit> =
+        if (isLoggedIn(context)) Result.success(Unit)
+        else Result.failure(IllegalStateException("StreamVPN ainda não ativada neste aparelho"))
 
     /**
      * O que o backend entrega a esta conta: a config WireGuard (rodada

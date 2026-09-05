@@ -71,7 +71,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Entrar na StreamVPN"
+                                android:text="Ativar StreamVPN neste aparelho"
                                 android:textColor="#FFFFFF"
                                 android:textSize="18sp"
                                 android:textStyle="bold"
@@ -81,28 +81,18 @@
                                 android:id="@+id/etVpnEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Utilizador (o mesmo da app IPTV)"
-                                android:inputType="text"
+                                android:hint="Código de ativação (ex.: SVPN-7K3M-9QX2)"
+                                android:inputType="textCapCharacters|textNoSuggestions"
                                 android:textColor="#FFFFFF"
                                 android:textColorHint="#78909C"
                                 android:layout_marginBottom="8dp" />
-
-                            <EditText
-                                android:id="@+id/etVpnPassword"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Password"
-                                android:inputType="textPassword"
-                                android:textColor="#FFFFFF"
-                                android:textColorHint="#78909C"
-                                android:layout_marginBottom="16dp" />
 
                             <Button
                                 android:id="@+id/btnVpnLogin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_smarters_sage"
-                                android:text="ENTRAR"
+                                android:text="ATIVAR"
                                 android:textColor="@color/text_primary"
                                 android:paddingHorizontal="24dp"
                                 android:focusable="true" />
