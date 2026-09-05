@@ -37,16 +37,17 @@
         android:maxLines="1"
         android:ellipsize="end" />
 
-    <!-- Botão de Estrela Favoritos (Clicável e Visível) -->
+    <!-- Botão de Estrela Favoritos: alvo de toque maior (48dp) para ser mais fácil de acertar,
+         com um único toque/clique a alternar o favorito (sem precisar de long-press). -->
     <ImageView
         android:id="@+id/ivFavIcon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:padding="4dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
         android:src="@android:drawable/btn_star_big_on"
         android:clickable="true"
         android:focusable="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Favorito"
-        android:layout_marginStart="6dp" />
+        android:contentDescription="Marcar/desmarcar como favorito"
+        android:layout_marginStart="4dp" />
 </LinearLayout>
