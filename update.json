@@ -1,6 +1,6 @@
 {
-  "versionCode": 161,
-  "versionName": "10.73",
-  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.73-debug.apk",
-  "releaseNotes": "v10.73:\n- Favoritar canal mais fácil (botão amarelo do comando alterna com um único toque, estrela maior) e EPG do preview redesenhado com título, horário e descrição separados."
+  "versionCode": 162,
+  "versionName": "10.74",
+  "apkUrl": "https://raw.githubusercontent.com/Rafaellapa20/iptv-app/main/iptv_v10.74-debug.apk",
+  "releaseNotes": "v10.74:\n- Corrige bug em que segurar OK para adicionar um canal aos favoritos ficava a remover logo a seguir (dois mecanismos de long-press duplicados)."
 }
