@@ -210,7 +210,8 @@ class LiveTvActivity : AppCompatActivity() {
         }
         if (catId == "fav") {
             channels.clear()
-            channels.addAll(FavoritesManager.getFavorites(this).map { it.toStream() })
+            // Só canais (live) aqui — favoritos de filmes/séries aparecem no ecrã de Filmes/Séries.
+            channels.addAll(FavoritesManager.getFavorites(this).filter { it.type == "live" }.map { it.toStream() })
             updateChannelAdapter()
             return
         }
@@ -373,7 +374,7 @@ class LiveTvActivity : AppCompatActivity() {
             h.name.text = cat.category_name
             val c = when(cat.category_id) {
                 "recent" -> RecentManager.getRecent(h.itemView.context).size
-                "fav" -> FavoritesManager.getFavorites(h.itemView.context).size
+                "fav" -> FavoritesManager.getFavorites(h.itemView.context).count { it.type == "live" }
                 else -> categoryCounts[cat.category_id] ?: 0
             }
             h.count.text = c.toString()

@@ -224,38 +224,30 @@ class StreamsActivity : AppCompatActivity() {
             val tvName: TextView = view.findViewById(R.id.tvName)
             val ivIcon: ImageView = view.findViewById(R.id.ivIcon)
             val ivFavorite: ImageView = view.findViewById(R.id.ivFavorite)
-            
-            init {
-                var isLongPressHandled = false
+            val pbWatchProgress: android.widget.ProgressBar = view.findViewById(R.id.pbWatchProgress)
 
+            init {
+                // Nota: o toggle de favorito ao segurar OK/Enter é tratado só pelo
+                // setOnLongClickListener nativo (dispara sozinho ao fim de ~500ms). Havia
+                // aqui também uma deteção manual por repeatCount no setOnKeyListener que
+                // duplicava o toggle (adicionava e logo a seguir removia) — removida.
                 view.setOnKeyListener { v, keyCode, event ->
-                    if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER || keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
-                        if (event.action == android.view.KeyEvent.ACTION_DOWN) {
-                            if (event.repeatCount >= 4 && !isLongPressHandled) {
-                                isLongPressHandled = true
-                                val position = bindingAdapterPosition
-                                if (position != RecyclerView.NO_POSITION) {
-                                    val stream = list[position]
-                                    val isFav = FavoritesManager.toggleFavorite(v.context, stream)
-                                    updateFavIcon(ivFavorite, isFav)
-                                    Toast.makeText(v.context, if (isFav) "⭐ Adicionado aos Favoritos" else "❌ Removido dos Favoritos", Toast.LENGTH_SHORT).show()
-                                }
-                                return@setOnKeyListener true
-                            }
-                        } else if (event.action == android.view.KeyEvent.ACTION_UP) {
-                            if (isLongPressHandled) {
-                                return@setOnKeyListener true
+                    if (keyCode == android.view.KeyEvent.KEYCODE_PROG_YELLOW || keyCode == android.view.KeyEvent.KEYCODE_BUTTON_Y) {
+                        if (event.action == android.view.KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                            val position = bindingAdapterPosition
+                            if (position != RecyclerView.NO_POSITION) {
+                                val stream = list[position]
+                                val isFav = FavoritesManager.toggleFavorite(v.context, stream)
+                                updateFavIcon(ivFavorite, isFav)
+                                Toast.makeText(v.context, if (isFav) "⭐ Adicionado aos Favoritos" else "❌ Removido dos Favoritos", Toast.LENGTH_SHORT).show()
                             }
                         }
+                        return@setOnKeyListener true
                     }
                     false
                 }
 
-                view.setOnClickListener { 
-                    if (isLongPressHandled) {
-                        isLongPressHandled = false
-                        return@setOnClickListener
-                    }
+                view.setOnClickListener {
                     onClick(list[bindingAdapterPosition])
                 }
                 
@@ -332,7 +324,20 @@ class StreamsActivity : AppCompatActivity() {
             } else {
                 holder.tvName.setTextColor(android.graphics.Color.WHITE)
             }
-            
+
+            // Barra "Continuar a Assistir" (estilo Netflix): só para filmes/séries com
+            // progresso guardado e ainda não terminados (< 90% visto).
+            val progressItem = if (type != "live") {
+                ProgressManager.getRecentProgressList(holder.itemView.context)
+                    .find { it.streamId == stream.stream_id }
+            } else null
+            if (progressItem != null && progressItem.duration > 0 && (progressItem.position.toDouble() / progressItem.duration) < 0.90) {
+                holder.pbWatchProgress.visibility = View.VISIBLE
+                holder.pbWatchProgress.progress = ((progressItem.position.toDouble() / progressItem.duration) * 100).toInt()
+            } else {
+                holder.pbWatchProgress.visibility = View.GONE
+            }
+
             if (stream.stream_icon.isNotEmpty()) {
                 Glide.with(holder.ivIcon.context)
                     .load(stream.stream_icon)

@@ -430,11 +430,13 @@ class VodNetflixActivity : AppCompatActivity() {
                 holder.ivPoster.setImageDrawable(null)
             }
             
-            // Verifica Progresso Visual
+            // Verifica Progresso Visual — só mostra "Continuar a Assistir" (barra) se
+            // ainda não estiver terminado (< 90% visto), como no Netflix. Uma vez
+            // terminado, a barra desaparece (fica só o "✅ visto" na grelha).
             holder.pbProgress.visibility = View.GONE
             val recents = ProgressManager.getRecentProgressList(holder.itemView.context)
             val match = recents.find { it.streamId == s.stream_id }
-            if (match != null && match.duration > 0) {
+            if (match != null && match.duration > 0 && (match.position.toDouble() / match.duration) < 0.90) {
                 holder.pbProgress.visibility = View.VISIBLE
                 holder.pbProgress.max = match.duration.toInt()
                 holder.pbProgress.progress = match.position.toInt()

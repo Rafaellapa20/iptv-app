@@ -40,6 +40,18 @@
                 android:padding="4dp"
                 android:clickable="true"
                 android:focusable="true"/>
+
+            <!-- Barra "Continuar a Assistir" estilo Netflix: só visível quando há
+                 progresso guardado (filme/série a meio, ainda não terminado). -->
+            <ProgressBar
+                android:id="@+id/pbWatchProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:max="100"
+                android:progressDrawable="@drawable/bg_progress_red"
+                android:visibility="gone"/>
         </FrameLayout>
 
         <TextView
