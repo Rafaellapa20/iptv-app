@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.cardSeries).setOnClickListener { openCategories(username, password, "series") }
 
         // QUICK ACCESS BAR (BARRA DE ACESSO RÁPIDO IGUAL À IMAGEM DE REFERÊNCIA)
-        findViewById<View>(R.id.btnQuickFavorites)?.setOnClickListener { openLiveTv(username, password) }
-
+        // Botão "Favoritos" removido a pedido do utilizador (redundante com o
+        // acesso a favoritos já existente dentro de Live TV).
         findViewById<View>(R.id.btnQuickEpg)?.setOnClickListener {
             val intent = Intent(this, EpgGridActivity::class.java)
             intent.putExtra("USERNAME", username)

@@ -392,7 +392,15 @@ class PlayerActivity : AppCompatActivity() {
         exoPlayer.addListener(object : androidx.media3.common.Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 if (isPlaying && exoPlayer == getActivePlayer()) {
-                    runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                    // Só escondemos aqui se não houver faixa de vídeo (ex: rádio) —
+                    // nesse caso não existe "primeiro frame" a render, por isso
+                    // onRenderedFirstFrame() nunca dispara. Para vídeo normal,
+                    // deixamos o overlay tapar o SurfaceView até ao primeiro frame
+                    // real (ver onRenderedFirstFrame), para não expor um instante de
+                    // ecrã preto em bruto entre o STATE_READY e a imagem aparecer.
+                    if (exoPlayer.videoFormat == null) {
+                        runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                    }
                     playerErrorRetryCount = 0
                 }
             }
@@ -407,7 +415,9 @@ class PlayerActivity : AppCompatActivity() {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (exoPlayer == getActivePlayer()) {
                     updateNetworkStatus(playbackState)
-                    if (playbackState == androidx.media3.common.Player.STATE_READY) {
+                    // Mesma lógica: STATE_READY acontece antes do primeiro frame ser
+                    // desenhado, por isso só escondemos aqui para streams sem vídeo.
+                    if (playbackState == androidx.media3.common.Player.STATE_READY && exoPlayer.videoFormat == null) {
                         runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
                     }
                 }

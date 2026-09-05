@@ -151,7 +151,12 @@ class StreamsActivity : AppCompatActivity() {
         progressBar.visibility = android.view.View.VISIBLE
 
         if (type == "favorites") {
-            val favs = FavoritesManager.getFavorites(this).map { it.toStream() }
+            // Só canais aqui — filmes/séries favoritos aparecem no seu próprio
+            // sítio (ex: continuar a ver / lista de VOD), não faz sentido
+            // misturá-los com a lista de canais favoritos.
+            val favs = FavoritesManager.getFavorites(this)
+                .filter { it.type == "live" }
+                .map { it.toStream() }
             streams.clear()
             streams.addAll(favs)
             filteredStreams.clear()

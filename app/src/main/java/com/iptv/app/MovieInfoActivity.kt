@@ -1,8 +1,8 @@
 package com.iptv.app
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,11 +94,9 @@ class MovieInfoActivity : AppCompatActivity() {
 
         btnTrailer.setOnClickListener {
             if (youtubeTrailerId.isNotEmpty()) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$youtubeTrailerId"))
-                startActivity(intent)
+                showTrailerDialog(youtubeTrailerId)
             } else {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=${Uri.encode("$movieTitle trailer")}"))
-                startActivity(intent)
+                Toast.makeText(this, "Trailer não disponível para este título.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -109,6 +107,31 @@ class MovieInfoActivity : AppCompatActivity() {
 
         btnPlay.requestFocus()
         fetchMovieInfo()
+    }
+
+    // Reproduz o trailer num WebView embutido (iframe da API de embed do
+    // YouTube), em vez de um Intent.ACTION_VIEW que abria a app do YouTube e
+    // tirava o utilizador da nossa app. android:usesCleartextTraffic não é
+    // necessário aqui porque o embed do YouTube corre em https.
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun showTrailerDialog(videoId: String) {
+        val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_trailer)
+
+        val webView = dialog.findViewById<android.webkit.WebView>(R.id.webViewTrailer)
+        webView.settings.javaScriptEnabled = true
+        webView.settings.mediaPlaybackRequiresUserGesture = false
+        webView.webChromeClient = android.webkit.WebChromeClient()
+        webView.loadUrl("https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1")
+
+        dialog.findViewById<View>(R.id.btnCloseTrailer).setOnClickListener {
+            webView.loadUrl("about:blank")
+            dialog.dismiss()
+        }
+        dialog.setOnDismissListener {
+            webView.loadUrl("about:blank")
+        }
+        dialog.show()
     }
 
     private fun playMovie(url: String) {
