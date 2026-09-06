@@ -188,7 +188,8 @@ class MainActivity : AppCompatActivity() {
                         badge.visibility = View.VISIBLE
                     }
                     is VpnManager.TunnelState.WireGuard -> {
-                        badge.text = "VPN ON${state.serverName?.let { " · $it" } ?: ""}".trimEnd(' ', '·')
+                        val flag = state.serverCountry?.let { countryToFlag(it) } ?: ""
+                        badge.text = "VPN ON${state.serverName?.let { " · $it${if (flag.isNotEmpty()) " $flag" else ""}" } ?: ""}".trimEnd()
                         badge.setTextColor(0xFF00E676.toInt())
                         badge.visibility = View.VISIBLE
                     }
@@ -681,6 +682,12 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Não", null)
             .show()
+    }
+
+    private fun countryToFlag(iso: String): String {
+        if (iso.length != 2) return ""
+        return iso.uppercase().map { 0x1F1E6 - 'A'.code + it.code }
+            .joinToString("") { String(Character.toChars(it)) }
     }
 
     override fun onDestroy() {

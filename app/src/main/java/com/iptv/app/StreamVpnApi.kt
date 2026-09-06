@@ -108,7 +108,7 @@ object StreamVpnApi {
      * ordem de tentativa, e a validade.
      */
     /** Um servidor + WireGuard concreto. `fallbacks` em VpnConfig são os de reserva, pela ordem do painel. */
-    data class VpnEntry(val serverName: String, val wireguardName: String, val endpoint: String?, val config: String)
+    data class VpnEntry(val serverName: String, val wireguardName: String, val endpoint: String?, val config: String, val country: String = "")
 
     data class VpnConfig(
         val primary: VpnEntry, val fallbacks: List<VpnEntry>,
@@ -123,7 +123,8 @@ object StreamVpnApi {
         serverName = j.optJSONObject("server")?.optString("name") ?: "",
         wireguardName = j.optJSONObject("wireguard")?.optString("name") ?: "",
         endpoint = j.optJSONObject("wireguard")?.optString("endpoint")?.ifBlank { null },
-        config = j.optString("config")
+        config = j.optString("config"),
+        country = j.optJSONObject("server")?.optString("country") ?: ""
     )
 
     suspend fun vpnConfig(context: Context): Result<VpnConfig> = call {

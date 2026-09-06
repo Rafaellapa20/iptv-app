@@ -42,7 +42,7 @@ object StreamVpnTunnel {
 
     enum class State { OFF, CONNECTING, ON, ERROR }
 
-    interface Listener { fun onVpnStateChanged(state: State, serverName: String?) }
+    interface Listener { fun onVpnStateChanged(state: State, serverName: String?, serverCountry: String? = null) }
 
     private lateinit var app: Context
     private var backend: GoBackend? = null
@@ -54,6 +54,7 @@ object StreamVpnTunnel {
 
     @Volatile var state: State = State.OFF; private set
     @Volatile var serverName: String? = null; private set
+    @Volatile var serverCountry: String? = null; private set
     @Volatile var lastError: String? = null; private set
     @Volatile var expiresAt: String? = null; private set
 
@@ -118,6 +119,7 @@ object StreamVpnTunnel {
         scope.launch {
             try { backend?.setState(tunnel, Tunnel.State.DOWN, null) } catch (e: Exception) { Log.w(TAG, "down: ${e.message}") }
             serverName = null
+            serverCountry = null
             setState(State.OFF)
         }
     }
@@ -148,6 +150,7 @@ object StreamVpnTunnel {
             // O túnel está UP; confirma que passa tráfego (handshake + resposta do backend pelo túnel)
             if (probeThroughTunnel()) {
                 serverName = entry.serverName
+                serverCountry = entry.country.ifBlank { null }
                 app.getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE).edit()
                     .putString(PREF_LAST_SERVER, entry.serverName).putBoolean("VPN_ENABLED", true).apply()
                 setState(State.ON)
@@ -196,7 +199,8 @@ object StreamVpnTunnel {
         state = s
         if (s == State.ON) { backoff = 10_000L; lastError = null }
         val name = serverName
+        val country = serverCountry
         val snapshot = listeners.toList()
-        scope.launch(Dispatchers.Main) { snapshot.forEach { it.onVpnStateChanged(s, name) } }
+        scope.launch(Dispatchers.Main) { snapshot.forEach { it.onVpnStateChanged(s, name, country) } }
     }
 }

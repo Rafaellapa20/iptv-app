@@ -31,7 +31,7 @@ object VpnManager {
         object Off : TunnelState()
         object Connecting : TunnelState()
         data class ByeDpi(val ok: Boolean = true) : TunnelState()
-        data class WireGuard(val serverName: String?) : TunnelState()
+        data class WireGuard(val serverName: String?, val serverCountry: String? = null) : TunnelState()
         object Error : TunnelState()
     }
 
@@ -223,9 +223,9 @@ object VpnManager {
         })
         // Mirror StreamVpnTunnel states
         StreamVpnTunnel.addListener(object : StreamVpnTunnel.Listener {
-            override fun onVpnStateChanged(state: StreamVpnTunnel.State, serverName: String?) {
+            override fun onVpnStateChanged(state: StreamVpnTunnel.State, serverName: String?, serverCountry: String?) {
                 when (state) {
-                    StreamVpnTunnel.State.ON         -> notify(TunnelState.WireGuard(serverName))
+                    StreamVpnTunnel.State.ON         -> notify(TunnelState.WireGuard(serverName, serverCountry))
                     StreamVpnTunnel.State.CONNECTING -> if (currentState !is TunnelState.ByeDpi) notify(TunnelState.Connecting)
                     StreamVpnTunnel.State.ERROR,
                     StreamVpnTunnel.State.OFF        -> if (currentState is TunnelState.WireGuard) notify(TunnelState.Off)
