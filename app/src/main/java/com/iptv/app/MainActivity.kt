@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.iptv.app.meta.MetaRepository
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
@@ -41,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private var seriesCardJob: kotlinx.coroutines.Job? = null
 
     private var miniPlayer: ExoPlayer? = null
+
+    private val metaRepository: MetaRepository by lazy { MetaRepository(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,6 +177,9 @@ class MainActivity : AppCompatActivity() {
 
         // Verificar atualizações automaticamente sempre que a app inicia
         UpdateManager.checkForUpdates(this, showNoUpdateToast = false)
+
+        // Sincronizar metadados TMDB em fundo (após o UI estar pronto)
+        metaRepository.syncInBackground()
     }
 
     // ---------- StreamVPN: arranque automático + badge no cabeçalho ----------
@@ -605,22 +611,51 @@ class MainActivity : AppCompatActivity() {
 
     inner class FeaturedMoviesAdapter(private val list: List<Stream>) : androidx.recyclerview.widget.RecyclerView.Adapter<FeaturedMoviesAdapter.VH>() {
         inner class VH(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
-            val poster: ImageView = v.findViewById(R.id.ivMoviePosterCard)
-            val title: TextView = v.findViewById(R.id.tvMoviePosterTitle)
+            val poster: ImageView = v.findViewById(R.id.ivFeaturedPoster)
+            val title: TextView = v.findViewById(R.id.tvFeaturedTitle)
+            val rating: TextView = v.findViewById(R.id.tvFeaturedRating)
         }
 
         override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
-            val view = android.view.LayoutInflater.from(parent.context).inflate(R.layout.item_movie_poster_card, parent, false)
+            val view = android.view.LayoutInflater.from(parent.context).inflate(R.layout.item_featured_movie, parent, false)
             return VH(view)
         }
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = list[position]
             holder.title.text = item.name
+            holder.rating.visibility = View.GONE
+
+            // Show IPTV poster as placeholder immediately, then enrich with TMDB
             if (item.stream_icon.isNotEmpty()) {
-                com.bumptech.glide.Glide.with(holder.itemView.context).load(item.stream_icon).into(holder.poster)
+                com.bumptech.glide.Glide.with(holder.itemView.context)
+                    .load(item.stream_icon)
+                    .into(holder.poster)
             } else {
                 holder.poster.setImageResource(R.drawable.logo)
+            }
+
+            // Fetch TMDB metadata asynchronously and overlay poster + rating
+            CoroutineScope(Dispatchers.Main).launch {
+                val meta = metaRepository.of(item.name)
+                if (meta != null) {
+                    // Prefer TMDB poster; fall back to IPTV icon
+                    val imageUrl = meta.poster(110) ?: item.stream_icon
+                    if (imageUrl.isNotEmpty()) {
+                        com.bumptech.glide.Glide.with(holder.itemView.context)
+                            .load(imageUrl)
+                            .into(holder.poster)
+                    }
+                    val ratingVal = meta.rating
+                    if (ratingVal != null && ratingVal > 0) {
+                        holder.rating.text = "★ ${"%.1f".format(ratingVal)}"
+                        holder.rating.visibility = View.VISIBLE
+                    }
+                    // Use TMDB title if available
+                    if (!meta.title.isNullOrBlank()) {
+                        holder.title.text = meta.title
+                    }
+                }
             }
 
             holder.itemView.setOnClickListener {

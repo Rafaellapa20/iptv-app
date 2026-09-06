@@ -403,6 +403,7 @@ class PlayerActivity : AppCompatActivity() {
                     if (exoPlayer.videoFormat == null) {
                         runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
                     }
+                    if (playerErrorRetryCount == 0) VideoRouting.markNetworkDirect(this@PlayerActivity)
                     playerErrorRetryCount = 0
                 }
             }
@@ -410,6 +411,7 @@ class PlayerActivity : AppCompatActivity() {
             override fun onRenderedFirstFrame() {
                 if (exoPlayer == getActivePlayer()) {
                     runOnUiThread { rlBufferingOverlay.visibility = View.GONE }
+                    if (playerErrorRetryCount == 0) VideoRouting.markNetworkDirect(this@PlayerActivity)
                     playerErrorRetryCount = 0
                 }
             }
@@ -481,7 +483,7 @@ class PlayerActivity : AppCompatActivity() {
                 currentStreamUrl
             }
             currentStreamUrl = retryUrl
-            val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
+            val dataSourceFactory = OkHttpDataSource.Factory(VideoRouting.client(this, relayFallback = playerErrorRetryCount >= 2))
             val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(
                 androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES or
                     androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_IGNORE_SPLICE_INFO_STREAM
@@ -490,6 +492,7 @@ class PlayerActivity : AppCompatActivity() {
                 .createMediaSource(MediaItem.fromUri(Uri.parse(retryUrl)))
             exoPlayer.setMediaSource(mediaSource)
             exoPlayer.prepare()
+            if (playerErrorRetryCount >= 2) VideoRouting.markNetworkNeedsRelay(this)
             exoPlayer.playWhenReady = true
         } catch (e: Exception) {
             android.util.Log.e("PlayerActivity", "Erro ao reconectar: ${e.message}")
@@ -527,7 +530,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         try {
-            val dataSourceFactory = OkHttpDataSource.Factory(OkHttpProvider.client)
+            val dataSourceFactory = OkHttpDataSource.Factory(VideoRouting.client(this))
             val extractorsFactory = DefaultExtractorsFactory().setTsExtractorFlags(
                 androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES or
                     androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory.FLAG_IGNORE_SPLICE_INFO_STREAM
