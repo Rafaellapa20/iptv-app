@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/bg_primary"
     tools:context=".MultiScreenActivity">
 
     <!-- BARRA SUPERIOR (HEADER) -->
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingHorizontal="16dp"
-        android:background="#99050A14"
+        android:background="@color/bg_elevated"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_button_neon"
             android:paddingHorizontal="12dp"
-            android:text="🔊 SOM: ECRÃ 1"
+            android:text="SOM: ECRÃ 1"
             android:textColor="@color/accent"
             android:textSize="@dimen/text_label"
             android:textStyle="bold" />
@@ -72,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#000000">
+            android:background="@color/bg_primary">
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView1"
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:paddingHorizontal="10dp"
-                android:background="#B3000000">
+                android:background="@color/overlay_dark">
 
                 <TextView
                     android:id="@+id/tvTitleScreen1"
@@ -128,7 +128,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#000000">
+            android:background="@color/bg_primary">
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/playerView2"
@@ -144,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:paddingHorizontal="10dp"
-                android:background="#B3000000">
+                android:background="@color/overlay_dark">
 
                 <TextView
                     android:id="@+id/tvTitleScreen2"

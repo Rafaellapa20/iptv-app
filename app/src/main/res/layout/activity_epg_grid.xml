@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0B10"
+    android:background="@color/bg_primary"
     tools:context=".EpgGridActivity">
 
     <!-- Header Bar -->
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:paddingHorizontal="24dp"
-        android:background="#66101420"
+        android:background="@color/bg_elevated"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📅 GUIA DE PROGRAMAÇÃO (EPG)"
+                android:text="GUIA DE PROGRAMAÇÃO (EPG)"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_item"
                 android:textStyle="bold" />
@@ -82,7 +82,7 @@
         android:layout_height="120dp"
         android:layout_margin="16dp"
         app:cardCornerRadius="14dp"
-        app:cardBackgroundColor="#121A2A"
+        app:cardBackgroundColor="@color/bg_elevated"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

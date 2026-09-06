@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0F1A">
+    android:background="@color/bg_primary">
 
     <!-- Background glow/blur (if we have any, we'll just use a solid nice color) -->
     <View
@@ -17,12 +17,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:text="🔧 DEFINIÇÕES"
+        android:text="DEFINIÇÕES"
         android:textColor="@color/accent"
         android:textSize="@dimen/text_display"
         android:textStyle="bold"
         android:letterSpacing="0.05"
-        android:shadowColor="#000000"
+        android:shadowColor="@color/bg_primary"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4" />
@@ -54,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#131B2A"
+                    app:cardBackgroundColor="@color/bg_elevated"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp">
 
@@ -68,7 +68,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="👤 Informação da Conta"
+                            android:text="Informação da Conta"
                             android:textColor="@color/text_primary"
                             android:textSize="@dimen/text_body"
                             android:textStyle="bold" />
@@ -99,7 +99,7 @@ Validade: --"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -113,7 +113,7 @@ Validade: --"
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🗑 Limpar Cache"
+                                android:text="Limpar Cache"
                                 android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold"
@@ -137,7 +137,7 @@ Validade: --"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -151,7 +151,7 @@ Validade: --"
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔄 Atualizações"
+                                android:text="Atualizações"
                                 android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold"
@@ -175,7 +175,7 @@ Validade: --"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#131B2A"
+                    app:cardBackgroundColor="@color/bg_elevated"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp">
 
@@ -201,7 +201,7 @@ Validade: --"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="StreamVPN"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="@dimen/text_body"
                                     android:textStyle="bold" />
 
@@ -210,7 +210,7 @@ Validade: --"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="4dp"
                                     android:text="Estado da VPN, quota mensal, servidores e teste de velocidade"
-                                    android:textColor="#78909C"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="@dimen/text_meta" />
                             </LinearLayout>
 
@@ -229,7 +229,7 @@ Validade: --"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Modo do túnel"
-                            android:textColor="#78909C"
+                            android:textColor="@color/text_secondary"
                             android:textSize="@dimen/text_label"
                             android:layout_marginTop="12dp" />
 
@@ -237,8 +237,23 @@ Validade: --"
                             android:id="@+id/spinnerVpnMode"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
-                            android:background="@color/bg_elevated"
-                            android:popupBackground="@color/bg_elevated" />
+                            android:background="@color/bg_elevated_2"
+                            android:popupBackground="@color/bg_elevated_2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Rota de vídeo"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="@dimen/text_label"
+                            android:layout_marginTop="8dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerVideoRoute"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@color/bg_elevated_2"
+                            android:popupBackground="@color/bg_elevated_2" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -256,7 +271,7 @@ Validade: --"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -303,7 +318,7 @@ Validade: --"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -318,7 +333,7 @@ Validade: --"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Terminar Sessão"
-                                android:textColor="#FF4444"
+                                android:textColor="@color/status_live"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="16dp"/>
@@ -346,7 +361,7 @@ Validade: --"
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -360,7 +375,7 @@ Validade: --"
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔗 Gerar Código de Acesso"
+                                android:text="Gerar Código de Acesso"
                                 android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold"
@@ -395,7 +410,7 @@ Validade: --"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:text="Validade: Ilimitado"
-                    android:textColor="#00FF00"
+                    android:textColor="@color/status_ok"
                     android:textSize="@dimen/text_meta"
                     android:layout_marginBottom="10dp"/>
                 <TextView
@@ -403,7 +418,7 @@ Validade: --"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:textColor="#5A697D"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_meta"
                     android:text="Versão 10.41" />
 
@@ -419,7 +434,7 @@ Validade: --"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:background="@drawable/bg_smarters_sage"
-        android:text="⬅ VOLTAR"
+        android:text="VOLTAR"
         android:textColor="@color/text_primary"
         android:textStyle="bold"
         android:focusable="true" />

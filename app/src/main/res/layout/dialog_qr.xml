@@ -3,7 +3,7 @@
     android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#151A24"
+    android:background="@color/bg_elevated"
     android:padding="24dp"
     android:gravity="center">
 
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Válido durante 30 minutos"
-        android:textColor="#5A697D"
+        android:textColor="@color/text_secondary"
         android:textSize="@dimen/text_label"
         android:textStyle="italic" />
 

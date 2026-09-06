@@ -8,3 +8,11 @@ local.properties
 # IDE
 .idea/
 *.hprof
+
+# Firebase (substituído pelo VPS)
+.firebaserc
+firebase.json
+firestore.indexes.json
+
+# Claude local settings
+.claude/settings.local.json

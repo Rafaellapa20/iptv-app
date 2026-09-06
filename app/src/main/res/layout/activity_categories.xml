@@ -31,7 +31,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:indeterminateTint="#00FFFF"
+            android:indeterminateTint="@color/accent"
             android:visibility="gone" />
     </FrameLayout>
 </LinearLayout>

@@ -103,7 +103,7 @@
             android:layout_height="54dp"
             android:background="@drawable/selector_button_login"
             android:src="@android:drawable/btn_star_big_on"
-            app:tint="#FFCC00"
+            app:tint="@color/status_warn"
             android:layout_marginEnd="12dp"
             android:focusable="true"
             android:clickable="true"
@@ -115,7 +115,7 @@
             android:layout_height="54dp"
             android:background="@drawable/selector_button_login"
             android:src="@android:drawable/presence_video_online"
-            app:tint="#FF0000"
+            app:tint="@color/status_live"
             android:layout_marginEnd="12dp"
             android:focusable="true"
             android:clickable="true"
@@ -142,7 +142,7 @@
         android:layout_margin="24dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="12dp"
-        app:cardBackgroundColor="#E60F172A"
+        app:cardBackgroundColor="@color/overlay_player"
         android:visibility="gone">
         
         <LinearLayout
@@ -203,7 +203,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#94A3B8"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_meta"
                 android:text="--:-- - --:--" />
 
@@ -246,7 +246,7 @@
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/accent"
             android:text="▶ REPRODUZIR AGORA"
-            android:textColor="#000000"
+            android:textColor="@color/cta_on"
             android:textSize="@dimen/text_label"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -260,9 +260,9 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="48dp"
         android:textColor="@color/text_primary"
-        android:textSize="50sp"
+        android:textSize="@dimen/text_hero"
         android:textStyle="bold"
-        android:shadowColor="#000000"
+        android:shadowColor="@color/bg_primary"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4"
@@ -275,7 +275,7 @@
         android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#E6000000"
+        android:background="@color/overlay_mini_guide"
         android:orientation="vertical"
         android:padding="16dp"
         android:visibility="gone">

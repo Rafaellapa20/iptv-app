@@ -27,7 +27,7 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/bg_search_input"
         android:hint="Pesquisar Canais, Filmes ou Séries..."
-        android:textColorHint="#888888"
+        android:textColorHint="@color/text_disabled"
         android:textColor="@color/text_primary"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"

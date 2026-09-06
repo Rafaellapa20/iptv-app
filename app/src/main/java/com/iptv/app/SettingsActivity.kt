@@ -114,6 +114,22 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // Seletor de rota de vídeo (Auto / Direto / Relay)
+        val routeLabels = listOf("Automático", "Direto", "Relay (via servidor)")
+        val routeValues = listOf("auto", "direct", "relay")
+        val spinnerVideoRoute = findViewById<Spinner>(R.id.spinnerVideoRoute)
+        val routeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, routeLabels)
+        routeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerVideoRoute.adapter = routeAdapter
+        val currentRoute = VideoRouting.getOverride(this)
+        spinnerVideoRoute.setSelection(routeValues.indexOf(currentRoute).coerceAtLeast(0))
+        spinnerVideoRoute.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                VideoRouting.setOverride(this@SettingsActivity, routeValues[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
         val btnPairing = findViewById<Button>(R.id.btnPairing)
         btnPairing.setOnClickListener {
             showGenerateCodeDialog()

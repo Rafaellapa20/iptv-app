@@ -186,7 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="▶  Assistir agora"
-                android:textColor="#000000"
+                android:textColor="@color/cta_on"
                 android:background="@color/accent"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
@@ -220,7 +220,7 @@
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:background="#0F1116"
+            android:background="@color/bg_elevated"
             android:padding="12dp">
             
             <TextView
@@ -241,7 +241,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OK"
-                android:background="#333"
+                android:background="@color/bg_elevated_2"
                 android:paddingHorizontal="6dp"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold"
@@ -257,7 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="VOLTAR"
-                android:background="#333"
+                android:background="@color/bg_elevated_2"
                 android:paddingHorizontal="6dp"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold"
