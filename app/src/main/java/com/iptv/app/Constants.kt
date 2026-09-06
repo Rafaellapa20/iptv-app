@@ -5,9 +5,9 @@ import android.content.Context
 object Constants {
     const val ORIGIN_URL = "http://nelitoplay.top:80"
     
-    // Relay TLS privado padrǜo (nginx + Let's Encrypt, reencaminha para o servidor de origem)
-    const val DEFAULT_TUNNEL_HOST = "rafaiptv2026.duckdns.org"
-    const val DEFAULT_TUNNEL_PORT = 443
+    // Relay TLS (nginx na 8446 + Let's Encrypt, reencaminha para o servidor de origem)
+    const val DEFAULT_TUNNEL_HOST = "relay.faktio.ch"
+    const val DEFAULT_TUNNEL_PORT = 8446
 
     // Backend StreamVPN (VPS PTisp) — gestão de VPN, quota, servidores.
     // HTTPS via Nginx + Let's Encrypt na porta 8444 (a 443 está ocupada por
@@ -17,11 +17,10 @@ object Constants {
     const val STREAMVPN_BASE_URL = "https://streamvpn.faktio.ch:8444/api"
 
     // Nota: o emparelhamento TV <-> telemóvel (PairingManager) usava aqui um
-    // servidor próprio (rafaiptv2026.duckdns.org:9443) que deixou de existir
-    // (domínio morto). Passou a usar o Firestore do mesmo projeto Firebase
-    // do sync — ver PairingManager.kt.
+    // servidor próprio que deixou de existir. Passou a usar o Firestore do
+    // mesmo projeto Firebase do sync — ver PairingManager.kt.
 
-    // Forçar a ligação direta (sem VPN) porque o servidor foi desligado.
+    // URL base para canais IPTV — via relay nginx (relay.faktio.ch:8446 → nelitoplay.top:80)
     val SERVER_URL: String
-        get() = ORIGIN_URL
+        get() = "https://$DEFAULT_TUNNEL_HOST:$DEFAULT_TUNNEL_PORT"
 }
