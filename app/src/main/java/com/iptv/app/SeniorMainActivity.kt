@@ -199,7 +199,7 @@ class SeniorMainActivity : AppCompatActivity() {
         val tvStatus = dialog.findViewById<TextView>(R.id.tvPairCodeStatus)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val code = PairingManager.generateSelfCode(username, password)
+            val code = PairingManager.generateSelfCode(this@SeniorMainActivity, username, password)
             if (!dialog.isShowing) return@launch
             if (code != null) {
                 tvCode.text = code

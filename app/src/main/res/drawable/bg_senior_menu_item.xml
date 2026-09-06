@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focado: borda amarela, fundo ligeiramente destacado — texto mantém-se legível -->
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#FBC02D" />
+            <solid android:color="#2A2D3A" />
+            <stroke android:width="3dp" android:color="#FBC02D" />
             <corners android:radius="8dp" />
         </shape>
     </item>
+    <!-- Normal: fundo subtil para os botões serem sempre distinguíveis -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@android:color/transparent" />
+            <solid android:color="#1E2030" />
             <corners android:radius="8dp" />
         </shape>
     </item>

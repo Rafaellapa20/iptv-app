@@ -178,7 +178,7 @@ class SettingsActivity : AppCompatActivity() {
             .show()
 
         CoroutineScope(Dispatchers.Main).launch {
-            val code = PairingManager.generateSelfCode(username, password)
+            val code = PairingManager.generateSelfCode(this@SettingsActivity, username, password)
             tvCode.text = code ?: "Erro"
         }
     }

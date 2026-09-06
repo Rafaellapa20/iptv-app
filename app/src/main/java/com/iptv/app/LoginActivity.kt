@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
                     var attempts = 0
                     val maxAttempts = 5
                     while (attempts < maxAttempts) {
-                        val result = PairingManager.pollOnce(code)
+                        val result = PairingManager.pollOnce(this@LoginActivity, code)
                         if (result.expired) {
                             Toast.makeText(this@LoginActivity, "Código inválido ou expirado.", Toast.LENGTH_LONG).show()
                             codeInput.isEnabled = true
