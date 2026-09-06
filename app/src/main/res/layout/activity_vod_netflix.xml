@@ -186,7 +186,7 @@
             android:layout_height="180dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="#000">
+            app:cardBackgroundColor="@color/bg_primary">
             <ImageView
                 android:id="@+id/ivHeroPoster"
                 android:layout_width="match_parent"
@@ -254,7 +254,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginTop="32dp"
-        android:indeterminateTint="#00FFFF"
+        android:indeterminateTint="@color/accent"
         app:layout_constraintTop_toBottomOf="@id/topNav"
         app:layout_constraintStart_toStartOf="@id/rvMovieGrid"
         app:layout_constraintEnd_toEndOf="@id/rvMovieGrid"

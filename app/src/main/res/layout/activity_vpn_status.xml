@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0F1A">
+    android:background="@color/bg_primary">
 
     <View
         android:layout_width="match_parent"
@@ -16,12 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:text="🔐 STREAMVPN"
+        android:text="STREAMVPN"
         android:textColor="@color/accent"
         android:textSize="@dimen/text_display"
         android:textStyle="bold"
         android:letterSpacing="0.05"
-        android:shadowColor="#000000"
+        android:shadowColor="@color/bg_primary"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4" />
@@ -58,7 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -72,7 +72,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Ativar StreamVPN neste aparelho"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_body"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="12dp" />
@@ -83,8 +83,8 @@
                                 android:layout_height="wrap_content"
                                 android:hint="Código de ativação (ex.: SVPN-7K3M-9QX2)"
                                 android:inputType="textCapCharacters|textNoSuggestions"
-                                android:textColor="#FFFFFF"
-                                android:textColorHint="#78909C"
+                                android:textColor="@color/text_primary"
+                                android:textColorHint="@color/text_secondary"
                                 android:layout_marginBottom="8dp" />
 
                             <Button
@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -145,7 +145,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="IP público: —"
-                                android:textColor="#78909C"
+                                android:textColor="@color/text_secondary"
                                 android:textSize="@dimen/text_meta" />
 
                             <LinearLayout
@@ -182,7 +182,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -196,7 +196,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Tráfego mensal"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold" />
 
@@ -224,7 +224,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -238,7 +238,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Teste de velocidade"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold" />
 
@@ -268,7 +268,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#131B2A"
+                        app:cardBackgroundColor="@color/bg_elevated"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="4dp">
 
@@ -282,7 +282,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Servidores disponíveis"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_item"
                                 android:textStyle="bold"
                                 android:layout_marginBottom="4dp" />

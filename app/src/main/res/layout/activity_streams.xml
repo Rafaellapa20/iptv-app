@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CANAIS"
-        android:textColor="#FF007F"
+        android:textColor="@color/status_danger"
         android:textSize="@dimen/text_title"
         android:textStyle="bold"
         android:gravity="center"
@@ -48,7 +48,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:hint="Pesquisar..."
-            android:textColorHint="#88FFFFFF"
+            android:textColorHint="@color/text_disabled"
             android:textColor="@color/text_primary"
             android:background="@drawable/bg_button_neon"
             android:paddingStart="16dp"
@@ -79,7 +79,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:indeterminateTint="#00FFFF"
+            android:indeterminateTint="@color/accent"
             android:visibility="gone" />
     </FrameLayout>
     </LinearLayout>

@@ -27,4 +27,17 @@
     <color name="status_online">#3D8BFF</color>
     <color name="status_warn">#FFB020</color>
     <color name="status_danger">#FF5C7A</color>
+    <color name="status_ok">#00C853</color>
+
+    <!-- Overlay colours used in player / multiscreen / users screens -->
+    <color name="overlay_dark">#B3000000</color>
+    <color name="overlay_deep">#F0060C1B</color>
+    <color name="overlay_player">#E60F172A</color>
+    <color name="overlay_mini_guide">#E6000000</color>
+
+    <!-- Card surface colours that differ from bg_elevated_2 -->
+    <color name="surface_card">#182234</color>
+    <color name="surface_card_2">#121824</color>
+    <color name="surface_card_3">#152030</color>
+    <color name="surface_card_4">#1A2838</color>
 </resources>

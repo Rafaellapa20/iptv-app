@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@color/bg_primary">
 
     <TextView
         android:id="@+id/tvClock"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="00:00"
         android:textColor="@color/accent_wash"
-        android:textSize="80sp"
+        android:textSize="@dimen/text_jumbo"
         android:textStyle="bold"
         android:fontFamily="sans-serif-thin" />
 </FrameLayout>

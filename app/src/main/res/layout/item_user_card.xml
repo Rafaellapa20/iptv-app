@@ -6,7 +6,7 @@
     android:layout_height="220dp"
     android:layout_margin="14dp"
     app:cardCornerRadius="18dp"
-    app:cardBackgroundColor="#121D33"
+    app:cardBackgroundColor="@color/bg_elevated"
     app:cardElevation="8dp"
     android:focusable="true"
     android:clickable="true"
@@ -51,7 +51,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:text="Validade : 20/09/2026"
-            android:textColor="#00FF66"
+            android:textColor="@color/status_ok"
             android:textSize="@dimen/text_label"
             android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
                 android:layout_height="38dp"
                 android:background="@drawable/bg_button_exit"
                 android:src="@android:drawable/ic_menu_delete"
-                app:tint="#FF3366"
+                app:tint="@color/status_danger"
                 android:contentDescription="Remover Conta" />
         </LinearLayout>
     </RelativeLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#060C1B"
+    android:background="@color/bg_primary"
     tools:context=".UsersActivity">
 
     <!-- Fundo Blur estilo IPTV Smarters Pro -->
@@ -18,7 +18,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F0060C1B" />
+        android:background="@color/overlay_deep" />
 
     <!-- Top Header Bar -->
     <RelativeLayout
@@ -62,7 +62,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_button_neon"
             android:paddingHorizontal="20dp"
-            android:text="➕ ADICIONAR NOVO UTILIZADOR"
+            android:text="ADICIONAR NOVO UTILIZADOR"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/text_label"
             android:textStyle="bold"

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="#222"
+        app:cardBackgroundColor="@color/bg_elevated_2"
         android:duplicateParentState="true"
         app:cardElevation="4dp">
 

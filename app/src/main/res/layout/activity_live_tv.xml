@@ -119,13 +119,13 @@
             android:layout_height="220dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="#000000">
+            app:cardBackgroundColor="@color/bg_primary">
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/mini_player_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#000000"
+                android:background="@color/bg_primary"
                 app:use_controller="false"
                 app:surface_type="texture_view"
                 app:resize_mode="fit"/>
@@ -147,7 +147,7 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#1AFFFFFF">
+            app:cardBackgroundColor="@color/accent_wash">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,7 +181,7 @@
                         android:id="@+id/tvEpgTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#B0FFFFFF"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/text_label"
                         android:fontFamily="monospace"
                         android:text=""/>
@@ -202,7 +202,7 @@
                     android:id="@+id/tvEpgDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CCFFFFFF"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_meta"
                     android:layout_marginTop="4dp"
                     android:maxLines="2"
@@ -232,7 +232,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A SEGUIR"
-                        android:textColor="#80FFFFFF"
+                        android:textColor="@color/text_disabled"
                         android:textSize="@dimen/text_label"
                         android:textStyle="bold"
                         android:letterSpacing="0.1"
@@ -248,7 +248,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#DDFFFFFF"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_meta"
                         android:maxLines="1"
                         android:ellipsize="end" />

@@ -10,7 +10,7 @@
         android:id="@+id/tvSpeedTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="⚡ SPEEDTEST IPTV GLOBAL"
+        android:text="SPEEDTEST IPTV GLOBAL"
         android:textColor="@color/accent"
         android:textSize="@dimen/text_title"
         android:textStyle="bold"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="0.0"
                 android:textColor="@color/text_primary"
-                android:textSize="48sp"
+                android:textSize="@dimen/text_hero"
                 android:textStyle="bold" />
 
             <TextView
@@ -129,7 +129,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⬇ DOWNLOAD"
+                android:text="DOWNLOAD"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
@@ -219,7 +219,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🌍 PAÍS / LOCALIZAÇÃO"
+                android:text="PAÍS / LOCALIZAÇÃO"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
@@ -245,7 +245,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔒 IP PÚBLICO"
+                android:text="IP PÚBLICO"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
@@ -271,7 +271,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🛡 VPN STATUS"
+                android:text="VPN STATUS"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
@@ -296,7 +296,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_smarters_sage"
-        android:text="▶ INICIAR SPEEDTEST"
+        android:text="INICIAR SPEEDTEST"
         android:textColor="@color/text_primary"
         android:textSize="@dimen/text_body"
         android:textStyle="bold"

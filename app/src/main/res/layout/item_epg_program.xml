@@ -6,7 +6,7 @@
     android:layout_height="64dp"
     android:layout_marginEnd="6dp"
     app:cardCornerRadius="8dp"
-    app:cardBackgroundColor="#121824"
+    app:cardBackgroundColor="@color/surface_card_2"
     app:cardElevation="2dp"
     android:focusable="true"
     android:clickable="true"
@@ -41,8 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="● EM DIRETO"
-                android:textColor="#00FF66"
-                android:textSize="9sp"
+                android:textColor="@color/status_ok"
+                android:textSize="@dimen/text_micro"
                 android:textStyle="bold"
                 android:visibility="gone" />
         </LinearLayout>

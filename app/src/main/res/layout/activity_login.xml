@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Usuário"
-            android:textColorHint="#AAAAAA"
+            android:textColorHint="@color/text_secondary"
             android:textColor="@color/text_primary"
             android:background="@color/bg_primary"
             android:paddingHorizontal="16dp"
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:hint="Senha"
                 android:inputType="textPassword"
-                android:textColorHint="#AAAAAA"
+                android:textColorHint="@color/text_secondary"
                 android:textColor="@color/text_primary"
                 android:background="@color/bg_primary"
                 android:paddingStart="16dp"
@@ -72,7 +72,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                app:tint="#AAAAAA"
+                app:tint="@color/text_secondary"
                 android:nextFocusDown="@id/btnLogin"
                 android:nextFocusLeft="@id/etPassword"/>
         </FrameLayout>
@@ -94,7 +94,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_smarters_sage"
-            android:text="🔗 Tenho um Código"
+            android:text="Tenho um Código"
             android:textColor="@color/accent"
             android:textStyle="bold" />
 
@@ -104,7 +104,7 @@
         android:id="@+id/progressBar"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:indeterminateTint="#00FFFF"
+        android:indeterminateTint="@color/accent"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
