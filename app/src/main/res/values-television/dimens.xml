@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- values-television/dimens.xml — TV, visto a 3 metros. -->
+<resources>
+    <dimen name="text_display">46sp</dimen>
+    <dimen name="text_title">26sp</dimen>
+    <dimen name="text_item">20sp</dimen>
+    <dimen name="text_body">18sp</dimen>
+    <dimen name="text_meta">16sp</dimen>
+    <dimen name="text_label">13sp</dimen>
+
+    <dimen name="touch_min">48dp</dimen>
+    <dimen name="gutter">44dp</dimen>
+    <dimen name="radius_card">12dp</dimen>
+    <dimen name="radius_cta">8dp</dimen>
+    <dimen name="focus_stroke">2dp</dimen>
+</resources>

@@ -3,22 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="#15171E">
+    android:background="@color/bg_primary">
 
     <!-- Left Sidebar -->
     <LinearLayout
         android:layout_width="220dp"
         android:layout_height="match_parent"
-        android:background="#1A1C23"
+        android:background="@color/bg_elevated"
         android:orientation="vertical"
         android:padding="24dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📺 Modo Fácil"
-            android:textColor="#FBC02D"
-            android:textSize="20sp"
+            android:text="Modo Simples"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_item"
             android:textStyle="bold"
             android:layout_marginBottom="48dp" />
 
@@ -27,9 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
+            android:textColor="@color/text_primary"
             android:text="TV ao vivo"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:padding="12dp"
             android:layout_marginBottom="8dp"
@@ -41,9 +41,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
+            android:textColor="@color/text_primary"
             android:text="Filmes"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:padding="12dp"
             android:layout_marginBottom="8dp"
@@ -55,9 +55,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
+            android:textColor="@color/text_primary"
             android:text="Séries"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:padding="12dp"
             android:layout_marginBottom="8dp"
@@ -69,9 +69,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
+            android:textColor="@color/text_primary"
             android:text="Favoritos"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:padding="12dp"
             android:focusable="true"
@@ -87,9 +87,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
-            android:text="🔗 Emparelhar Telemóvel"
-            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:text="Emparelhar Telemóvel"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:padding="12dp"
             android:layout_marginBottom="8dp"
@@ -101,9 +101,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_senior_menu_item"
-            android:textColor="@color/color_senior_menu_text"
+            android:textColor="@color/text_primary"
             android:text="Sair do Modo"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_item"
             android:padding="12dp"
             android:focusable="true"
             android:clickable="true" />
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:text="Início"
             android:textColor="@color/text_primary"
-            android:textSize="28sp"
+            android:textSize="@dimen/text_display"
             android:textStyle="bold"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true" />
@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             android:text="20:15"
             android:textColor="@color/text_primary"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_title"
             android:textStyle="bold"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true" />
@@ -155,9 +155,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="• DESTAQUE"
-                android:textColor="#FF5252"
-                android:textSize="14sp"
+                android:text="DESTAQUE"
+                android:textColor="@color/status_live"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
                 
             <TextView
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:text="Aceder à Televisão"
                 android:textColor="@color/text_primary"
-                android:textSize="32sp"
+                android:textSize="@dimen/text_display"
                 android:textStyle="bold"
                 android:layout_marginTop="8dp" />
                 
@@ -173,8 +173,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Assista aos seus canais favoritos em direto."
-                android:textColor="#9E9E9E"
-                android:textSize="18sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_body"
                 android:layout_marginTop="4dp" />
                 
             <View
@@ -187,11 +187,11 @@
                 android:layout_height="wrap_content"
                 android:text="▶  Assistir agora"
                 android:textColor="#000000"
-                android:background="#FBC02D"
+                android:background="@color/accent"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_item" />
         </LinearLayout>
 
         <!-- Category Row -->
@@ -203,7 +203,7 @@
             android:layout_marginTop="24dp"
             android:text="Canais Recentes"
             android:textColor="@color/text_primary"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_item"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -229,13 +229,13 @@
                 android:text="▲ ▼ ◀ ▶"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_meta" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" escolher    "
-                android:textColor="#9E9E9E"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -245,13 +245,13 @@
                 android:paddingHorizontal="6dp"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_meta" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" assistir    "
-                android:textColor="#9E9E9E"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -261,13 +261,13 @@
                 android:paddingHorizontal="6dp"
                 android:textColor="@color/text_primary"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_meta" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" sair"
-                android:textColor="#9E9E9E"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta" />
         </LinearLayout>
 
     </RelativeLayout>

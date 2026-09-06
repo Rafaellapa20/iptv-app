@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D071E">
+    android:background="@color/bg_primary">
 
     <!-- Fundo Desfocado -->
     <ImageView
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:textColor="@color/text_primary"
-                android:textSize="36sp"
+                android:textSize="@dimen/text_display"
                 android:textStyle="bold"
                 android:text="A Carregar..."
                 app:layout_constraintStart_toEndOf="@id/cvPoster"
@@ -81,8 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#FFCC00"
-                android:textSize="18sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_body"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/tvSeriesTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvSeriesTitle"/>
@@ -92,8 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:textColor="#AAAAAA"
-                android:textSize="18sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_body"
                 app:layout_constraintStart_toEndOf="@id/tvRating"
                 app:layout_constraintTop_toTopOf="@id/tvRating"
                 app:layout_constraintBottom_toBottomOf="@id/tvRating"/>
@@ -103,8 +103,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#00FFFF"
-                android:textSize="16sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_item"
                 app:layout_constraintStart_toStartOf="@id/tvSeriesTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvRating"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="#DDDDDD"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_item"
                 android:lineSpacingExtra="4dp"
                 app:layout_constraintStart_toStartOf="@id/tvSeriesTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvGenre"
@@ -127,8 +127,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColor="#AAAAAA"
-                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta"
                 app:layout_constraintStart_toStartOf="@id/tvSeriesTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvPlot"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -138,8 +138,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="#AAAAAA"
-                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta"
                 app:layout_constraintStart_toStartOf="@id/tvSeriesTitle"
                 app:layout_constraintTop_toBottomOf="@id/tvDirector"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:text="EPISÓDIOS"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold"
                 android:layout_marginTop="24dp"
                 app:layout_constraintStart_toStartOf="parent"

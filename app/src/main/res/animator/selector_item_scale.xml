@@ -1,44 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Foco com física: 1.00 → 1.06 em 180ms, fast_out_slow_in, sombra a crescer 40ms depois. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Estado: Focado -->
     <item android:state_focused="true">
-        <set>
-            <objectAnimator
-                android:propertyName="scaleX"
-                android:duration="200"
-                android:valueTo="1.10"
-                android:valueType="floatType" />
-            <objectAnimator
-                android:propertyName="scaleY"
-                android:duration="200"
-                android:valueTo="1.10"
-                android:valueType="floatType" />
-            <objectAnimator
-                android:propertyName="translationZ"
-                android:duration="200"
-                android:valueTo="8dp"
-                android:valueType="floatType" />
+        <set android:ordering="together">
+            <objectAnimator android:propertyName="scaleX" android:valueTo="1.06"
+                android:duration="180" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            <objectAnimator android:propertyName="scaleY" android:valueTo="1.06"
+                android:duration="180" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            <objectAnimator android:propertyName="translationZ" android:valueTo="8"
+                android:duration="180" android:startOffset="40" />
         </set>
     </item>
-
-    <!-- Estado: Padrão -->
     <item>
-        <set>
-            <objectAnimator
-                android:propertyName="scaleX"
-                android:duration="200"
-                android:valueTo="1.0"
-                android:valueType="floatType" />
-            <objectAnimator
-                android:propertyName="scaleY"
-                android:duration="200"
-                android:valueTo="1.0"
-                android:valueType="floatType" />
-            <objectAnimator
-                android:propertyName="translationZ"
-                android:duration="200"
-                android:valueTo="0dp"
-                android:valueType="floatType" />
+        <set android:ordering="together">
+            <objectAnimator android:propertyName="scaleX" android:valueTo="1.0"
+                android:duration="160" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            <objectAnimator android:propertyName="scaleY" android:valueTo="1.0"
+                android:duration="160" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            <objectAnimator android:propertyName="translationZ" android:valueTo="0"
+                android:duration="160" />
         </set>
     </item>
 </selector>

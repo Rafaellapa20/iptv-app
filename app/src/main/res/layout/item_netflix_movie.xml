@@ -34,7 +34,7 @@
             android:padding="8dp"
             android:background="#99000000"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:maxLines="2"
             android:ellipsize="end"
             android:textAlignment="center"

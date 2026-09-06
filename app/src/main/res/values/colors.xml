@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Paleta unificada — design handoff set 2026-09.
+     Regra central: accent = só foco/selecção. Acção primária = cta_bg (branco).
+     Vermelho = só "em direto". Nunca decorativo. -->
 <resources>
-    <!-- Paleta "dark minimalista" (estilo Netflix/Apple TV): fundo quase preto,
-         superfícies discretamente mais claras, texto em dois tons de cinza/branco,
-         e um único acento usado com moderação (nada de neon espalhado). -->
     <color name="bg_primary">#0B0B0D</color>
-    <color name="bg_elevated">#1A1A1C</color>
+    <color name="bg_elevated">#141417</color>
     <color name="bg_elevated_2">#242426</color>
 
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#9B9BA1</color>
-    <color name="text_disabled">#5A5A5E</color>
+    <color name="text_disabled">#6E6E76</color>
 
     <color name="accent">#3D8BFF</color>
-    <color name="accent_muted">#2C4A7A</color>
+    <color name="accent_on">#06121F</color>
+    <color name="accent_wash">#1A3D8BFF</color>
+    <color name="accent_line">#733D8BFF</color>
 
-    <color name="divider">#2A2A2D</color>
+    <!-- Acção primária: branco sobre preto. O azul fica só para foco/selecção. -->
+    <color name="cta_bg">#FFFFFF</color>
+    <color name="cta_on">#111111</color>
 
-    <!-- Cores de estado semânticas (deliberadamente separadas do accent):
-         usadas só para indicar "ao vivo" / "ligado", nunca como cor decorativa
-         ou de interação, para não voltar a espalhar cores por todo o lado. -->
+    <color name="divider">#26262A</color>
+    <color name="surface_line">#232327</color>
+
     <color name="status_live">#FF1744</color>
-    <color name="status_online">#00FF88</color>
+    <color name="status_online">#3D8BFF</color>
+    <color name="status_warn">#FFB020</color>
+    <color name="status_danger">#FF5C7A</color>
 </resources>

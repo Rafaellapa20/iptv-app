@@ -25,8 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Versão Mobile"
-        android:textColor="#00E5FF"
-        android:textSize="18sp"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_body"
         android:textStyle="bold"
         android:layout_marginBottom="32dp" />
 
@@ -37,7 +37,7 @@
         android:background="@drawable/bg_button_neon"
         android:text="Ligar à TV (Modo Comando)"
         android:textColor="@color/text_primary"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_item"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
@@ -48,7 +48,7 @@
         android:background="@drawable/bg_smarters_sage"
         android:text="Ver Canais"
         android:textColor="@color/text_primary"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_item"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
@@ -59,7 +59,7 @@
         android:background="@drawable/bg_smarters_sage"
         android:text="Filmes e Séries"
         android:textColor="@color/text_primary"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_item"
         android:textStyle="bold" />
 
 </LinearLayout>

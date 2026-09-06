@@ -38,7 +38,7 @@
             android:layout_marginBottom="4dp"
             android:text="Filme / Série"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -52,6 +52,6 @@
             android:progress="60"
             android:max="100"
             android:progressDrawable="@android:drawable/progress_horizontal"
-            android:progressTint="#00E5FF" />
+            android:progressTint="@color/accent" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

@@ -36,7 +36,7 @@
             android:layout_marginStart="12dp"
             android:text="MULTI-ECRÃ (2 CANAIS SIMULTÂNEOS)"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_meta"
             android:textStyle="bold"
             android:letterSpacing="0.05" />
 
@@ -50,8 +50,8 @@
             android:background="@drawable/bg_button_neon"
             android:paddingHorizontal="12dp"
             android:text="🔊 SOM: ECRÃ 1"
-            android:textColor="#00E5FF"
-            android:textSize="11sp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -97,7 +97,7 @@
                     android:layout_centerVertical="true"
                     android:text="Ecrã 1: RTP 1 HD"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold" />
 
                 <Button
@@ -110,7 +110,7 @@
                     android:paddingHorizontal="8dp"
                     android:text="TROCAR CANAL 1"
                     android:textColor="@color/text_primary"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:focusable="true"
                     android:clickable="true" />
@@ -120,7 +120,7 @@
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="#00E5FF" />
+            android:background="@color/accent" />
 
         <!-- ECRÃ 2 (DIREITA 50%) -->
         <RelativeLayout
@@ -153,7 +153,7 @@
                     android:layout_centerVertical="true"
                     android:text="Ecrã 2: Sport TV 1 HD"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold" />
 
                 <Button
@@ -166,7 +166,7 @@
                     android:paddingHorizontal="8dp"
                     android:text="TROCAR CANAL 2"
                     android:textColor="@color/text_primary"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:focusable="true"
                     android:clickable="true" />

@@ -6,7 +6,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp"
-    app:cardBackgroundColor="#150B2E"
+    app:cardBackgroundColor="@color/bg_primary"
     android:focusable="true"
     android:foreground="@drawable/bg_item_focus">
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:text="Item Name"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:maxLines="2"
             android:ellipsize="end"

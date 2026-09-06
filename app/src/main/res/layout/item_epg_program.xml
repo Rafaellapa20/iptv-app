@@ -32,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="20:00 - 22:00"
-                android:textColor="#00E5FF"
-                android:textSize="10sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -54,7 +54,7 @@
             android:layout_marginTop="4dp"
             android:text="Liga Portugal: SL Benfica vs FC Porto"
             android:textColor="@color/text_primary"
-            android:textSize="11sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="2" />

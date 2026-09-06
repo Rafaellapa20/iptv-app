@@ -37,7 +37,7 @@
             android:layout_margin="4dp"
             android:text="Filme"
             android:textColor="@color/text_primary"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />

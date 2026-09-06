@@ -8,7 +8,7 @@
     android:paddingVertical="12dp"
     android:background="@drawable/selector_season_bg"
     android:textColor="@color/text_primary"
-    android:textSize="18sp"
+    android:textSize="@dimen/text_body"
     android:textStyle="bold"
     android:focusable="true"
     android:clickable="true" />

@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CANAIS"
-        android:textColor="#00FFFF"
-        android:textSize="24sp"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_title"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="16dp"/>

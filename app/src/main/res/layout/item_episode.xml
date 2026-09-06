@@ -13,8 +13,8 @@
         android:id="@+id/tvEpNum"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:textColor="#8A99AD"
-        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_meta"
         android:textStyle="bold" />
         
     <TextView
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/text_primary"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_meta"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:maxLines="1" />

@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textColor="@color/text_primary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textAlignment="center"/>

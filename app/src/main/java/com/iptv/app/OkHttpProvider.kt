@@ -105,6 +105,31 @@ private class AntiDpiSocket(private val delegate: Socket) : Socket() {
         delegate.setPerformancePreferences(connectionTime, latency, bandwidth)
 }
 
+/** Igual ao FastSocketFactory mas SEM fragmentacao do primeiro write:
+ *  para media nao ha ClientHello a esconder e os 2 ms de sleep por
+ *  ligacao pagam-se em latencia no primeiro fotograma. */
+class MediaSocketFactory : SocketFactory() {
+    private val delegate: SocketFactory = SocketFactory.getDefault()
+
+    private fun tune(socket: Socket): Socket {
+        try {
+            socket.receiveBufferSize = 4 * 1024 * 1024
+            socket.sendBufferSize = 512 * 1024
+            socket.tcpNoDelay = true
+            socket.keepAlive = true
+        } catch (e: Exception) {}
+        return socket
+    }
+
+    override fun createSocket(): Socket = tune(delegate.createSocket())
+    override fun createSocket(host: String, port: Int): Socket = tune(delegate.createSocket(host, port))
+    override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket =
+        tune(delegate.createSocket(host, port, localHost, localPort))
+    override fun createSocket(host: InetAddress, port: Int): Socket = tune(delegate.createSocket(host, port))
+    override fun createSocket(address: InetAddress, port: Int, localAddress: InetAddress, localPort: Int): Socket =
+        tune(delegate.createSocket(address, port, localAddress, localPort))
+}
+
 class FastSocketFactory : SocketFactory() {
     private val delegate = SocketFactory.getDefault()
 
@@ -282,4 +307,40 @@ object OkHttpProvider {
         useProxy = false
         client = buildClient()
     }
+
+    // ── Media client (PlayerFactory) ─────────────────────────────────────────
+    // Pool próprio: ligações de media não competem com chamadas de API.
+    private val mediaPool = ConnectionPool(6, 5, TimeUnit.MINUTES)
+
+    private val mediaUa = Interceptor { chain ->
+        chain.proceed(
+            chain.request().newBuilder()
+                .header("User-Agent", BROWSER_USER_AGENT)
+                .header("Connection", "keep-alive")
+                .build()
+        )
+    }
+
+    private val mediaClientInstance: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            // SEM .cache(): segmentos de vídeo não entram na cache HTTP.
+            .connectTimeout(6, TimeUnit.SECONDS)   // falhar depressa → tentar outra fonte
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .callTimeout(0, TimeUnit.SECONDS)      // 0 = sem limite: live não termina
+            .retryOnConnectionFailure(true)
+            .socketFactory(MediaSocketFactory())
+            .connectionPool(mediaPool)
+            .addInterceptor(mediaUa)
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .build()
+    }
+
+    /** Usado só pelo PlayerFactory — sem proxy, sem cache, buffers grandes. */
+    fun mediaClient(): OkHttpClient = mediaClientInstance
+
+    /** Se o relay for necessário também para vídeo nesta rede, usa o cliente normal. */
+    fun mediaClientVia(relay: Boolean): OkHttpClient =
+        if (relay) client else mediaClientInstance
 }

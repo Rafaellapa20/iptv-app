@@ -41,7 +41,7 @@
                 android:layout_marginStart="8dp"
                 android:text="Sport TV 1"
                 android:textColor="@color/text_primary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:maxLines="2" />

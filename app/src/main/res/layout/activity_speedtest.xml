@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#050A14"
+    android:background="@color/bg_primary"
     android:padding="24dp">
 
     <!-- Título -->
@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="⚡ SPEEDTEST IPTV GLOBAL"
-        android:textColor="#00E5FF"
-        android:textSize="22sp"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/text_title"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginTop="10dp" />
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvSpeedTitle"
         android:text="Testar velocidade da ligação ao servidor IPTV"
-        android:textColor="#8A99AD"
-        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_label"
         android:gravity="center"
         android:layout_marginTop="4dp" />
 
@@ -66,8 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Mbps"
-                android:textColor="#00E5FF"
-                android:textSize="16sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold" />
 
             <TextView
@@ -75,8 +75,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pronto para testar"
-                android:textColor="#8A99AD"
-                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
     </FrameLayout>
@@ -104,8 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="PING"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:text="-- ms"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -130,8 +130,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="⬇ DOWNLOAD"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -139,8 +139,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-- Mbps"
-                android:textColor="#00E5FF"
-                android:textSize="16sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -156,8 +156,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SERVIDOR"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/text_primary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -182,8 +182,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="QUALIDADE"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/status_online"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
@@ -220,8 +220,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🌍 PAÍS / LOCALIZAÇÃO"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -229,8 +229,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A verificar..."
-                android:textColor="#00E5FF"
-                android:textSize="14sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -246,8 +246,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🔒 IP PÚBLICO"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -256,7 +256,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/text_primary"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -272,8 +272,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🛡 VPN STATUS"
-                android:textColor="#8A99AD"
-                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
 
             <TextView
@@ -282,7 +282,7 @@
                 android:layout_height="wrap_content"
                 android:text="--"
                 android:textColor="@color/status_online"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
@@ -298,7 +298,7 @@
         android:background="@drawable/bg_smarters_sage"
         android:text="▶ INICIAR SPEEDTEST"
         android:textColor="@color/text_primary"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_body"
         android:textStyle="bold"
         android:textAllCaps="false"
         android:focusable="true" />

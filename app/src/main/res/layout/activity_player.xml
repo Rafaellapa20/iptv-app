@@ -30,7 +30,7 @@
         android:id="@+id/rlBufferingOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#0D071E"
+        android:background="@color/bg_primary"
         android:gravity="center"
         android:visibility="gone">
 
@@ -49,7 +49,7 @@
             android:layout_below="@id/ivLoadingCover"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:indeterminateTint="#00E5FF" />
+            android:indeterminateTint="@color/accent" />
 
         <TextView
             android:id="@+id/tvLoadingTitle"
@@ -60,7 +60,7 @@
             android:layout_marginTop="12dp"
             android:text="A carregar canal..."
             android:textColor="@color/text_primary"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_item"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/tvDiagnostics"
@@ -70,8 +70,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:text=""
-            android:textColor="#FFCC00"
-            android:textSize="12sp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_label"
             android:visibility="gone"
             android:textStyle="italic" />
     </RelativeLayout>
@@ -127,7 +127,7 @@
             android:layout_height="54dp"
             android:background="@drawable/selector_button_login"
             android:src="@android:drawable/ic_menu_today"
-            app:tint="#00E5FF"
+            app:tint="@color/accent"
             android:focusable="true"
             android:clickable="true"
             android:contentDescription="Multi Tela" />
@@ -163,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/text_primary"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_body"
                     android:textStyle="bold"
                     android:lineSpacingExtra="4dp"
                     android:text="Sem Informação de EPG" />
@@ -175,7 +175,7 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginStart="16dp"
-                    android:background="#333333"
+                    android:background="@color/divider"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="6dp">
 
@@ -184,15 +184,15 @@
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:src="@android:drawable/presence_online"
-                        app:tint="#00E5FF" />
+                        app:tint="@color/accent" />
 
                     <TextView
                         android:id="@+id/tvNetworkSpeed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textColor="#00E5FF"
-                        android:textSize="12sp"
+                        android:textColor="@color/accent"
+                        android:textSize="@dimen/text_label"
                         android:textStyle="bold"
                         android:text="--- Mbps" />
                 </LinearLayout>
@@ -204,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textColor="#94A3B8"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_meta"
                 android:text="--:-- - --:--" />
 
             <ProgressBar
@@ -236,7 +236,7 @@
             android:layout_height="wrap_content"
             android:text="Próximo episódio em 10s..."
             android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_meta" />
 
         <Button
             android:id="@+id/btnNextEpisode"
@@ -244,10 +244,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tvNextCountdown"
             android:layout_marginTop="8dp"
-            android:backgroundTint="#00E5FF"
+            android:backgroundTint="@color/accent"
             android:text="▶ REPRODUZIR AGORA"
             android:textColor="#000000"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -284,8 +284,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CANAIS"
-            android:textColor="#00E5FF"
-            android:textSize="18sp"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_body"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="16dp" />

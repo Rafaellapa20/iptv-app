@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_marginBottom="10dp"
-    android:background="#333333"
+    android:background="@color/divider"
     android:orientation="horizontal"
     android:padding="8dp"
     android:gravity="center_vertical"
@@ -25,7 +25,7 @@
         android:gravity="center_vertical"
         android:lines="1"
         android:textColor="@color/text_primary"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_label"
         android:textStyle="bold" />
 
 </LinearLayout>

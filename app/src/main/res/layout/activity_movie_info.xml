@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#050A14"
+    android:background="@color/bg_primary"
     tools:context=".MovieInfoActivity">
 
     <!-- Fundo Desfocado Ambiente -->
@@ -19,7 +19,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F0050A14"/>
+        android:background="@color/bg_primary"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:textColor="@color/text_primary"
-                android:textSize="34sp"
+                android:textSize="@dimen/text_display"
                 android:textStyle="bold"
                 android:text="OPPENHEIMER"
                 app:layout_constraintStart_toEndOf="@id/cvPoster"
@@ -81,11 +81,11 @@
                     android:layout_height="wrap_content"
                     android:text="2024"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:background="#33FFFFFF" />
+                    android:background="@color/accent_wash" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,23 +93,23 @@
                     android:layout_marginStart="6dp"
                     android:text="12+"
                     android:textColor="@color/text_primary"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:background="#33FFFFFF" />
+                    android:background="@color/accent_wash" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:text="4K"
-                    android:textColor="#00E5FF"
-                    android:textSize="12sp"
+                    android:textColor="@color/accent"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
-                    android:background="#3300E5FF" />
+                    android:background="@color/accent_wash" />
 
                 <TextView
                     android:id="@+id/tvRating"
@@ -117,12 +117,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="IMDb 8.2 ★"
-                    android:textColor="#FFCC00"
-                    android:textSize="12sp"
+                    android:textColor="@color/accent"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="2dp"
-                    android:background="#33FFCC00" />
+                    android:background="@color/accent_wash" />
 
                 <TextView
                     android:id="@+id/tvGenre"
@@ -130,8 +130,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="Sci-Fi/Action"
-                    android:textColor="#8A99AD"
-                    android:textSize="13sp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/text_meta" />
             </LinearLayout>
 
             <!-- Sinopse / Overview -->
@@ -140,8 +140,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:textColor="#D0D8E4"
-                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_meta"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:lineSpacingExtra="3dp"
@@ -159,8 +159,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="▼ Ver mais"
-                android:textColor="#00E5FF"
-                android:textSize="11sp"
+                android:textColor="@color/accent"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:focusable="true"
                 android:clickable="true"
@@ -196,9 +196,9 @@
                     android:layout_width="160dp"
                     android:layout_height="42dp"
                     android:background="@drawable/bg_button_neon"
-                    android:text="▶ Reproduzir"
+                    android:text="Reproduzir"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_meta"
                     android:textStyle="bold"
                     android:focusable="true"
                     android:clickable="true" />
@@ -211,9 +211,9 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_smarters_sage"
-                android:text="⭐ Adicionar aos Favoritos"
+                android:text="Adicionar aos Favoritos"
                 android:textColor="@color/text_primary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:focusable="true"
                 android:clickable="true"
@@ -228,9 +228,9 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/bg_smarters_sage"
-                android:text="🔄 Failover (Backup Servidor 2)"
-                android:textColor="#8A99AD"
-                android:textSize="12sp"
+                android:text="Failover (Backup Servidor 2)"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:focusable="true"
                 android:clickable="true"
@@ -242,7 +242,7 @@
                 android:id="@+id/pbLoading"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:indeterminateTint="#00E5FF"
+                android:indeterminateTint="@color/accent"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

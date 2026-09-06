@@ -18,7 +18,7 @@
         android:layout_weight="1"
         android:text="Categoria"
         android:textColor="@color/text_primary"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_meta"
         android:textStyle="bold"
         android:ellipsize="end"
         android:maxLines="1" />
@@ -28,8 +28,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_meta"
         android:layout_marginStart="8dp" />
 
 </LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D071E">
+    android:background="@color/bg_primary">
 
     <!-- Barra Superior -->
     <LinearLayout
@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
         android:gravity="center_vertical"
-        android:background="#1A1A1A"
+        android:background="@color/bg_elevated"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Canais"
-            android:textColor="#FFCC00"
+            android:textColor="@color/accent"
             android:textStyle="bold"
             android:layout_marginEnd="20dp"
             android:focusable="true"
@@ -87,7 +87,7 @@
         android:id="@+id/rvCategories"
         android:layout_width="250dp"
         android:layout_height="0dp"
-        android:background="#151515"
+        android:background="@color/bg_elevated"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -97,7 +97,7 @@
         android:id="@+id/rvChannels"
         android:layout_width="350dp"
         android:layout_height="0dp"
-        android:background="#202020"
+        android:background="@color/bg_elevated"
         app:layout_constraintStart_toEndOf="@id/rvCategories"
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:text="Nenhum canal selecionado"
             android:textColor="@color/text_primary"
-            android:textSize="22sp"
+            android:textSize="@dimen/text_title"
             android:textStyle="bold"
             android:layout_marginTop="24dp"/>
 
@@ -172,8 +172,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="A DAR AGORA"
-                        android:textColor="#00E5FF"
-                        android:textSize="12sp"
+                        android:textColor="@color/accent"
+                        android:textSize="@dimen/text_label"
                         android:textStyle="bold"
                         android:letterSpacing="0.12"/>
 
@@ -182,7 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#B0FFFFFF"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/text_label"
                         android:fontFamily="monospace"
                         android:text=""/>
                 </LinearLayout>
@@ -192,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_body"
                     android:textStyle="bold"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -203,7 +203,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#CCFFFFFF"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_meta"
                     android:layout_marginTop="4dp"
                     android:maxLines="2"
                     android:ellipsize="end"
@@ -233,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:text="A SEGUIR"
                         android:textColor="#80FFFFFF"
-                        android:textSize="10sp"
+                        android:textSize="@dimen/text_label"
                         android:textStyle="bold"
                         android:letterSpacing="0.1"
                         android:background="@drawable/bg_epg_next_pill"
@@ -249,7 +249,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="#DDFFFFFF"
-                        android:textSize="13sp"
+                        android:textSize="@dimen/text_meta"
                         android:maxLines="1"
                         android:ellipsize="end" />
                 </LinearLayout>

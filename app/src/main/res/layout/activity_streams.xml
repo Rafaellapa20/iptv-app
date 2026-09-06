@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:text="CANAIS"
         android:textColor="#FF007F"
-        android:textSize="24sp"
+        android:textSize="@dimen/text_title"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="8dp"/>

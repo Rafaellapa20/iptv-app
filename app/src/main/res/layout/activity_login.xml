@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#150B2E"
+    android:background="@color/bg_primary"
     tools:context=".LoginActivity">
 
     <LinearLayout
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="#25164B"
+        android:background="@color/bg_elevated"
         android:padding="24dp"
         android:elevation="8dp"
         android:layout_margin="32dp"
@@ -35,7 +35,7 @@
             android:hint="Usuário"
             android:textColorHint="#AAAAAA"
             android:textColor="@color/text_primary"
-            android:background="#150B2E"
+            android:background="@color/bg_primary"
             android:paddingHorizontal="16dp"
             android:layout_marginBottom="16dp"
             android:imeOptions="actionNext"
@@ -55,7 +55,7 @@
                 android:inputType="textPassword"
                 android:textColorHint="#AAAAAA"
                 android:textColor="@color/text_primary"
-                android:background="#150B2E"
+                android:background="@color/bg_primary"
                 android:paddingStart="16dp"
                 android:paddingEnd="48dp"
                 android:imeOptions="actionDone"
@@ -95,7 +95,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_smarters_sage"
             android:text="🔗 Tenho um Código"
-            android:textColor="#00E5FF"
+            android:textColor="@color/accent"
             android:textStyle="bold" />
 
     </LinearLayout>

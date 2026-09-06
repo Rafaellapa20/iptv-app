@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="▼ IPTV "
                 android:textColor="@color/accent"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="GLOBAL"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_item"
                 android:textStyle="bold"
                 android:letterSpacing="0.05" />
         </LinearLayout>
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:text="Perfil: Rafael"
                 android:textColor="@color/text_primary"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="3dp"
@@ -112,7 +112,7 @@
                 android:layout_marginStart="10dp"
                 android:text="15:42"
                 android:textColor="@color/text_primary"
-                android:textSize="13sp"
+                android:textSize="@dimen/text_meta"
                 android:textStyle="bold" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_marginStart="10dp"
                 android:text="🟢 1 playlist ativa"
                 android:textColor="@color/status_online"
-                android:textSize="11sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>
@@ -185,7 +185,7 @@
                     android:layout_margin="6dp"
                     android:text="🔴 LIVE"
                     android:textColor="@color/text_primary"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
@@ -200,7 +200,7 @@
                     android:layout_marginHorizontal="8dp"
                     android:text="LIVE TV"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_meta"
                     android:textStyle="bold"
                     android:gravity="start"
                     android:maxLines="1"
@@ -220,7 +220,7 @@
                     android:layout_marginBottom="6dp"
                     android:text="🔴 A DAR: Telejornal"
                     android:textColor="@color/accent"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:gravity="start"
                     android:maxLines="1"
@@ -271,7 +271,7 @@
                     android:layout_above="@id/tvSubFilmes"
                     android:text="MOVIES (VOD)"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_meta"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:maxLines="1"
@@ -284,7 +284,7 @@
                     android:layout_alignParentBottom="true"
                     android:text="Catálogo de Filmes ▸"
                     android:textColor="@color/accent"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:gravity="center" />
             </RelativeLayout>
@@ -328,7 +328,7 @@
                     android:layout_above="@id/tvSubSeries"
                     android:text="SERIES"
                     android:textColor="@color/text_primary"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_meta"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:maxLines="1"
@@ -341,7 +341,7 @@
                     android:layout_alignParentBottom="true"
                     android:text="Temporadas &amp; Episódios ▸"
                     android:textColor="@color/accent"
-                    android:textSize="11sp"
+                    android:textSize="@dimen/text_label"
                     android:textStyle="bold"
                     android:gravity="center" />
             </RelativeLayout>
@@ -369,7 +369,7 @@
             android:background="@drawable/bg_smarters_sage"
             android:text="📺 Guia EPG"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:textAllCaps="false"
             android:focusable="true"
@@ -387,7 +387,7 @@
             android:background="@drawable/bg_smarters_sage"
             android:text="⚙️ Definições"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:textAllCaps="false"
             android:focusable="true"
@@ -409,7 +409,7 @@
             android:background="@drawable/bg_smarters_sage"
             android:text="📱 Emparelhar"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:textAllCaps="false"
             android:focusable="true"
@@ -424,10 +424,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#2E7D32"
+            android:background="@color/status_online"
             android:text="👴 Modo Fácil"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_label"
             android:textStyle="bold"
             android:textAllCaps="false"
             android:focusable="true"
@@ -445,7 +445,7 @@
         android:layout_height="wrap_content"
         android:text="CONTINUAR A VER"
         android:textColor="@color/text_primary"
-        android:textSize="11sp"
+        android:textSize="@dimen/text_label"
         android:textStyle="bold"
         android:letterSpacing="0.05"
         android:layout_marginStart="24dp"
@@ -466,7 +466,7 @@
         android:layout_height="wrap_content"
         android:text="🎬 FILMES EM DESTAQUE"
         android:textColor="@color/accent"
-        android:textSize="11sp"
+        android:textSize="@dimen/text_label"
         android:textStyle="bold"
         android:letterSpacing="0.05"
         android:layout_marginStart="24dp"
@@ -501,7 +501,7 @@
             android:layout_centerVertical="true"
             android:text="Validade : Ilimitado"
             android:textColor="@color/text_secondary"
-            android:textSize="10sp" />
+            android:textSize="@dimen/text_label" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -516,7 +516,7 @@
                 android:layout_height="wrap_content"
                 android:text="🔒 SOCKS5 VPS PROTECTED"
                 android:textColor="@color/status_online"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_label"
                 android:textStyle="bold"
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="1dp"
@@ -529,7 +529,7 @@
                 android:layout_marginStart="8dp"
                 android:text=""
                 android:textColor="@color/text_secondary"
-                android:textSize="10sp" />
+                android:textSize="@dimen/text_label" />
         </LinearLayout>
     </RelativeLayout>
 
