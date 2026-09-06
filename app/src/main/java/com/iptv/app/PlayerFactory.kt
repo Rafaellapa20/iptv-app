@@ -47,7 +47,7 @@ object PlayerFactory {
         val trackSelector = DefaultTrackSelector(ctx).apply {
             parameters = buildUponParameters()
                 .setTunnelingEnabled(isTv)          // deixa o descodificador sair em nativo
-                .setMinVideoBitrate(2_500_000)      // nunca comecar na variante mais baixa
+                .setMinVideoBitrate(1_500_000)      // nunca comecar na variante mais baixa
                 .build()
         }
 

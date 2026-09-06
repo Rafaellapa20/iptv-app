@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "streamvpn-backend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "cwd": "../../StreamVpn/backend",
+      "port": 3000
+    },
+    {
+      "name": "iptv-app-build",
+      "runtimeExecutable": "gradlew.bat",
+      "runtimeArgs": ["assembleDebug"],
+      "cwd": ".",
+      "port": null
+    },
+    {
+      "name": "iptv-app-install",
+      "runtimeExecutable": "gradlew.bat",
+      "runtimeArgs": ["installDebug"],
+      "cwd": ".",
+      "port": null
+    }
+  ]
+}
