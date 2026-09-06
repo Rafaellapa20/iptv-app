@@ -667,7 +667,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val code = PairingManager.generateSelfCode(username, password)
+            val code = PairingManager.generateSelfCode(this@MainActivity, username, password)
             if (!dialog.isShowing) return@launch
             if (code != null) {
                 tvCode.text = code
