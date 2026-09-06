@@ -139,9 +139,13 @@ object DeviceAgent : Application.ActivityLifecycleCallbacks {
             .put("appVersion", try { app.packageManager.getPackageInfo(app.packageName, 0).versionName } catch (_: Exception) { "?" })
             .put("screen", currentActivity?.javaClass?.simpleName ?: JSONObject.NULL)
             .put("playing", playingTitle ?: JSONObject.NULL)
-            .put("vpnOn", StreamVpnTunnel.state == StreamVpnTunnel.State.ON)
-            .put("vpnServer", StreamVpnTunnel.serverName ?: JSONObject.NULL)
-            .put("vpnMode", if (StreamVpnTunnel.state == StreamVpnTunnel.State.ON) "wireguard" else JSONObject.NULL)
+            .put("vpnOn", VpnManager.currentState is VpnManager.TunnelState.ByeDpi || VpnManager.currentState is VpnManager.TunnelState.WireGuard)
+            .put("vpnServer", (VpnManager.currentState as? VpnManager.TunnelState.WireGuard)?.serverName ?: JSONObject.NULL)
+            .put("vpnMode", when (VpnManager.currentState) {
+                is VpnManager.TunnelState.ByeDpi    -> "byedpi"
+                is VpnManager.TunnelState.WireGuard -> "wireguard"
+                else -> JSONObject.NULL
+            })
         return JSONObject().put("type", type).put("device", device)
     }
 

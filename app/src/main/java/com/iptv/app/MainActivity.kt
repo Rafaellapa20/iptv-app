@@ -177,34 +177,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ---------- StreamVPN: arranque automático + badge no cabeçalho ----------
-    private val vpnListener = object : StreamVpnTunnel.Listener {
-        override fun onVpnStateChanged(state: StreamVpnTunnel.State, serverName: String?) {
+    private val vpnManagerListener = object : VpnManager.Listener {
+        override fun onTunnelStateChanged(state: VpnManager.TunnelState) {
             val badge = findViewById<TextView>(R.id.tvVpnBadge) ?: return
-            when (state) {
-                StreamVpnTunnel.State.ON -> { badge.text = "🔒 VPN ON · ${serverName ?: ""}".trimEnd(' ', '·'); badge.setTextColor(0xFF00E676.toInt()); badge.visibility = View.VISIBLE }
-                StreamVpnTunnel.State.CONNECTING -> { badge.text = "VPN …"; badge.setTextColor(0xFFFFC107.toInt()); badge.visibility = View.VISIBLE }
-                StreamVpnTunnel.State.ERROR -> { badge.text = "VPN OFF"; badge.setTextColor(0xFFFF5252.toInt()); badge.visibility = View.VISIBLE }
-                StreamVpnTunnel.State.OFF -> badge.visibility = if (StreamVpnApi.isLoggedIn(this@MainActivity)) View.VISIBLE.also { badge.text = "VPN OFF"; badge.setTextColor(0xFF78909C.toInt()) } else View.GONE
+            runOnUiThread {
+                when (state) {
+                    is VpnManager.TunnelState.ByeDpi -> {
+                        badge.text = "Proteção ativa"
+                        badge.setTextColor(0xFF00E676.toInt())
+                        badge.visibility = View.VISIBLE
+                    }
+                    is VpnManager.TunnelState.WireGuard -> {
+                        badge.text = "VPN ON${state.serverName?.let { " · $it" } ?: ""}".trimEnd(' ', '·')
+                        badge.setTextColor(0xFF00E676.toInt())
+                        badge.visibility = View.VISIBLE
+                    }
+                    is VpnManager.TunnelState.Connecting -> {
+                        badge.text = "VPN …"
+                        badge.setTextColor(0xFFFFC107.toInt())
+                        badge.visibility = View.VISIBLE
+                    }
+                    is VpnManager.TunnelState.Error,
+                    is VpnManager.TunnelState.Off -> {
+                        badge.text = "VPN OFF"
+                        badge.setTextColor(0xFF78909C.toInt())
+                        badge.visibility = if (StreamVpnApi.isLoggedIn(this@MainActivity)) View.VISIBLE else View.GONE
+                    }
+                }
             }
         }
     }
 
-    private fun startVpnIfNeeded() {
-        if (!StreamVpnApi.isLoggedIn(this) || !StreamVpnTunnel.autoStart(this)) return
-        if (StreamVpnTunnel.state == StreamVpnTunnel.State.ON || StreamVpnTunnel.state == StreamVpnTunnel.State.CONNECTING) return
-        if (StreamVpnTunnel.ensurePermission(this)) StreamVpnTunnel.connect(this)
-        // se não tinha autorização, o diálogo do sistema abre e continuamos em onActivityResult
+    private fun tryStartVpn() {
+        if (!StreamVpnApi.isLoggedIn(this)) return
+        if (!VpnManager.ensurePermission(this, StreamVpnTunnel.REQUEST_VPN_PERMISSION)) return
+        VpnManager.ensure(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == StreamVpnTunnel.REQUEST_VPN_PERMISSION && resultCode == Activity.RESULT_OK) StreamVpnTunnel.connect(this)
+        if (requestCode == StreamVpnTunnel.REQUEST_VPN_PERMISSION && resultCode == Activity.RESULT_OK) VpnManager.onPermissionGranted(this)
     }
 
     override fun onResume() {
         super.onResume()
-        StreamVpnTunnel.addListener(vpnListener)
-        startVpnIfNeeded()
+        VpnManager.addListener(vpnManagerListener)
+        tryStartVpn()
         setupContinueWatching()
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)
         val username = prefs.getString("USERNAME", "") ?: ""
@@ -645,7 +663,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        StreamVpnTunnel.removeListener(vpnListener)
+        VpnManager.removeListener(vpnManagerListener)
         miniPlayer?.pause()
     }
 

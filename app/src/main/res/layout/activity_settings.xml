@@ -191,42 +191,63 @@ Validade: --"
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
+                        android:orientation="vertical"
                         android:padding="24dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
 
-                            <TextView
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="🔐 StreamVPN"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="@dimen/text_body"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="Estado da VPN, quota mensal, servidores e teste de velocidade"
+                                    android:textColor="#78909C"
+                                    android:textSize="@dimen/text_meta" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnStreamVpn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔐 StreamVPN"
-                                android:textColor="#FFFFFF"
-                                android:textSize="@dimen/text_body"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Estado da VPN, quota mensal, servidores e teste de velocidade"
-                                android:textColor="#78909C"
-                                android:textSize="@dimen/text_meta" />
+                                android:background="@drawable/bg_smarters_sage"
+                                android:text="ABRIR"
+                                android:textColor="@color/text_primary"
+                                android:paddingHorizontal="24dp"
+                                android:focusable="true" />
                         </LinearLayout>
 
-                        <Button
-                            android:id="@+id/btnStreamVpn"
-                            android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_smarters_sage"
-                            android:text="ABRIR"
-                            android:textColor="@color/text_primary"
-                            android:paddingHorizontal="24dp"
-                            android:focusable="true" />
+                            android:text="Modo do túnel"
+                            android:textColor="#78909C"
+                            android:textSize="@dimen/text_label"
+                            android:layout_marginTop="12dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerVpnMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@color/bg_elevated"
+                            android:popupBackground="@color/bg_elevated" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

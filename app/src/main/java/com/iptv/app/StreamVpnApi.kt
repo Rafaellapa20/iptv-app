@@ -112,7 +112,8 @@ object StreamVpnApi {
 
     data class VpnConfig(
         val primary: VpnEntry, val fallbacks: List<VpnEntry>,
-        val dns: List<String>, val requireClientApp: Boolean, val expiresAt: String?
+        val dns: List<String>, val requireClientApp: Boolean, val expiresAt: String?,
+        val forceWireguard: Boolean = false
     ) {
         /** Todos por ordem de tentativa: principal primeiro. */
         val all: List<VpnEntry> get() = listOf(primary) + fallbacks
@@ -134,7 +135,8 @@ object StreamVpnApi {
             fallbacks = if (fbArr == null) emptyList() else (0 until fbArr.length()).map { entry(fbArr.getJSONObject(it)) },
             dns = if (dnsArr == null) emptyList() else (0 until dnsArr.length()).map { dnsArr.getString(it) },
             requireClientApp = j.optBoolean("requireClientApp"),
-            expiresAt = j.optString("expiresAt").ifBlank { null }
+            expiresAt = j.optString("expiresAt").ifBlank { null },
+            forceWireguard = j.optBoolean("forceWireguard", false)
         )
     }
 

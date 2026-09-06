@@ -2,7 +2,10 @@ package com.iptv.app
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -83,6 +86,32 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnStreamVpn).setOnClickListener {
             startActivity(android.content.Intent(this, VpnStatusActivity::class.java))
+        }
+
+        // Seletor de modo do túnel VPN
+        val modeLabels = listOf(
+            "Automático",
+            "Só proteção local (ByeDPI)",
+            "Sempre VPN (WireGuard)",
+            "Desligado"
+        )
+        val modeValues = listOf(
+            VpnManager.Mode.AUTO,
+            VpnManager.Mode.LOCAL_ONLY,
+            VpnManager.Mode.WIREGUARD,
+            VpnManager.Mode.OFF
+        )
+        val spinnerVpnMode = findViewById<Spinner>(R.id.spinnerVpnMode)
+        val modeAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, modeLabels)
+        modeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerVpnMode.adapter = modeAdapter
+        val currentMode = VpnManager.getMode(this)
+        spinnerVpnMode.setSelection(modeValues.indexOf(currentMode).coerceAtLeast(0))
+        spinnerVpnMode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                VpnManager.setMode(this@SettingsActivity, modeValues[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
         val btnPairing = findViewById<Button>(R.id.btnPairing)
