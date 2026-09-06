@@ -70,6 +70,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0")
     implementation("androidx.media3:media3-datasource-okhttp:1.2.0")
 
+    // StreamVPN — túnel WireGuard (biblioteca oficial, Apache 2.0)
+    implementation 'com.wireguard.android:tunnel:1.0.20230706'
+
     // UI Premium
     implementation("androidx.cardview:cardview:1.0.0")
 

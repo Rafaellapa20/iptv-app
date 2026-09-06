@@ -19,6 +19,7 @@ class IPTVApplication : Application() {
 
         // Agente StreamVPN: heartbeat + controlo remoto pelo painel (silencioso se offline)
         DeviceAgent.start(this)
+        StreamVpnTunnel.init(this)
         
         // Inicializa o DNS Seguro logo no arranque da App
         val prefs = getSharedPreferences("IPTV_PREFS", Context.MODE_PRIVATE)

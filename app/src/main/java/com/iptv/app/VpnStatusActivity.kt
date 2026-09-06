@@ -75,7 +75,11 @@ class VpnStatusActivity : AppCompatActivity() {
         toast("A ativar...")
         uiScope.launch {
             StreamVpnApi.activate(this@VpnStatusActivity, code)
-                .onSuccess { toast("StreamVPN ativada neste aparelho"); showLoginOrContent() }
+                .onSuccess {
+                    toast("StreamVPN ativada neste aparelho"); showLoginOrContent()
+                    StreamVpnTunnel.setAutoStart(this@VpnStatusActivity, true)
+                    if (StreamVpnTunnel.ensurePermission(this@VpnStatusActivity)) StreamVpnTunnel.connect(this@VpnStatusActivity)
+                }
                 .onFailure { toast("Ativação falhou: ${it.message}") }
         }
     }
@@ -83,17 +87,7 @@ class VpnStatusActivity : AppCompatActivity() {
     private fun refreshAll() {
         tvStatus.text = "A carregar..."
         uiScope.launch {
-            StreamVpnApi.status(this@VpnStatusActivity).onSuccess { s ->
-                val on = s.status == "active"
-                tvStatus.text = if (on) "● LIGADA" else "○ DESLIGADA"
-                tvStatus.setTextColor(Color.parseColor(if (on) "#00E676" else "#FF5252"))
-                tvServer.text = "Servidor: ${s.currentServer ?: "—"}"
-            }.onFailure { handleError(it) }
-
-            StreamVpnApi.connectionInfo(this@VpnStatusActivity).onSuccess { c ->
-                tvIp.text = "IP público: ${c.publicIp}  ·  ${c.protocol}\n" +
-                    "↓ ${fmtBytes(c.bytesDownloaded)}   ↑ ${fmtBytes(c.bytesUploaded)}"
-            }
+            renderTunnel(StreamVpnTunnel.state, StreamVpnTunnel.serverName)
 
             StreamVpnApi.quota(this@VpnStatusActivity).onSuccess { q ->
                 pbQuota.progress = q.percentUsed
@@ -132,14 +126,46 @@ class VpnStatusActivity : AppCompatActivity() {
         }
     }
 
+    // ---------- Túnel real ----------
+    private val tunnelListener = object : StreamVpnTunnel.Listener {
+        override fun onVpnStateChanged(state: StreamVpnTunnel.State, serverName: String?) = renderTunnel(state, serverName)
+    }
+
+    private fun renderTunnel(state: StreamVpnTunnel.State, serverName: String?) {
+        val (txt, color) = when (state) {
+            StreamVpnTunnel.State.ON -> "● LIGADA" to "#00E676"
+            StreamVpnTunnel.State.CONNECTING -> "◌ A LIGAR…" to "#FFC107"
+            StreamVpnTunnel.State.ERROR -> "○ DESLIGADA" to "#FF5252"
+            StreamVpnTunnel.State.OFF -> "○ DESLIGADA" to "#B0BEC5"
+        }
+        tvStatus.text = txt; tvStatus.setTextColor(Color.parseColor(color))
+        tvServer.text = "Servidor: ${serverName ?: "—"}" + (StreamVpnTunnel.lastError?.let { if (state == StreamVpnTunnel.State.ERROR) "\n$it" else "" } ?: "")
+        val (rx, tx) = StreamVpnTunnel.stats()
+        tvIp.text = "WireGuard  ·  ↓ ${fmtBytes(rx)}   ↑ ${fmtBytes(tx)}" +
+            (StreamVpnTunnel.expiresAt?.let { "\nVálida até ${it.take(10)}" } ?: "")
+        findViewById<Button>(R.id.btnVpnReconnect).text = if (state == StreamVpnTunnel.State.ON || state == StreamVpnTunnel.State.CONNECTING) "DESLIGAR" else "LIGAR"
+    }
+
+    /** Botão LIGAR/DESLIGAR (o id antigo era "reconectar"). */
     private fun reconnect() {
-        toast("A reconectar...")
-        uiScope.launch {
-            StreamVpnApi.reconnect(this@VpnStatusActivity)
-                .onSuccess { toast(it); refreshAll() }
-                .onFailure { handleError(it) }
+        if (StreamVpnTunnel.state == StreamVpnTunnel.State.ON || StreamVpnTunnel.state == StreamVpnTunnel.State.CONNECTING) {
+            StreamVpnTunnel.setAutoStart(this, false)
+            StreamVpnTunnel.disconnect(); toast("VPN desligada")
+        } else {
+            StreamVpnTunnel.setAutoStart(this, true)
+            if (StreamVpnTunnel.ensurePermission(this)) StreamVpnTunnel.connect(this)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == StreamVpnTunnel.REQUEST_VPN_PERMISSION) {
+            if (resultCode == RESULT_OK) StreamVpnTunnel.connect(this) else toast("Sem autorização de VPN")
+        }
+    }
+
+    override fun onResume() { super.onResume(); StreamVpnTunnel.addListener(tunnelListener) }
+    override fun onPause() { super.onPause(); StreamVpnTunnel.removeListener(tunnelListener) }
 
     private fun changeServer(s: StreamVpnApi.VpnServer) {
         toast("A mudar para ${s.name}...")
