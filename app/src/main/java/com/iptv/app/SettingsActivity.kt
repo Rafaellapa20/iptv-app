@@ -68,7 +68,8 @@ class SettingsActivity : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
             prefs.edit().clear().apply()
-            
+            Prefs.clearCredentials(this)    // limpa também o armazenamento cifrado + syncId
+
             // Clear favorites
             getSharedPreferences("IPTV_FAVORITES", MODE_PRIVATE).edit().clear().apply()
 

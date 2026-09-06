@@ -205,6 +205,11 @@ class LoginActivity : AppCompatActivity() {
                             .putString("EXP_DATE", expDateFormated)
                             .apply()
 
+                        // Guarda no armazenamento cifrado (Prefs.kt).
+                        // Se as credenciais mudaram (conta diferente), o syncId em cache
+                        // é automaticamente invalidado para obter o correto desta conta.
+                        Prefs.saveCredentials(this@LoginActivity, username, password)
+
                         OkHttpProvider.disableDoH()
 
                         // Guardar a conta na Lista Multi-Utilizador

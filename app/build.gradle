@@ -90,6 +90,9 @@ dependencies {
     // UI Premium
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Credenciais cifradas (Prefs.kt — syncId + password guardados com AES-256-GCM)
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
     // Firebase (sincronização de favoritos/continuar-a-ver E emparelhamento
     // TV<->telemóvel entre dispositivos da mesma conta — substitui os
     // servidores próprios antigos, que deixaram de existir). BOM garante

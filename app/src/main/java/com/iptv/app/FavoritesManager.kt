@@ -7,8 +7,9 @@ import org.json.JSONObject
 
 object FavoritesManager {
 
-    private const val PREFS_NAME = "IPTV_Favorites"
+    private const val PREFS_NAME   = "IPTV_Favorites"
     private const val FAVORITES_KEY = "favorites_list"
+    private const val REMOVED_KEY   = "favorites_removed"
 
     data class FavoriteItem(
         val streamId: String,
@@ -17,7 +18,7 @@ object FavoritesManager {
         val type: String
     ) {
         fun toStream() = Stream(streamId, title, coverUrl, type, "")
-        
+
         val stream_id: String get() = streamId
         val name: String get() = title
         val stream_icon: String get() = coverUrl
@@ -25,41 +26,20 @@ object FavoritesManager {
         val extension: String get() = ""
     }
 
-    private fun getPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    }
+    private fun getPrefs(context: Context): SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    /* ─── consulta ──────────────────────────────────────────────────── */
 
     fun isFavorite(context: Context, streamId: String): Boolean {
         if (streamId.isEmpty()) return false
-        val list = getFavorites(context)
-        return list.any { it.streamId == streamId }
+        return getFavorites(context).any { it.streamId == streamId }
     }
-    
+
     fun isFavorite(context: Context, stream: Stream): Boolean = isFavorite(context, stream.stream_id)
 
-    fun toggleFavorite(context: Context, streamId: String, title: String, coverUrl: String, type: String): Boolean {
-        if (streamId.isEmpty()) return false
-        val list = getFavorites(context).toMutableList()
-        val existing = list.find { it.streamId == streamId }
-        
-        val isNowFavorite = if (existing != null) {
-            list.remove(existing)
-            false
-        } else {
-            list.add(0, FavoriteItem(streamId, title, coverUrl, type))
-            true
-        }
-        
-        saveFavorites(context, list)
-        return isNowFavorite
-    }
-    
-    fun toggleFavorite(context: Context, stream: Stream): Boolean =
-        toggleFavorite(context, stream.stream_id, stream.name, stream.stream_icon, stream.stream_type)
-
     fun getFavorites(context: Context): List<FavoriteItem> {
-        val prefs = getPrefs(context)
-        val jsonString = prefs.getString(FAVORITES_KEY, "[]") ?: "[]"
+        val jsonString = getPrefs(context).getString(FAVORITES_KEY, "[]") ?: "[]"
         val list = mutableListOf<FavoriteItem>()
         try {
             val array = JSONArray(jsonString)
@@ -69,10 +49,7 @@ object FavoritesManager {
                 val title = obj.optString("title", obj.optString("name", "Sem Título"))
                 val cover = obj.optString("coverUrl", obj.optString("stream_icon", ""))
                 val type = obj.optString("type", obj.optString("stream_type", "live"))
-                
-                if (id.isNotEmpty()) {
-                    list.add(FavoriteItem(id, title, cover, type))
-                }
+                if (id.isNotEmpty()) list.add(FavoriteItem(id, title, cover, type))
             }
         } catch (e: Exception) {
             android.util.Log.e("FavoritesManager", "Erro ao carregar favoritos: ${e.message}")
@@ -80,17 +57,82 @@ object FavoritesManager {
         return list
     }
 
-    private fun saveFavorites(context: Context, list: List<FavoriteItem>) {
-        val newArray = JSONArray()
-        for (item in list) {
-            val obj = JSONObject()
-            obj.put("streamId", item.streamId)
-            obj.put("title", item.title)
-            obj.put("coverUrl", item.coverUrl)
-            obj.put("type", item.type)
-            newArray.put(obj)
+    /* ─── toggle ────────────────────────────────────────────────────── */
+
+    /**
+     * Adiciona ou remove um favorito. Ao adicionar, guarda "at" (timestamp)
+     * para que a junção por data funcione correctamente. Ao remover, escreve
+     * uma lápide em REMOVED_KEY para que a remoção se propague entre aparelhos.
+     */
+    fun toggleFavorite(context: Context, streamId: String, title: String, coverUrl: String, type: String): Boolean {
+        if (streamId.isEmpty()) return false
+        val prefs = getPrefs(context)
+        val array = try { JSONArray(prefs.getString(FAVORITES_KEY, "[]")) } catch (e: Exception) { JSONArray() }
+
+        // Procura o item existente
+        var found = false
+        val kept  = JSONArray()
+        for (i in 0 until array.length()) {
+            val obj = array.optJSONObject(i) ?: continue
+            if (obj.optString("streamId") == streamId || obj.optString("stream_id") == streamId) {
+                found = true // omite da lista (= remoção)
+            } else {
+                kept.put(obj)
+            }
         }
-        getPrefs(context).edit().putString(FAVORITES_KEY, newArray.toString()).apply()
+
+        val now = System.currentTimeMillis()
+
+        if (found) {
+            // Gravação da lápide para que a remoção se propague
+            val tombstones = try { JSONArray(prefs.getString(REMOVED_KEY, "[]")) } catch (e: Exception) { JSONArray() }
+            tombstones.put(JSONObject().put("streamId", streamId).put("at", now))
+            prefs.edit()
+                .putString(FAVORITES_KEY, kept.toString())
+                .putString(REMOVED_KEY, tombstones.toString())
+                .apply()
+            SyncManager.syncToCloud(context)
+            return false
+        }
+
+        // Adição: coloca no topo com o timestamp
+        val newItem = JSONObject()
+            .put("streamId", streamId)
+            .put("title",    title)
+            .put("coverUrl", coverUrl)
+            .put("type",     type)
+            .put("at",       now)
+        val finalArray = JSONArray()
+        finalArray.put(newItem)
+        for (i in 0 until array.length()) finalArray.put(array.get(i))
+        prefs.edit().putString(FAVORITES_KEY, finalArray.toString()).apply()
         SyncManager.syncToCloud(context)
+        return true
+    }
+
+    fun toggleFavorite(context: Context, stream: Stream): Boolean =
+        toggleFavorite(context, stream.stream_id, stream.name, stream.stream_icon, stream.stream_type)
+
+    /* ─── export / import (usados pelo SyncManager) ─────────────────── */
+
+    /** Devolve o blob tal como está guardado. O SyncManager usa isto. */
+    fun exportJson(context: Context): JSONArray =
+        try { JSONArray(getPrefs(context).getString(FAVORITES_KEY, "[]")) }
+        catch (e: Exception) { JSONArray() }
+
+    /** Lápides: favoritos removidos, com data. Sem isto, remover nunca propaga. */
+    fun exportRemovedJson(context: Context): JSONArray =
+        try { JSONArray(getPrefs(context).getString(REMOVED_KEY, "[]")) }
+        catch (e: Exception) { JSONArray() }
+
+    /**
+     * Guarda a lista juntada vinda do servidor. Substitui directamente sem
+     * passar pelo SyncManager (evitar loop).
+     */
+    fun importJson(context: Context, favorites: JSONArray, removed: JSONArray) {
+        getPrefs(context).edit()
+            .putString(FAVORITES_KEY, favorites.toString())
+            .putString(REMOVED_KEY,   removed.toString())
+            .apply()
     }
 }
