@@ -1,6 +1,5 @@
 package com.iptv.app
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +18,7 @@ import kotlinx.coroutines.*
 import okhttp3.Request
 import org.json.JSONObject
 
-data class ActorMember(val name: String, val photoUrl: String = "")
+data class ActorMember(val name: String, var photoUrl: String = "")
 
 class MovieInfoActivity : AppCompatActivity() {
 
@@ -30,7 +28,6 @@ class MovieInfoActivity : AppCompatActivity() {
     private var streamUrl = ""
     private var movieTitle = ""
     private var coverUrl = ""
-    private var youtubeTrailerId = ""
 
     private lateinit var pbLoading: ProgressBar
     private lateinit var tvTitle: TextView
@@ -38,15 +35,16 @@ class MovieInfoActivity : AppCompatActivity() {
     private lateinit var tvDuration: TextView
     private lateinit var tvGenre: TextView
     private lateinit var tvPlot: TextView
+    private lateinit var tvPlotToggle: TextView
     private lateinit var ivPoster: ImageView
     private lateinit var ivBackground: ImageView
     private lateinit var btnPlay: Button
-    private lateinit var btnTrailer: Button
     private lateinit var btnBackup: Button
     private lateinit var btnFavorite: Button
     private lateinit var rvCast: RecyclerView
 
     private val castList = mutableListOf<ActorMember>()
+    private var plotExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,10 +64,10 @@ class MovieInfoActivity : AppCompatActivity() {
         tvDuration = findViewById(R.id.tvYear)
         tvGenre = findViewById(R.id.tvGenre)
         tvPlot = findViewById(R.id.tvPlot)
+        tvPlotToggle = findViewById(R.id.tvPlotToggle)
         ivPoster = findViewById(R.id.ivPoster)
         ivBackground = findViewById(R.id.ivBackground)
         btnPlay = findViewById(R.id.btnPlay)
-        btnTrailer = findViewById(R.id.btnTrailer)
         btnBackup = findViewById(R.id.btnBackup)
         btnFavorite = findViewById(R.id.btnFavorite)
         rvCast = findViewById(R.id.rvCast)
@@ -81,57 +79,35 @@ class MovieInfoActivity : AppCompatActivity() {
             Glide.with(this).load(coverUrl).into(ivBackground)
         }
         tvTitle.text = movieTitle
-        
-        updateFavoriteButtonState()
 
-        btnPlay.setOnClickListener {
-            playMovie(streamUrl)
-        }
-
-        btnBackup.setOnClickListener {
-            playMovie(streamUrl)
-        }
-
-        btnTrailer.setOnClickListener {
-            if (youtubeTrailerId.isNotEmpty()) {
-                showTrailerDialog(youtubeTrailerId)
+        // Expandir / recolher sinopse ao clicar
+        val togglePlot = View.OnClickListener {
+            plotExpanded = !plotExpanded
+            if (plotExpanded) {
+                tvPlot.maxLines = Int.MAX_VALUE
+                tvPlot.ellipsize = null
+                tvPlotToggle.text = "▲ Ver menos"
             } else {
-                Toast.makeText(this, "Trailer não disponível para este título.", Toast.LENGTH_SHORT).show()
+                tvPlot.maxLines = 3
+                tvPlot.ellipsize = android.text.TextUtils.TruncateAt.END
+                tvPlotToggle.text = "▼ Ver mais"
             }
         }
+        tvPlot.setOnClickListener(togglePlot)
+        tvPlotToggle.setOnClickListener(togglePlot)
+
+        updateFavoriteButtonState()
+
+        btnPlay.setOnClickListener { playMovie(streamUrl) }
+        btnBackup.setOnClickListener { playMovie(streamUrl) }
 
         btnFavorite.setOnClickListener {
-            val isNowFav = FavoritesManager.toggleFavorite(this, streamId, movieTitle, coverUrl, "vod")
+            FavoritesManager.toggleFavorite(this, streamId, movieTitle, coverUrl, "vod")
             updateFavoriteButtonState()
         }
 
         btnPlay.requestFocus()
         fetchMovieInfo()
-    }
-
-    // Reproduz o trailer num WebView embutido (iframe da API de embed do
-    // YouTube), em vez de um Intent.ACTION_VIEW que abria a app do YouTube e
-    // tirava o utilizador da nossa app. android:usesCleartextTraffic não é
-    // necessário aqui porque o embed do YouTube corre em https.
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun showTrailerDialog(videoId: String) {
-        val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog.setContentView(R.layout.dialog_trailer)
-
-        val webView = dialog.findViewById<android.webkit.WebView>(R.id.webViewTrailer)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.mediaPlaybackRequiresUserGesture = false
-        webView.webChromeClient = android.webkit.WebChromeClient()
-        webView.loadUrl("https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1")
-
-        dialog.findViewById<View>(R.id.btnCloseTrailer).setOnClickListener {
-            webView.loadUrl("about:blank")
-            dialog.dismiss()
-        }
-        dialog.setOnDismissListener {
-            webView.loadUrl("about:blank")
-        }
-        dialog.show()
     }
 
     private fun playMovie(url: String) {
@@ -167,57 +143,61 @@ class MovieInfoActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val body = response.body?.string() ?: ""
                     val json = JSONObject(body)
-                    
+
                     val info = json.optJSONObject("info")
                     if (info != null) {
-                        val plot = info.optString("plot", "Sinopse não disponível.")
+                        val plot = info.optString("plot", "").ifBlank { "Sinopse não disponível." }
                         val castStr = info.optString("cast", "")
-                        val rating = info.optString("rating", "8.2")
+                        val rating = info.optString("rating", "")
                         val duration = info.optString("duration", "")
-                        val genre = info.optString("genre", "Sci-Fi/Action")
-                        val releasedate = info.optString("releasedate", info.optString("year", "2024"))
-                        youtubeTrailerId = info.optString("youtube_trailer", "")
-
+                        val genre = info.optString("genre", "")
+                        val releasedate = info.optString("releasedate", info.optString("year", ""))
                         val bestCover = info.optString("cover_big", info.optString("movie_image", coverUrl))
 
+                        // Build cast list from names
                         castList.clear()
                         if (castStr.isNotEmpty()) {
-                            val names = castStr.split(",")
-                            for (n in names) {
-                                val clean = n.trim()
-                                if (clean.isNotEmpty()) {
-                                    castList.add(ActorMember(clean))
-                                }
-                            }
+                            castStr.split(",")
+                                .map { it.trim() }
+                                .filter { it.isNotEmpty() }
+                                .take(10)
+                                .forEach { castList.add(ActorMember(it)) }
                         }
 
-                        // Atores por defeito se a lista vier vazia
-                        if (castList.isEmpty()) {
-                            castList.add(ActorMember("Cillian Murphy"))
-                            castList.add(ActorMember("Emily Blunt"))
-                            castList.add(ActorMember("Matt Damon"))
-                            castList.add(ActorMember("Robert Downey Jr."))
-                            castList.add(ActorMember("Florence Pugh"))
+                        // Fetch actor photos from Wikipedia concurrently
+                        val photoJobs = castList.map { actor ->
+                            async { actor.photoUrl = fetchWikipediaPhoto(actor.name) }
                         }
+                        photoJobs.awaitAll()
 
                         withContext(Dispatchers.Main) {
                             pbLoading.visibility = View.GONE
-                            
+
                             tvPlot.text = plot
-                            tvRating.text = "IMDb $rating ★"
-                            if (duration.isNotEmpty()) tvDuration.text = "$releasedate · $duration" else tvDuration.text = releasedate
+                            // Mostrar toggle só se o texto for longo o suficiente para ser cortado
+                            tvPlot.post {
+                                if (tvPlot.lineCount > 3) tvPlotToggle.visibility = View.VISIBLE
+                            }
+
+                            if (rating.isNotEmpty()) tvRating.text = "IMDb $rating ★"
+                            val yearDur = listOf(releasedate, duration).filter { it.isNotEmpty() }.joinToString(" · ")
+                            if (yearDur.isNotEmpty()) tvDuration.text = yearDur
                             if (genre.isNotEmpty()) tvGenre.text = genre
-                            
+
                             if (bestCover.isNotEmpty() && bestCover != coverUrl) {
                                 Glide.with(this@MovieInfoActivity).load(bestCover).into(ivPoster)
                                 Glide.with(this@MovieInfoActivity).load(bestCover).into(ivBackground)
                             }
 
-                            rvCast.adapter = CastAdapter(castList)
+                            if (castList.isNotEmpty()) {
+                                rvCast.adapter = CastAdapter(castList)
+                            }
                         }
                     } else {
                         withContext(Dispatchers.Main) { pbLoading.visibility = View.GONE }
                     }
+                } else {
+                    withContext(Dispatchers.Main) { pbLoading.visibility = View.GONE }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) { pbLoading.visibility = View.GONE }
@@ -225,21 +205,49 @@ class MovieInfoActivity : AppCompatActivity() {
         }
     }
 
-    inner class CastAdapter(private val list: List<ActorMember>) : RecyclerView.Adapter<CastAdapter.VH>() {
+    /**
+     * Busca a miniatura de um ator/atriz na Wikipedia REST API.
+     * Retorna URL da foto ou string vazia se não encontrar.
+     */
+    private fun fetchWikipediaPhoto(actorName: String): String {
+        return try {
+            val encoded = actorName.trim().replace(" ", "_")
+            val url = "https://en.wikipedia.org/api/rest_v1/page/summary/$encoded"
+            val resp = OkHttpProvider.client.newCall(Request.Builder().url(url).build()).execute()
+            if (resp.isSuccessful) {
+                val j = JSONObject(resp.body?.string() ?: "")
+                j.optJSONObject("thumbnail")?.optString("source") ?: ""
+            } else ""
+        } catch (e: Exception) { "" }
+    }
+
+    inner class CastAdapter(private val list: List<ActorMember>) :
+        RecyclerView.Adapter<CastAdapter.VH>() {
+
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
             val photo: ImageView = v.findViewById(R.id.ivActorPhoto)
             val name: TextView = v.findViewById(R.id.tvActorName)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_cast_member, parent, false)
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_cast_member, parent, false)
             return VH(view)
         }
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val actor = list[position]
             holder.name.text = actor.name
-            holder.photo.setImageResource(android.R.drawable.ic_menu_myplaces)
+            if (actor.photoUrl.isNotEmpty()) {
+                Glide.with(holder.photo.context)
+                    .load(actor.photoUrl)
+                    .circleCrop()
+                    .placeholder(android.R.drawable.ic_menu_myplaces)
+                    .error(android.R.drawable.ic_menu_myplaces)
+                    .into(holder.photo)
+            } else {
+                holder.photo.setImageResource(android.R.drawable.ic_menu_myplaces)
+            }
         }
 
         override fun getItemCount() = list.size

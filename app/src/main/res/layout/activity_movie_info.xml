@@ -145,23 +145,42 @@
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:lineSpacingExtra="3dp"
+                android:focusable="true"
+                android:clickable="true"
                 android:text="Synopsis, the Trinity test chosen to mes with a Trinity test vplosnc monter of Oppenheimer..."
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
                 app:layout_constraintTop_toBottomOf="@id/llMetadata"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- "Ver mais / Ver menos" para expandir sinopse -->
+            <TextView
+                android:id="@+id/tvPlotToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="▼ Ver mais"
+                android:textColor="#00E5FF"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:focusable="true"
+                android:clickable="true"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvPlot"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <!-- Seção de Atores (CAST) -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCast"
                 android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="90dp"
+                android:layout_marginTop="14dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvPlot"
+                app:layout_constraintTop_toBottomOf="@id/tvPlotToggle"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Botões de Ação (Reproduzir & Trailer) -->
+            <!-- Botões de Ação -->
             <LinearLayout
                 android:id="@+id/llMainActionButtons"
                 android:layout_width="0dp"
@@ -178,19 +197,6 @@
                     android:layout_height="42dp"
                     android:background="@drawable/bg_button_neon"
                     android:text="▶ Reproduzir"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:focusable="true"
-                    android:clickable="true" />
-
-                <Button
-                    android:id="@+id/btnTrailer"
-                    android:layout_width="140dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/bg_smarters_sage"
-                    android:text="▶ Trailer"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
